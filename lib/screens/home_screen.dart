@@ -29,8 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Scaffold(
         backgroundColor: AppColors.background,
-        extendBody: true,
-        extendBodyBehindAppBar: true,
         body: _buildTabContent(),
         bottomNavigationBar: BottomNav(
           current: currentTab,
