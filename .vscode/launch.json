@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Mock (No Backend)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_mock.dart",
+      "args": ["--flavor", "mock"]
+    },
+    {
+      "name": "Dev (Local Backend)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_dev.dart",
+      "args": ["--flavor", "dev"]
+    },
+    {
+      "name": "Prod (Production)",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main_prod.dart",
+      "args": ["--flavor", "prod"]
+    }
+  ]
+}
