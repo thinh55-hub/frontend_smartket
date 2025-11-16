@@ -21,7 +21,7 @@ This script:
 After setup:
 ```bash
 flutter emulators --launch Samsung_S24_Ultra
-flutter run
+flutter run --flavor mock -t lib/main_mock.dart
 ```
 
 Re-run the script safely at any time; it is idempotent for existing resources.
