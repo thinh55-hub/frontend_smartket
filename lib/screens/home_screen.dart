@@ -530,7 +530,11 @@ class _ProductCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+<<<<<<< HEAD
           const SizedBox(height: 8),
+=======
+          const SizedBox(height: 4),
+>>>>>>> main
           const Icon(Icons.ramen_dining, size: 32, color: Color(0xFFEF6C00)),
           const SizedBox(height: 8),
           Text(
