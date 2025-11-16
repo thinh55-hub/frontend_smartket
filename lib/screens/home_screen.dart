@@ -96,94 +96,107 @@ class _HomeOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.zero,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 16),
-          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
+    return Column(
+      children: [
+        // Fixed header section
+        Container(
+          color: AppColors.background,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'SMARTKET',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              const SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    const Text(
+                      'SMARTKET',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.favorite_border, color: Color(0xFF00C853)),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.person_outline, color: Color(0xFF00C853)),
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.favorite_border, color: Color(0xFF00C853)),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.person_outline, color: Color(0xFF00C853)),
-                onPressed: () {},
-              ),
-            ],
-          ),
-          ),
-          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE0E4EE)),
-            ),
-            child: Row(
-              children: const [
-                Icon(Icons.location_on_outlined, size: 18, color: Color(0xFF00C853)),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Quận 1, TP.HCM • 5 km',
-                    style: TextStyle(fontSize: 13),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFE0E4EE)),
+                  ),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.location_on_outlined, size: 18, color: Color(0xFF00C853)),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Quận 1, TP.HCM • 5 km',
+                          style: TextStyle(fontSize: 13),
+                        ),
+                      ),
+                      Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF3C404B)),
+                    ],
                   ),
                 ),
-                Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF3C404B)),
-              ],
-            ),
-          ),
-          ),
-          const SizedBox(height: 12),
-          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: const [
-                Icon(Icons.search, size: 20, color: Color(0xFF9AA1AF)),
-                SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Tìm sản phẩm, cửa hàng, smartbag...',
-                    style: TextStyle(fontSize: 13, color: Color(0xFF9AA1AF)),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: const [
+                      Icon(Icons.search, size: 20, color: Color(0xFF9AA1AF)),
+                      SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Tìm sản phẩm, cửa hàng, smartbag...',
+                          style: TextStyle(fontSize: 13, color: Color(0xFF9AA1AF)),
+                        ),
+                      ),
+                      Icon(Icons.tune_rounded, size: 18, color: Color(0xFF9AA1AF)),
+                    ],
                   ),
                 ),
-                Icon(Icons.tune_rounded, size: 18, color: Color(0xFF9AA1AF)),
-              ],
-            ),
-          ),
-          ),
-          const SizedBox(height: 12),
-          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              _SegmentChip('Ngày', true),
-              const SizedBox(width: 8),
-              _SegmentChip('Tuần', false),
-              const SizedBox(width: 8),
-              _SegmentChip('Tháng', false),
+              ),
+              const SizedBox(height: 12),
             ],
           ),
-          ),
-          const SizedBox(height: 12),
+        ),
+        // Scrollable content
+        Expanded(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.zero,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Row(
+                    children: [
+                      _SegmentChip('Ngày', true),
+                      const SizedBox(width: 8),
+                      _SegmentChip('Tuần', false),
+                      const SizedBox(width: 8),
+                      _SegmentChip('Tháng', false),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 12),
           SizedBox(
           height: 90,
           child: ListView(
@@ -303,14 +316,15 @@ class _HomeOverview extends StatelessWidget {
             ),
           ),
           ),
-          const SizedBox(height: 24),
-        ],
-      ),
+                const SizedBox(height: 24),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
-}
-
-class _SegmentChip extends StatelessWidget {
+}class _SegmentChip extends StatelessWidget {
   final String label;
   final bool selected;
 
