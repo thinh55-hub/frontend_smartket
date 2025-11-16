@@ -577,8 +577,17 @@ class _ProductCard extends StatelessWidget {
   }
 
   String _formatCurrency(double v) {
-    // Basic VND formatting without intl dependency yet
-    return '${v.toStringAsFixed(v.truncateToDouble() == v ? 0 : 0)}.000 đ';
+    // Format VND: no decimals, '.' as thousand separator
+    final int amount = v.toInt();
+    final str = amount.toString();
+    final buffer = StringBuffer();
+    for (int i = 0; i < str.length; i++) {
+      if (i > 0 && (str.length - i) % 3 == 0) {
+        buffer.write('.');
+      }
+      buffer.write(str[i]);
+    }
+    return '${buffer.toString()} đ';
   }
 }
 
