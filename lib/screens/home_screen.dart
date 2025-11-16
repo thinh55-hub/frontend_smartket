@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/bottom_nav.dart';
 import '../theme/app_theme.dart';
+import '../core/state/product_provider.dart';
+import '../core/models/product.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isLandscape;
@@ -222,16 +225,38 @@ class _HomeOverview extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SizedBox(
-          height: 160,
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            children: const [
-              _DealCard(title: 'Mì Hảo Hảo Tôm Chua Cay', store: 'Gia Lạc Minimart', distance: '0.8 km', price: '6.000 đ', oldPrice: '8.000 đ', discount: '-25%'),
-              SizedBox(width: 12),
-              _DealCard(title: 'Cơm Bento Trứng Cuộn', store: 'Gia Lạc Minimart', distance: '0.8 km', price: '35.000 đ', oldPrice: '35.000 đ', discount: '-0%'),
-            ],
-          ),
+            height: 170,
+            child: Consumer<ProductProvider>(
+              builder: (context, provider, _) {
+                if (provider.loading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (provider.error != null) {
+                  return Center(
+                    child: Text(
+                      'Lỗi: ${provider.error}',
+                      style: const TextStyle(color: Colors.red, fontSize: 12),
+                    ),
+                  );
+                }
+                final products = provider.products.take(10).toList();
+                if (products.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Chưa có sản phẩm',
+                      style: TextStyle(fontSize: 12, color: Color(0xFF80848F)),
+                    ),
+                  );
+                }
+                return ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: products.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 12),
+                  itemBuilder: (ctx, i) => _ProductCard(product: products[i]),
+                );
+              },
+            ),
           ),
           const SizedBox(height: 16),
           Padding(
@@ -462,6 +487,88 @@ class _DealCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _ProductCard extends StatelessWidget {
+  final Product product;
+  const _ProductCard({required this.product});
+
+  @override
+  Widget build(BuildContext context) {
+    final price = product.price != null ? _formatCurrency(product.price!) : '--';
+    final oldPrice = product.oldPrice != null ? _formatCurrency(product.oldPrice!) : null;
+    final discount = (product.price != null && product.oldPrice != null && product.oldPrice! > 0)
+        ? '-${(((product.oldPrice! - product.price!) / product.oldPrice!) * 100).round()}%'
+        : null;
+
+    return Container(
+      width: 170,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE0E4EE)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 4),
+          const Icon(Icons.fastfood, size: 32, color: Color(0xFF00C853)),
+          const SizedBox(height: 8),
+          Text(
+            product.name,
+            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 4),
+            Text(
+              product.merchantName ?? 'SMARTKET',
+              style: const TextStyle(fontSize: 11, color: Color(0xFF00C853)),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          const Spacer(),
+          Row(
+            children: [
+              Text(
+                price,
+                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
+              ),
+              const SizedBox(width: 4),
+              if (oldPrice != null)
+                Text(
+                  oldPrice,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFFB3BAC8),
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+              const Spacer(),
+              if (discount != null)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    discount,
+                    style: const TextStyle(fontSize: 10, color: Colors.white),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatCurrency(double v) {
+    // Basic VND formatting without intl dependency yet
+    return '${v.toStringAsFixed(v.truncateToDouble() == v ? 0 : 0)}.000 đ';
   }
 }
 
