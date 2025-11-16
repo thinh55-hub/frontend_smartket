@@ -233,7 +233,7 @@ class _HomeOverview extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           SizedBox(
-          height: 170,
+          height: 200,
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
@@ -707,7 +707,8 @@ class _SmartbagTab extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Expanded(
+        SizedBox(
+          height: 200,
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
@@ -766,7 +767,7 @@ class _SmartbagCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 190,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
@@ -774,66 +775,70 @@ class _SmartbagCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
+          const Icon(Icons.lunch_dining, size: 28, color: Color(0xFFFFA726)),
           const SizedBox(height: 4),
-          const Icon(Icons.lunch_dining, size: 32, color: Color(0xFFFFA726)),
-          const SizedBox(height: 8),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
               color: const Color(0xFFE5F9EC),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
               tag,
-              style: const TextStyle(fontSize: 11, color: Color(0xFF00C853)),
+              style: const TextStyle(fontSize: 10, color: Color(0xFF00C853)),
             ),
           ),
-          const SizedBox(height: 6),
-          Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
           const SizedBox(height: 4),
+          Text(title, 
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 2),
           Text(
             '$store\n$distance',
-            style: const TextStyle(fontSize: 11, color: Color(0xFF00C853)),
+            style: const TextStyle(fontSize: 10, color: Color(0xFF00C853)),
           ),
-          const Spacer(),
+          const SizedBox(height: 4),
           Row(
             children: [
               Text(
                 price,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.red),
               ),
               const SizedBox(width: 4),
               Text(
                 oldPrice,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 10,
                   color: Color(0xFFB3BAC8),
                   decoration: TextDecoration.lineThrough,
                 ),
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                 decoration: BoxDecoration(
                   color: Colors.red,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   discount,
-                  style: const TextStyle(fontSize: 10, color: Colors.white),
+                  style: const TextStyle(fontSize: 9, color: Colors.white),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Row(
             children: [
-              const Icon(Icons.access_time, size: 14, color: Color(0xFF80848F)),
-              const SizedBox(width: 4),
+              const Icon(Icons.access_time, size: 12, color: Color(0xFF80848F)),
+              const SizedBox(width: 3),
               Text(
                 time,
-                style: const TextStyle(fontSize: 11, color: Color(0xFF80848F)),
+                style: const TextStyle(fontSize: 10, color: Color(0xFF80848F)),
               ),
             ],
           ),
