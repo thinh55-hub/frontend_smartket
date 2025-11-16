@@ -195,6 +195,7 @@ class _HomeOverview extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             padding: EdgeInsets.zero,
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -216,6 +217,7 @@ class _HomeOverview extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
             children: const [
               _StatCard(title: 'Túi thực phẩm đã cứu', value: '3', subtitle: 'Hôm nay bạn đã cứu được'),
               SizedBox(width: 12),
@@ -262,6 +264,7 @@ class _HomeOverview extends StatelessWidget {
                 return ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
                   itemCount: products.length,
                   separatorBuilder: (_, __) => const SizedBox(width: 12),
                   itemBuilder: (ctx, i) => _ProductCard(product: products[i]),
@@ -286,6 +289,7 @@ class _HomeOverview extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
             children: const [
               _SmartbagCard(
                 tag: 'Túi bữa sáng',
@@ -684,6 +688,7 @@ class _ExploreTab extends StatelessWidget {
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -845,6 +850,7 @@ class _SmartbagTab extends StatelessWidget {
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
             child: Row(
               children: chips.map((c) {
                 final selected = c == 'Túi bữa sáng';
@@ -862,6 +868,7 @@ class _SmartbagTab extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
             children: const [
               _SmartbagCard(
                 tag: 'Túi bữa sáng',
