@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../widgets/bottom_nav.dart';
 import '../theme/app_theme.dart';
@@ -19,16 +20,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: _buildTabContent(),
-      bottomNavigationBar: BottomNav(
-        current: currentTab,
-        onChanged: (tab) {
-          setState(() {
-            currentTab = tab;
-          });
-        },
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        extendBody: true,
+        extendBodyBehindAppBar: true,
+        body: _buildTabContent(),
+        bottomNavigationBar: BottomNav(
+          current: currentTab,
+          onChanged: (tab) {
+            setState(() {
+              currentTab = tab;
+            });
+          },
+        ),
       ),
     );
   }
