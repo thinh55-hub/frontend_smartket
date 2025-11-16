@@ -443,6 +443,7 @@ class _DealCard extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE0E4EE)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 8),
@@ -454,7 +455,7 @@ class _DealCard extends StatelessWidget {
             '$store\n$distance',
             style: const TextStyle(fontSize: 11, color: Color(0xFF00C853)),
           ),
-          const Spacer(),
+          const SizedBox(height: 6),
           Row(
             children: [
               Text(
@@ -462,12 +463,16 @@ class _DealCard extends StatelessWidget {
                 style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
               ),
               const SizedBox(width: 4),
-              Text(
-                oldPrice,
-                style: const TextStyle(
-                  fontSize: 11,
-                  color: Color(0xFFB3BAC8),
-                  decoration: TextDecoration.lineThrough,
+              Flexible(
+                child: Text(
+                  oldPrice,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFFB3BAC8),
+                    decoration: TextDecoration.lineThrough,
+                  ),
                 ),
               ),
               const Spacer(),
@@ -511,6 +516,7 @@ class _ProductCard extends StatelessWidget {
         border: Border.all(color: const Color(0xFFE0E4EE)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 4),
@@ -523,13 +529,13 @@ class _ProductCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 4),
-            Text(
-              product.merchantName ?? 'SMARTKET',
-              style: const TextStyle(fontSize: 11, color: Color(0xFF00C853)),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          const Spacer(),
+          Text(
+            product.merchantName ?? 'SMARTKET',
+            style: const TextStyle(fontSize: 11, color: Color(0xFF00C853)),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          const SizedBox(height: 6),
           Row(
             children: [
               Text(
@@ -538,12 +544,16 @@ class _ProductCard extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               if (oldPrice != null)
-                Text(
-                  oldPrice,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFFB3BAC8),
-                    decoration: TextDecoration.lineThrough,
+                Flexible(
+                  child: Text(
+                    oldPrice,
+                    overflow: TextOverflow.fade,
+                    softWrap: false,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFFB3BAC8),
+                      decoration: TextDecoration.lineThrough,
+                    ),
                   ),
                 ),
               const Spacer(),
