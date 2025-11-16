@@ -1,16 +1,27 @@
-# frontend_smartket
+# Frontend Setup for Smartket
 
-A new Flutter project.
+## Samsung S24 Ultra Emulator Setup For MacOS Only
 
-## Getting Started
+To replicate the current development environment (Flutter + Android SDK + a Samsung S24 Ultra configured emulator) run:
 
-This project is a starting point for a Flutter application.
+```bash
+chmod +x android-emulator-setup.sh
+./android-emulator-setup.sh
+```
 
-A few resources to get you started if this is your first Flutter project:
+This script:
+- Ensures Homebrew + Flutter installed (macOS only).
+- Installs / updates Android SDK components & accepts licenses.
+- Chooses an Android API level (tries 36, then 35, then 34).
+- Creates or updates an emulator named `Samsung_S24_Ultra`.
+- Applies screen specs 1440x3120 @ 505dpi, 2GB RAM, 2 CPU cores.
+- Disables cameras & Play Store for a lean dev image.
+- Runs `flutter pub get`.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+After setup:
+```bash
+flutter emulators --launch Samsung_S24_Ultra
+flutter run
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Re-run the script safely at any time; it is idempotent for existing resources.
