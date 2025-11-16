@@ -1,12 +1,12 @@
 # Frontend Setup for Smartket
 
-## Samsung S24 Ultra Emulator Setup For MacOS Only
+## Samsung S24 Ultra Emulator Setup (macOS only)
 
 To replicate the current development environment (Flutter + Android SDK + a Samsung S24 Ultra configured emulator) run:
 
 ```bash
-chmod +x android-emulator-setup.sh
-./android-emulator-setup.sh
+chmod +x ./scripts/android-emulator-setup.sh
+./scripts/android-emulator-setup.sh
 ```
 
 This script:
