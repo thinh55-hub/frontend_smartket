@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
-import '../repositories/product_repository.dart';
 import '../models/product.dart';
 import '../api/api_client.dart';
 
 class ProductProvider extends ChangeNotifier {
-  final ProductRepository _repo;
+  final dynamic _repo; // Can be ProductRepository or ProductRepositoryMock
   ProductProvider(this._repo);
 
   List<Product> _products = [];
