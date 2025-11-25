@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
   const OtpVerificationScreen({super.key});
@@ -42,22 +43,19 @@ class OtpVerificationScreen extends StatelessWidget {
                           child: const Icon(Icons.shield_outlined, color: Color(0xFF00C853), size: 40),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
+                        Text(
                           'Xác minh OTP',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: GoogleFonts.lexendDeca(fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
+                        Text(
                           'Mã xác minh đã được gửi đến',
-                          style: TextStyle(fontSize: 13, color: Color(0xFF80848F)),
+                          style: GoogleFonts.lexendDeca(fontSize: 13, color: const Color(0xFF80848F)),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
+                        Text(
                           '0905175313',
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                          style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 32),
                         Row(
@@ -84,9 +82,9 @@ class OtpVerificationScreen extends StatelessWidget {
                           }),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
+                        Text(
                           'Gửi lại mã sau 57s',
-                          style: TextStyle(fontSize: 13, color: Color(0xFF80848F)),
+                          style: GoogleFonts.lexendDeca(fontSize: 13, color: const Color(0xFF80848F)),
                         ),
                         const Spacer(),
                         Container(
@@ -97,13 +95,9 @@ class OtpVerificationScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           alignment: Alignment.center,
-                          child: const Text(
+                          child: Text(
                             'Xác nhận',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFFB3BAC8),
-                            ),
+                            style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600, color: const Color(0xFFB3BAC8)),
                           ),
                         ),
                       ],

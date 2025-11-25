@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../components/app_top_bar.dart';
 import '../theme/app_theme.dart';
 
@@ -19,9 +20,9 @@ class PersonalInfoScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       'Hoàn tất thông tin để bắt đầu sử dụng SMARTKET',
-                      style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                      style: GoogleFonts.lexendDeca(fontSize: 13, color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 24),
                     const _Label('Họ và tên'),
@@ -61,14 +62,10 @@ class PersonalInfoScreen extends StatelessWidget {
                           color: AppColors.disabled,
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
                             'Hoàn tất',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.textSecondary,
-                            ),
+                            style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                           ),
                         ),
                       ),
