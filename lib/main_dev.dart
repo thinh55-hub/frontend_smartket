@@ -7,6 +7,7 @@ import 'core/api/api_client.dart';
 import 'core/repositories/product_repository.dart';
 import 'core/state/product_provider.dart';
 import 'core/config/env.dart';
+import 'core/state/navigation_provider.dart';
 
 void main() {
   EnvConfig.setMode(EnvMode.development);
@@ -32,8 +33,9 @@ class SmartketApp extends StatelessWidget {
       providers: [
         Provider<ApiClient>(create: (_) => ApiClient()),
         ProxyProvider<ApiClient, ProductRepository>(
-          update: (_, client, __) => ProductRepository(client),
+          update: (context, client, previous) => ProductRepository(client),
         ),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider<ProductProvider>(
           create: (ctx) {
             final provider = ProductProvider(ctx.read<ProductRepository>());

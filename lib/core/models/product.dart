@@ -9,6 +9,7 @@ class Product {
   final int? merchantId;
   final int? stock;
   final double? discount;
+  final String? imageUrl; // asset path or network URL
 
   Product({
     required this.id,
@@ -21,17 +22,18 @@ class Product {
     this.merchantId,
     this.stock,
     this.discount,
+    this.imageUrl,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
-    double? _toDouble(dynamic v) {
+    double? toDouble(dynamic v) {
       if (v == null) return null;
       if (v is num) return v.toDouble();
       if (v is String) return double.tryParse(v);
       return null;
     }
 
-    int? _toInt(dynamic v) {
+    int? toInt(dynamic v) {
       if (v == null) return null;
       if (v is int) return v;
       if (v is String) return int.tryParse(v);
@@ -42,13 +44,14 @@ class Product {
       id: json['id']?.toString() ?? '',
       name: json['name'] ?? json['title'] ?? 'Unnamed',
       description: json['description'],
-      price: _toDouble(json['sale_price'] ?? json['price']),
-      oldPrice: _toDouble(json['orig_price'] ?? json['old_price'] ?? json['original_price']),
+      price: toDouble(json['sale_price'] ?? json['price']),
+      oldPrice: toDouble(json['orig_price'] ?? json['old_price'] ?? json['original_price']),
       category: json['category'],
       merchantName: json['merchant_name'] ?? json['store'],
-      merchantId: _toInt(json['merchant_id']),
-      stock: _toInt(json['stock']),
-      discount: _toDouble(json['discount']),
+      merchantId: toInt(json['merchant_id']),
+      stock: toInt(json['stock']),
+      discount: toDouble(json['discount']),
+      imageUrl: json['image'] ?? json['image_url'],
     );
   }
 }

@@ -68,7 +68,7 @@ class SmartbagScreen extends StatelessWidget {
                   final selected = i == 0;
                   return _Chip(chips[i], selected);
                 },
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
+                separatorBuilder: (context, index) => const SizedBox(width: 8),
                 itemCount: chips.length,
               ),
             ),

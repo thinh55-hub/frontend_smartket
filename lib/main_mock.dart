@@ -5,6 +5,7 @@ import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
 import 'core/repositories/product_repository_mock.dart';
 import 'core/state/product_provider.dart';
+import 'core/state/navigation_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +29,7 @@ class SmartketApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<ProductRepositoryMock>(create: (_) => ProductRepositoryMock()),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider<ProductProvider>(
           create: (ctx) {
             final provider = ProductProvider(ctx.read<ProductRepositoryMock>());

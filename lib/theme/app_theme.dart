@@ -9,6 +9,9 @@ class AppColors {
   static const Color textSecondary = Color(0xFF80848F);
   static const Color disabled = Color(0xFFE8E8E8);
   static const Color navInactive = Color(0xFF9A9A9A);
+  // Discount badge colors (Figma alignment)
+  static const Color discountPink = Color(0xFFFFE2E2);
+  static const Color discountRed = Color(0xFFE7000B);
 }
 
 class AppRadius {
