@@ -28,24 +28,22 @@ class _IncreaseItem extends StatelessWidget {
     // CSS: width/height 1.86627rem (~29.86px), border-radius 1.06667rem (~17.07px), background #00C950
     const double size = 1.86627 * 16; // ~29.86
     const double radius = 1.06667 * 16; // ~17.07
+
     return SizedBox(
       width: size,
       height: size,
-      child: Container(
-        alignment: Alignment.center,
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(radius),
-            color: const Color(0xFF00C950),
-          ),
-          child: IconButton(
-            icon: const Icon(Icons.add, size: 16),
-            color: Colors.white,
-            onPressed: onPressed,
-            padding: EdgeInsets.zero,
-            alignment: Alignment.center,
+      child: Material(
+        color: const Color(0xFF00C950),
+        borderRadius: BorderRadius.circular(radius),
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(radius),
+          child: const Center(
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+              size: 16,
+            ),
           ),
         ),
       ),
@@ -353,25 +351,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             ),
                           ),
                           SizedBox(width: 0.53333 * 16),
-                          // increase
-                          SizedBox(
-                            width: 1.86627 * 16,
-                            height: 1.86627 * 16,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(1.06667 * 16),
-                                color: const Color(0xFF00C950),
-                                boxShadow: [BoxShadow(color: const Color.fromRGBO(0, 0, 0, 0.10), blurRadius: 6, offset: const Offset(0, 2))],
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.add, size: 16),
-                                color: Colors.white,
-                                onPressed: () => setState(() => quantity++),
-                                padding: EdgeInsets.zero,
-                                alignment: Alignment.center,
-                              ),
-                            ),
-                          ),
+                          // increase (use reusable widget)
+                          _IncreaseItem(onPressed: () => setState(() => quantity++)),
                         ],
                       ),
                     ),
