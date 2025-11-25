@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import '../core/state/navigation_provider.dart';
 import '../widgets/bottom_nav.dart';
 import '../theme/app_theme.dart';
 import '../core/state/product_provider.dart';
 import '../core/models/product.dart';
+import 'product_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isLandscape;
@@ -16,10 +18,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  MainTab currentTab = MainTab.home;
+  // HomeScreen now reads tab state from NavigationProvider.
 
   @override
   Widget build(BuildContext context) {
+    final nav = context.watch<NavigationProvider>();
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -29,20 +33,18 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       child: Scaffold(
         backgroundColor: AppColors.background,
-        body: _buildTabContent(),
+        body: _buildTabContent(nav.current),
         bottomNavigationBar: BottomNav(
-          current: currentTab,
+          current: nav.current,
           onChanged: (tab) {
-            setState(() {
-              currentTab = tab;
-            });
+            nav.current = tab;
           },
         ),
       ),
     );
   }
 
-  Widget _buildTabContent() {
+  Widget _buildTabContent(MainTab currentTab) {
     switch (currentTab) {
       case MainTab.home:
         return const _HomeOverview();
@@ -58,6 +60,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+// This private shell is intentionally unused in some layouts; keep it for future designs.
+// ignore: unused_element
 class _HomeShell extends StatelessWidget {
   final bool isLandscape;
   final MainTab currentTab;
@@ -264,8 +268,20 @@ class _HomeOverview extends StatelessWidget {
                   scrollDirection: Axis.horizontal,
                   physics: const BouncingScrollPhysics(),
                   itemCount: products.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemBuilder: (ctx, i) => _ProductCard(product: products[i]),
+                  separatorBuilder: (context, index) => const SizedBox(width: 12),
+                  itemBuilder: (ctx, i) {
+                    final p = products[i];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => ProductDetailScreen(product: p),
+                          ),
+                        );
+                      },
+                      child: _ProductCard(product: p),
+                    );
+                  },
                 );
               },
             ),
@@ -533,7 +549,16 @@ class _ProductCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 4),
-          const Icon(Icons.ramen_dining, size: 32, color: Color(0xFFEF6C00)),
+          SizedBox(
+            height: 48,
+            child: product.imageUrl != null
+                ? Image.asset(
+                    product.imageUrl!,
+                    fit: BoxFit.contain,
+                    errorBuilder: (ctx, error, stack) => const Icon(Icons.ramen_dining, size: 32, color: Color(0xFFEF6C00)),
+                  )
+                : const Icon(Icons.ramen_dining, size: 32, color: Color(0xFFEF6C00)),
+          ),
           Text(
             product.name,
             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
@@ -571,14 +596,18 @@ class _ProductCard extends StatelessWidget {
               const Spacer(),
               if (discount != null)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.red,
+                    color: AppColors.discountPink,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     discount,
-                    style: const TextStyle(fontSize: 10, color: Colors.white),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.discountRed,
+                    ),
                   ),
                 ),
             ],
@@ -974,14 +1003,18 @@ class _SmartbagCard extends StatelessWidget {
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.red,
+                  color: AppColors.discountPink,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
                   discount,
-                  style: const TextStyle(fontSize: 9, color: Colors.white),
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.discountRed,
+                  ),
                 ),
               ),
             ],

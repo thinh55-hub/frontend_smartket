@@ -10,15 +10,23 @@ class AuthRepository {
     final resp = await _client.post('/auth/login', body: {
       'email': email,
       'password': password,
-    }, parser: (json) {
-      // Backend wraps data? Try common shapes
-      final data = json['data'] ?? json;
-      final token = data['token'] ?? json['token'];
-      if (token is String) await TokenStorage.saveToken(token);
-      final userJson = data['user'] ?? data['profile'] ?? data; // fallback
-      return User.fromJson(Map<String, dynamic>.from(userJson));
-    });
-    return resp;
+    }, parser: (json) => json);
+
+    if (!resp.ok) {
+      if (resp.unauthorized) return ApiResponse.unauthorized();
+      return ApiResponse.failure(resp.statusCode ?? 0, resp.payload);
+    }
+
+    // resp.data should be the decoded JSON. Normalize common shapes
+    final json = resp.data;
+    final data = (json is Map && json.containsKey('data')) ? json['data'] : json;
+    final token = (data is Map && (data['token'] ?? json['token']) != null) ? (data['token'] ?? json['token']) : null;
+    if (token is String) await TokenStorage.saveToken(token);
+    final userJson = (data is Map && (data['user'] ?? data['profile']) != null)
+        ? (data['user'] ?? data['profile'])
+        : data;
+    final user = User.fromJson(Map<String, dynamic>.from(userJson));
+    return ApiResponse.success(user);
   }
 
   Future<ApiResponse<User>> register(String email, String password, {String? name}) async {
@@ -26,14 +34,22 @@ class AuthRepository {
       'email': email,
       'password': password,
       if (name != null) 'name': name,
-    }, parser: (json) {
-      final data = json['data'] ?? json;
-      final token = data['token'] ?? json['token'];
-      if (token is String) await TokenStorage.saveToken(token);
-      final userJson = data['user'] ?? data['profile'] ?? data; 
-      return User.fromJson(Map<String, dynamic>.from(userJson));
-    });
-    return resp;
+    }, parser: (json) => json);
+
+    if (!resp.ok) {
+      if (resp.unauthorized) return ApiResponse.unauthorized();
+      return ApiResponse.failure(resp.statusCode ?? 0, resp.payload);
+    }
+
+    final json = resp.data;
+    final data = (json is Map && json.containsKey('data')) ? json['data'] : json;
+    final token = (data is Map && (data['token'] ?? json['token']) != null) ? (data['token'] ?? json['token']) : null;
+    if (token is String) await TokenStorage.saveToken(token);
+    final userJson = (data is Map && (data['user'] ?? data['profile']) != null)
+        ? (data['user'] ?? data['profile'])
+        : data;
+    final user = User.fromJson(Map<String, dynamic>.from(userJson));
+    return ApiResponse.success(user);
   }
 
   Future<ApiResponse<User>> profile() async {
