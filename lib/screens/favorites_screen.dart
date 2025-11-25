@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
 class FavoritesScreen extends StatelessWidget {
@@ -14,10 +15,10 @@ class FavoritesScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
               child: Row(
-                children: const [
-                  Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.textPrimary),
-                  SizedBox(width: 12),
-                  Text('Favorites', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                children: [
+                  const Icon(Icons.arrow_back_ios_new_rounded, size: 18, color: AppColors.textPrimary),
+                  const SizedBox(width: 12),
+                  Text('Favorites', style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
                 ],
               ),
             ),
@@ -32,12 +33,12 @@ class FavoritesScreen extends StatelessWidget {
                       child: const Icon(Icons.favorite_border, size: 40, color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 24),
-                    const Text('No favorite stores yet', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                    Text('No favorite stores yet', style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'Start adding stores to your favorites to see them here',
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                      style: GoogleFonts.lexendDeca(fontSize: 13, color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 24),
                     SizedBox(
@@ -50,8 +51,8 @@ class FavoritesScreen extends StatelessWidget {
                           border: Border.all(color: AppColors.border),
                           boxShadow: AppShadows.light,
                         ),
-                        child: const Center(
-                          child: Text('Browse Stores', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
+                        child: Center(
+                          child: Text('Browse Stores', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
                         ),
                       ),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LocationPermissionScreen extends StatelessWidget {
   const LocationPermissionScreen({super.key});
@@ -43,12 +44,9 @@ class LocationPermissionScreen extends StatelessWidget {
                           child: const Icon(Icons.location_on_outlined, color: Color(0xFF00C853), size: 40),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
+                        Text(
                           'Cho phép truy cập vị trí',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: GoogleFonts.lexendDeca(fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 8),
                         const Text(
@@ -71,18 +69,14 @@ class LocationPermissionScreen extends StatelessWidget {
                               color: const Color(0xFF00C853),
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            child: Row(
+                                child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(Icons.send_rounded, color: Colors.white, size: 18),
-                                SizedBox(width: 8),
+                              children: [
+                                const Icon(Icons.send_rounded, color: Colors.white, size: 18),
+                                const SizedBox(width: 8),
                                 Text(
                                   'Cho phép',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: GoogleFonts.lexendDeca(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
@@ -98,9 +92,9 @@ class LocationPermissionScreen extends StatelessWidget {
                             border: Border.all(color: const Color(0xFFE0E4EE)),
                           ),
                           alignment: Alignment.centerLeft,
-                          child: const Text(
+                          child: Text(
                             'Chọn vị trí thủ công',
-                            style: TextStyle(fontSize: 14, color: Color(0xFF3C404B)),
+                            style: GoogleFonts.lexendDeca(fontSize: 14, color: const Color(0xFF3C404B)),
                           ),
                         ),
                         const SizedBox(height: 16),

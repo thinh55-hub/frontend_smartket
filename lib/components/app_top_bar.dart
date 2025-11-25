@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
 class AppTopBar extends StatelessWidget {
@@ -23,11 +24,7 @@ class AppTopBar extends StatelessWidget {
           const SizedBox(width: 8),
           Text(
             title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+            style: GoogleFonts.lexendDeca(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
           ),
         ],
       ),

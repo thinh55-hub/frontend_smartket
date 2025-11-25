@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../core/state/navigation_provider.dart';
 import '../widgets/bottom_nav.dart';
 import '../theme/app_theme.dart';
@@ -125,9 +126,9 @@ class _HomeOverview extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   children: [
-                    const Text(
+                    Text(
                       'SMARTKET',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                      style: GoogleFonts.lexendDeca(fontSize: 18, fontWeight: FontWeight.w700),
                     ),
                     const Spacer(),
                     IconButton(
@@ -175,16 +176,16 @@ class _HomeOverview extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
-                    children: const [
-                      Icon(Icons.search, size: 20, color: Color(0xFF9AA1AF)),
-                      SizedBox(width: 8),
+                    children: [
+                      const Icon(Icons.search, size: 20, color: Color(0xFF9AA1AF)),
+                      const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'Tìm sản phẩm, cửa hàng, smartbag...',
-                          style: TextStyle(fontSize: 13, color: Color(0xFF9AA1AF)),
+                          style: GoogleFonts.lexendDeca(fontSize: 13, color: Color(0xFF9AA1AF)),
                         ),
                       ),
-                      Icon(Icons.tune_rounded, size: 18, color: Color(0xFF9AA1AF)),
+                      const Icon(Icons.tune_rounded, size: 18, color: Color(0xFF9AA1AF)),
                     ],
                   ),
                 ),
@@ -229,15 +230,15 @@ class _HomeOverview extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: const [
-              Icon(Icons.local_offer_outlined, size: 16, color: Color(0xFF00C853)),
-              SizedBox(width: 6),
-              Text('Khuyến mãi gần bạn', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-            ],
-          ),
-          ),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                const Icon(Icons.local_offer_outlined, size: 16, color: Color(0xFF00C853)),
+                const SizedBox(width: 6),
+                Text('Khuyến mãi gần bạn', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
+              ],
+            ),
+            ),
           const SizedBox(height: 8),
           SizedBox(
             height: 170,
@@ -290,10 +291,10 @@ class _HomeOverview extends StatelessWidget {
           Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            children: const [
-              Icon(Icons.shopping_bag_outlined, size: 16, color: Color(0xFF00C853)),
-              SizedBox(width: 6),
-              Text('Smartbag gần bạn', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            children: [
+              const Icon(Icons.shopping_bag_outlined, size: 16, color: Color(0xFF00C853)),
+              const SizedBox(width: 6),
+              Text('Smartbag gần bạn', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
             ],
           ),
           ),
@@ -333,10 +334,10 @@ class _HomeOverview extends StatelessWidget {
           Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            children: const [
-              Icon(Icons.favorite_border, size: 16, color: Color(0xFF00C853)),
-              SizedBox(width: 6),
-              Text('Cửa hàng yêu thích', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+            children: [
+              const Icon(Icons.favorite_border, size: 16, color: Color(0xFF00C853)),
+              const SizedBox(width: 6),
+              Text('Cửa hàng yêu thích', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
             ],
           ),
           ),
@@ -660,9 +661,9 @@ class _ExploreTab extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              const Text(
+              Text(
                 'KHÁM PHÁ',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w700),
               ),
               const Spacer(),
               IconButton(
@@ -680,10 +681,8 @@ class _ExploreTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            children: const [
-              _SegmentChip('Danh sách', true),
-              SizedBox(width: 8),
-              _SegmentChip('Bản đồ', false),
+            children: [
+              Text('Thực phẩm & đồ ăn', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
             ],
           ),
         ),
@@ -766,11 +765,11 @@ class _QrTab extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
             'Mã QR của tôi',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
         const SizedBox(height: 12),

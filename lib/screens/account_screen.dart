@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -24,16 +25,13 @@ class AccountScreen extends StatelessWidget {
                     Container(
                       height: 48,
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                          SizedBox(width: 12),
+                          child: Row(
+                        children: [
+                          const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                          const SizedBox(width: 12),
                           Text(
                             'Hồ sơ của tôi',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
@@ -47,10 +45,7 @@ class AccountScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 8),
-                            const Text(
-                              'Tài khoản',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
+                            Text('Tài khoản', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 8),
                             _AccountItem(
                               icon: Icons.person_outline,
@@ -63,10 +58,7 @@ class AccountScreen extends StatelessWidget {
                               title: 'Lịch sử đơn hàng',
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Thanh toán',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
+                            Text('Thanh toán', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 8),
                             _AccountItem(
                               icon: Icons.credit_card_outlined,
@@ -75,10 +67,7 @@ class AccountScreen extends StatelessWidget {
                               onTap: () => _showPaymentSheet(context),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Cài đặt',
-                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
+                            Text('Cài đặt', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 8),
                             _AccountItem(
                               icon: Icons.notifications_none,
@@ -125,11 +114,11 @@ class AccountScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'Payment Methods',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
               const SizedBox(height: 16),
@@ -159,14 +148,10 @@ class AccountScreen extends StatelessWidget {
                     color: const Color(0xFF00C853),
                     borderRadius: BorderRadius.circular(24),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       'Done',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: GoogleFonts.lexendDeca(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
