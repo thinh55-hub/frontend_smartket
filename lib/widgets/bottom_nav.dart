@@ -28,10 +28,6 @@ class BottomNav extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: const BorderRadius.only(
-          topLeft: AppRadius.r20,
-          topRight: AppRadius.r20,
-        ),
         boxShadow: AppShadows.light,
       ),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
