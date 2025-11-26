@@ -11,7 +11,7 @@ import '../theme/app_theme.dart';
 import '../core/state/product_provider.dart';
 import '../core/models/product.dart';
 import '../data/mock_products.dart';
-import '../components/home_product_card.dart';
+import '../components/product_card.dart';
 import '../components/stat_card.dart';
 import 'product_detail_screen.dart';
 import 'explore_screen.dart';
@@ -304,7 +304,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                         separatorBuilder: (_, __) => const SizedBox(width: 12),
                         itemBuilder: (context, index) {
                           final product = promos[index];
-                          return HomeProductCard(
+                          return ProductCard(
                             product: product,
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(builder: (_) => ProductDetailScreen(product: product)),

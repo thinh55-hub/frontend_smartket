@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 import '../components/product_card.dart';
+import '../core/models/product.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
@@ -116,13 +117,8 @@ class ExploreContent extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final item = _exploreProducts[index];
                     return ProductCard(
-                      title: item.title,
-                      store: item.store,
-                      distance: item.distance,
-                      price: item.price,
-                      oldPrice: item.oldPrice,
-                      discount: item.discount,
-                      leadingIcon: item.icon,
+                      product: item.product,
+                      onTap: () {},
                     );
                   },
                 ),
@@ -188,23 +184,9 @@ class _ExploreCategoryChip extends StatelessWidget {
 }
 
 class _ExploreProduct {
-  final String title;
-  final String store;
-  final String distance;
-  final String price;
-  final String oldPrice;
-  final String discount;
-  final IconData icon;
+  final Product product;
 
-  const _ExploreProduct({
-    required this.title,
-    required this.store,
-    required this.distance,
-    required this.price,
-    required this.oldPrice,
-    required this.discount,
-    required this.icon,
-  });
+  const _ExploreProduct({required this.product});
 }
 
 const List<String> _exploreCategories = [
@@ -222,42 +204,46 @@ const List<String> _exploreCategories = [
   'Khác',
 ];
 
-const List<_ExploreProduct> _exploreProducts = [
+final List<_ExploreProduct> _exploreProducts = [
   _ExploreProduct(
-    title: 'Cơm Bento Trứng Cuộn',
-    store: 'Gia Lạc Minimart',
-    distance: '0.8 km',
-    price: '35.000 đ',
-    oldPrice: '50.000 đ',
-    discount: '-30%',
-    icon: Icons.rice_bowl,
+    product: Product(
+      id: 'exp-1',
+      name: 'Cơm Bento Trứng Cuộn',
+      merchantName: 'Gia Lạc Minimart',
+      price: 35000.0,
+      oldPrice: 50000.0,
+      discount: 30,
+    ),
   ),
   _ExploreProduct(
-    title: 'Combo Ngũ Quả',
-    store: 'Happy Vegan',
-    distance: '1.2 km',
-    price: '49.000 đ',
-    oldPrice: '70.000 đ',
-    discount: '-25%',
-    icon: Icons.eco,
+    product: Product(
+      id: 'exp-2',
+      name: 'Combo Ngũ Quả',
+      merchantName: 'Happy Vegan',
+      price: 49000.0,
+      oldPrice: 70000.0,
+      discount: 25,
+    ),
   ),
   _ExploreProduct(
-    title: 'Smoothie Mix Pack',
-    store: 'Freshie Bar',
-    distance: '0.5 km',
-    price: '45.000 đ',
-    oldPrice: '60.000 đ',
-    discount: '-20%',
-    icon: Icons.blender,
+    product: Product(
+      id: 'exp-3',
+      name: 'Smoothie Mix Pack',
+      merchantName: 'Freshie Bar',
+      price: 45000.0,
+      oldPrice: 60000.0,
+      discount: 20,
+    ),
   ),
   _ExploreProduct(
-    title: 'Set Ngũ Cốc Healthy',
-    store: 'Nutri Corner',
-    distance: '2.1 km',
-    price: '55.000 đ',
-    oldPrice: '80.000 đ',
-    discount: '-30%',
-    icon: Icons.breakfast_dining,
+    product: Product(
+      id: 'exp-4',
+      name: 'Set Ngũ Cốc Healthy',
+      merchantName: 'Nutri Corner',
+      price: 55000.0,
+      oldPrice: 80000.0,
+      discount: 30,
+    ),
   ),
 ];
 
