@@ -19,6 +19,7 @@ class SmartbagChipList extends StatelessWidget {
     return SizedBox(
       height: 42,
       child: ListView.separated(
+        padding: EdgeInsets.zero,
         scrollDirection: Axis.horizontal,
         itemCount: labels.length,
         separatorBuilder: (_, __) => const SizedBox(width: 10),

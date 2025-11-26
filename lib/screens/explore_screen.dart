@@ -48,6 +48,7 @@ class ExploreContent extends StatelessWidget {
                   selectedIndex: 0,
                   onSelected: (_) {},
                 ),
+                const SizedBox(height: 8),
                 Consumer<ProductProvider>(
                   builder: (context, provider, _) {
                     final products = provider.products.isNotEmpty ? provider.products : _fallbackProducts;
