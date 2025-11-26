@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
 import '../components/smartbag_card.dart';
+import '../widgets/smartket_header_bar.dart';
 
 class SmartbagScreen extends StatelessWidget {
   const SmartbagScreen({super.key});
@@ -26,19 +27,15 @@ class SmartbagScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: const [
-                  Text('Smartbag', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-                  Spacer(),
-                  Icon(Icons.favorite_border, color: AppColors.primary),
-                  SizedBox(width: 8),
-                  Icon(Icons.person_outline, color: AppColors.primary),
-                ],
-              ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: SmartketHeaderBar(),
             ),
             const SizedBox(height: 8),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text('Smartbag', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Container(
@@ -138,5 +135,4 @@ class _Chip extends StatelessWidget {
     );
   }
 }
-
 

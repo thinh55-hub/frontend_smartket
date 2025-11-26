@@ -12,6 +12,14 @@ class AppColors {
   // Discount badge colors (Figma alignment)
   static const Color discountPink = Color(0xFFFFE2E2);
   static const Color discountRed = Color(0xFFE7000B);
+  // Home hero / promo palette pulled from Figma
+  static const Color heroGradientStart = Color(0xFF5BE186);
+  static const Color heroGradientMid = Color(0xFF1FC76E);
+  static const Color heroGradientFade = Color(0x001CC76B);
+  static const Color promoCardBorder = Color(0xFF33CF78);
+  static const Color promoCardGlow = Color(0x1900A86B);
+  static const Color promoCardBackground = Color(0xFFF3FFF7);
+  static const Color salePrice = Color(0xFFEA1C2D);
 }
 
 class AppRadius {
@@ -73,4 +81,3 @@ ThemeData buildAppTheme() {
     ),
   );
 }
-
