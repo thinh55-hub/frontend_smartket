@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../components/product_card.dart';
 import '../components/search_pill.dart';
+import '../components/smartbag_chip_list.dart';
 import '../core/models/product.dart';
 import '../core/state/product_provider.dart';
 import '../theme/app_theme.dart';
@@ -16,44 +17,25 @@ class ExploreContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Text(
-                'KHÁM PHÁ',
-                style: GoogleFonts.lexendDeca(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.favorite_border, color: AppColors.primary),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.person_outline, color: AppColors.primary),
-                onPressed: () {},
-              ),
-            ],
+        const SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                _ExploreModeChip(label: 'Danh sách', selected: true),
+                SizedBox(width: 8),
+                _ExploreModeChip(label: 'Bản đồ', selected: false),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 12),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              _ExploreModeChip(label: 'Danh sách', selected: true),
-              SizedBox(width: 8),
-              _ExploreModeChip(label: 'Bản đồ', selected: false),
-            ],
-          ),
-        ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         const Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: SearchPill(placeholder: 'Tìm kiếm sản phẩm hoặc cửa hàng...'),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Expanded(
           child: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
@@ -61,17 +43,11 @@ class ExploreContent extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: _exploreCategories.map((c) => _ExploreCategoryChip(label: c)).toList(),
+                SmartbagChipList(
+                  labels: _exploreCategories,
+                  selectedIndex: 0,
+                  onSelected: (_) {},
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  'Thực phẩm & đồ ăn',
-                  style: GoogleFonts.lexendDeca(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
-                ),
-                const SizedBox(height: 12),
                 Consumer<ProductProvider>(
                   builder: (context, provider, _) {
                     final products = provider.products.isNotEmpty ? provider.products : _fallbackProducts;
@@ -133,42 +109,20 @@ class _ExploreModeChip extends StatelessWidget {
   }
 }
 
-class _ExploreCategoryChip extends StatelessWidget {
-  final String label;
-
-  const _ExploreCategoryChip({required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border),
-        boxShadow: AppShadows.light,
-      ),
-      child: Text(
-        label,
-        style: GoogleFonts.lexendDeca(fontSize: 12, fontWeight: FontWeight.w500, color: AppColors.textPrimary),
-      ),
-    );
-  }
-}
-
 const List<String> _exploreCategories = [
-  'Thực phẩm & đồ ăn',
-  'Đồ uống',
-  'Bánh ngọt / Bánh mì',
-  'Trái cây – Rau củ',
-  'Thịt – Hải sản',
-  'Sữa & sản phẩm từ sữa',
-  'Đồ khô – Gia vị – Mì gói',
-  'Thực phẩm chay / hữu cơ',
-  'Snack – Bánh kẹo – Đồ ăn vặt',
-  'Đồ hộp / Thực phẩm chế biến sẵn',
-  'Gia vị – Dầu ăn – Nước mắm',
-  'Khác',
+  '🍱 Thực phẩm & đồ ăn',
+  '🥤 Đồ uống',
+  '🍪 Snack – Bánh kẹo – Đồ ăn vặt',
+  '🥛 Sữa & sản phẩm từ sữa',
+  '🍜 Mì gói – đồ khô – Gia vị',
+  '🥬 Trái cây – Rau củ',
+  '🥖 Bánh mì – Bánh ngọt',
+  '🥩 Thịt – Hải sản',
+  '🍲 Đồ khô – Gia vị – Mì gói',
+  '🌱 Thực phẩm chay / hữu cơ',
+  '🥫 Đồ hộp / Thực phẩm chế biến sẵn',
+  '🧂 Gia vị – Dầu ăn – Nước mắm',
+  '📦 Khác',
 ];
 
 final List<Product> _fallbackProducts = [
