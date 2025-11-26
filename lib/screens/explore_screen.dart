@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
 import '../theme/app_theme.dart';
 import '../components/product_card.dart';
 import '../core/models/product.dart';
+import '../core/state/product_provider.dart';
 
 class ExploreScreen extends StatelessWidget {
   const ExploreScreen({super.key});
@@ -104,21 +107,26 @@ class ExploreContent extends StatelessWidget {
                   style: GoogleFonts.lexendDeca(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                 ),
                 const SizedBox(height: 12),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 0.95,
-                  ),
-                  itemCount: _exploreProducts.length,
-                  itemBuilder: (context, index) {
-                    final item = _exploreProducts[index];
-                    return ProductCard(
-                      product: item.product,
-                      onTap: () {},
+                Consumer<ProductProvider>(
+                  builder: (context, provider, _) {
+                    final data = provider.products.isNotEmpty ? provider.products : _fallbackProducts;
+                    if (data.isEmpty) {
+                      return const Center(child: Text('Chưa có sản phẩm'));
+                    }
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 180,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 160 / 238.281,
+                      ),
+                      itemCount: data.length,
+                      itemBuilder: (context, index) {
+                        final product = data[index];
+                        return ProductCard(product: product, onTap: () {});
+                      },
                     );
                   },
                 ),
@@ -183,12 +191,6 @@ class _ExploreCategoryChip extends StatelessWidget {
   }
 }
 
-class _ExploreProduct {
-  final Product product;
-
-  const _ExploreProduct({required this.product});
-}
-
 const List<String> _exploreCategories = [
   'Thực phẩm & đồ ăn',
   'Đồ uống',
@@ -204,46 +206,38 @@ const List<String> _exploreCategories = [
   'Khác',
 ];
 
-final List<_ExploreProduct> _exploreProducts = [
-  _ExploreProduct(
-    product: Product(
-      id: 'exp-1',
-      name: 'Cơm Bento Trứng Cuộn',
-      merchantName: 'Gia Lạc Minimart',
-      price: 35000.0,
-      oldPrice: 50000.0,
-      discount: 30,
-    ),
+final List<Product> _fallbackProducts = [
+  Product(
+    id: 'exp-1',
+    name: 'Cơm Bento Trứng Cuộn',
+    merchantName: 'Gia Lạc Minimart',
+    price: 35000.0,
+    oldPrice: 50000.0,
+    discount: 30,
   ),
-  _ExploreProduct(
-    product: Product(
-      id: 'exp-2',
-      name: 'Combo Ngũ Quả',
-      merchantName: 'Happy Vegan',
-      price: 49000.0,
-      oldPrice: 70000.0,
-      discount: 25,
-    ),
+  Product(
+    id: 'exp-2',
+    name: 'Combo Ngũ Quả',
+    merchantName: 'Happy Vegan',
+    price: 49000.0,
+    oldPrice: 70000.0,
+    discount: 25,
   ),
-  _ExploreProduct(
-    product: Product(
-      id: 'exp-3',
-      name: 'Smoothie Mix Pack',
-      merchantName: 'Freshie Bar',
-      price: 45000.0,
-      oldPrice: 60000.0,
-      discount: 20,
-    ),
+  Product(
+    id: 'exp-3',
+    name: 'Smoothie Mix Pack',
+    merchantName: 'Freshie Bar',
+    price: 45000.0,
+    oldPrice: 60000.0,
+    discount: 20,
   ),
-  _ExploreProduct(
-    product: Product(
-      id: 'exp-4',
-      name: 'Set Ngũ Cốc Healthy',
-      merchantName: 'Nutri Corner',
-      price: 55000.0,
-      oldPrice: 80000.0,
-      discount: 30,
-    ),
+  Product(
+    id: 'exp-4',
+    name: 'Set Ngũ Cốc Healthy',
+    merchantName: 'Nutri Corner',
+    price: 55000.0,
+    oldPrice: 80000.0,
+    discount: 30,
   ),
 ];
 
