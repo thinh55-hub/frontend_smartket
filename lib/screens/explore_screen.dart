@@ -152,15 +152,15 @@ class _ExploreModeChip extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: selected ? AppColors.primary : AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: selected ? AppColors.primary : AppColors.border),
         boxShadow: selected ? AppShadows.light : null,
       ),
       child: Text(
         label,
         style: GoogleFonts.lexendDeca(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
           color: selected ? Colors.white : AppColors.textPrimary,
         ),
       ),
