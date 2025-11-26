@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
 
 enum MainTab { home, explore, qr, smartbag, cart }
@@ -48,7 +49,7 @@ class BottomNav extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     item.label,
-                    style: TextStyle(
+                    style: GoogleFonts.lexendDeca(
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                       color: color,
