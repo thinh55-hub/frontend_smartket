@@ -1,0 +1,79 @@
+{
+  "meta": {
+    "createdBy": "automated-mapper",
+    "createdAt": "2025-11-25T00:00:00Z",
+    "description": "Mapping between Figma Home Page 1 nodes and Flutter code widgets in lib/screens/home_screen.dart. Replace <FIGMA_NODE_ID_...> values with real node IDs from Figma."
+  },
+  "mappings": [
+    {
+      "figmaNodePlaceholder": "507-567",
+      "layerName": "Header Gradient / Top Area",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview",
+      "commentMarker": "// Figma Node: 507-567 — Header gradient / top area"
+    },
+    {
+      "figmaNodePlaceholder": "348-1097",
+      "layerName": "App Title / Logo",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> Row (title)",
+      "commentMarker": "// Figma Node: 348-1097 — App title / logo"
+    },
+    {
+      "figmaNodePlaceholder": "346-1052",
+      "layerName": "Location Selector Pill",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> Container (location)",
+      "commentMarker": "// Figma Node: 346-1052 — Location selector pill"
+    },
+    {
+      "figmaNodePlaceholder": "558-491",
+      "layerName": "Search Input",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> Container (search)",
+      "commentMarker": "// Figma Node: 558-491 — Search input"
+    },
+    {
+      "figmaNodePlaceholder": "511-845",
+      "layerName": "Segment Chips (Ngày / Tuần / Tháng)",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> _SegmentChip (inverted)",
+      "commentMarker": "// Figma Node: 511-845 — Segment chips (Ngày / Tuần / Tháng)"
+    },
+    {
+      "figmaNodePlaceholder": "511-845",
+      "layerName": "Stat Cards Row",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> _StatCard",
+      "commentMarker": "// Figma Node: 511-845 — Stat cards row"
+    },
+    {
+      "figmaNodePlaceholder": "348-1211",
+      "layerName": "Promotions Section Header",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> Row (Khuyến mãi gần bạn)",
+      "commentMarker": "// Figma Node: 348-1211 — \"Khuyến mãi gần bạn\" section header"
+    },
+    {
+      "figmaNodePlaceholder": "348-1210",
+      "layerName": "Promotions Carousel / Product Cards",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> ListView -> _ProductCard",
+      "commentMarker": "// Figma Node: 348-1210 — Promotions horizontal list"
+    },
+    {
+      "figmaNodePlaceholder": "356-1245",
+      "layerName": "Smartbag Section Header",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> Row (Smartbag gần bạn)",
+      "commentMarker": "// Figma Node: 356-1245 — Smartbag Section Header"
+    },
+    {
+      "figmaNodePlaceholder": "823-2445",
+      "layerName": "Smartbag Carousel / Smartbag Cards",
+      "file": "lib/screens/home_screen.dart",
+      "widget": "_HomeOverview -> ListView -> _SmartbagCard",
+      "commentMarker": "// Figma Node: 823-2445 — Smartbag horizontal list"
+    }
+  ]
+}

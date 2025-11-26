@@ -6,8 +6,10 @@ import 'screens/home_screen.dart';
 import 'core/api/api_client.dart';
 import 'core/repositories/product_repository.dart';
 import 'core/state/product_provider.dart';
+import 'core/state/navigation_provider.dart';
 import 'screens/register_screen.dart';
 import 'screens/login_screen.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -31,8 +33,9 @@ class SmartketApp extends StatelessWidget {
       providers: [
         Provider<ApiClient>(create: (_) => ApiClient()),
         ProxyProvider<ApiClient, ProductRepository>(
-          update: (_, client, __) => ProductRepository(client),
+          update: (context, client, previous) => ProductRepository(client),
         ),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider<ProductProvider>(
           create: (ctx) {
             final provider = ProductProvider(ctx.read<ProductRepository>());

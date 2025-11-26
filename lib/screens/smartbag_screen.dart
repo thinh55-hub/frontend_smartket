@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../theme/app_theme.dart';
-import '../components/smartbag_card.dart';
+import '../widgets/segment_chip.dart';
 
 class SmartbagScreen extends StatelessWidget {
   const SmartbagScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: const SmartbagContent(),
+      ),
+    );
+  }
+}
+
+class SmartbagContent extends StatelessWidget {
+  const SmartbagContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,124 +35,217 @@ class SmartbagScreen extends StatelessWidget {
       'Túi combo hỗn hợp',
     ];
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: const [
-                  Text('Smartbag', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.textPrimary)),
-                  Spacer(),
-                  Icon(Icons.favorite_border, color: AppColors.primary),
-                  SizedBox(width: 8),
-                  Icon(Icons.person_outline, color: AppColors.primary),
-                ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Text(
+                'Smartbag',
+                style: GoogleFonts.lexendDeca(fontSize: 18, fontWeight: FontWeight.w700),
               ),
-            ),
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.border),
-                ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.location_on_outlined, size: 18, color: AppColors.primary),
-                    SizedBox(width: 8),
-                    Expanded(child: Text('Quận 1, TP.HCM • 5 km', style: TextStyle(fontSize: 13, color: AppColors.textPrimary))),
-                    Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textPrimary),
-                  ],
-                ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.favorite_border, color: Color(0xFF00C853)),
+                onPressed: () {},
               ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 40,
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, i) {
-                  final selected = i == 0;
-                  return _Chip(chips[i], selected);
-                },
-                separatorBuilder: (_, __) => const SizedBox(width: 8),
-                itemCount: chips.length,
+              IconButton(
+                icon: const Icon(Icons.person_outline, color: Color(0xFF00C853)),
+                onPressed: () {},
               ),
-            ),
-            const SizedBox(height: 12),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.78,
-                  children: const [
-                    SmartbagCard(
-                      tag: 'Túi bữa sáng',
-                      title: 'Breakfast Bag – Bakery & Coffee',
-                      store: 'Gia Lạc Minimart',
-                      distance: '0.8 km',
-                      price: '45.000 đ',
-                      oldPrice: '90.000 đ',
-                      discount: '-50%',
-                      time: '07:00–09:00',
-                    ),
-                    SmartbagCard(
-                      tag: 'Túi bữa tối',
-                      title: 'Dinner Bag',
-                      store: 'Gia Lạc Minimart',
-                      distance: '0.8 km',
-                      price: '50.000 đ',
-                      oldPrice: '100.000 đ',
-                      discount: '-50%',
-                      time: '18:00–20:00',
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
+        const SizedBox(height: 4),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: const Color(0xFFECEFF3)),
+              boxShadow: const [BoxShadow(color: Color(0x05000000), blurRadius: 6, offset: Offset(0, 2))],
+            ),
+            child: Row(
+              children: const [
+                Icon(Icons.location_on_outlined, size: 18, color: Color(0xFF00C853)),
+                SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Quận 1, TP.HCM • 5 km',
+                    style: TextStyle(fontSize: 13),
+                  ),
+                ),
+                Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF3C404B)),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 90,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Row(
+              children: chips.map((c) {
+                final selected = c == 'Túi bữa sáng';
+                return Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: SegmentChip(c, selected),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 200,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            children: const [
+              SmartbagCard(
+                tag: 'Túi bữa sáng',
+                title: 'Breakfast Bag – Bakery & Coffee',
+                store: 'Gia Lạc Minimart',
+                distance: '0.8 km',
+                price: '45.000 đ',
+                oldPrice: '90.000 đ',
+                discount: '-50%',
+                time: '07:00–09:00',
+              ),
+              SizedBox(width: 12),
+              SmartbagCard(
+                tag: 'Túi bữa tối',
+                title: 'Dinner Bag',
+                store: 'Gia Lạc Minimart',
+                distance: '0.8 km',
+                price: '50.000 đ',
+                oldPrice: '100.000 đ',
+                discount: '-50%',
+                time: '18:00–20:00',
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _Chip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  const _Chip(this.label, this.selected);
+class SmartbagCard extends StatelessWidget {
+  final String tag;
+  final String title;
+  final String store;
+  final String distance;
+  final String price;
+  final String oldPrice;
+  final String discount;
+  final String time;
+
+  const SmartbagCard({
+    super.key,
+    required this.tag,
+    required this.title,
+    required this.store,
+    required this.distance,
+    required this.price,
+    required this.oldPrice,
+    required this.discount,
+    required this.time,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primary : AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: selected ? AppColors.primary : AppColors.border),
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: selected ? Colors.white : AppColors.textPrimary,
-        ),
+    return SizedBox(
+      width: 320,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFE0E4EE)),
+              boxShadow: const [BoxShadow(color: Color(0x0D000000), blurRadius: 8, offset: Offset(0, 4))],
+            ),
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    color: const Color(0xFFF6F8FA),
+                    child: const Icon(Icons.lunch_dining, size: 44, color: Color(0xFFFFA726)),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFFCEB),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          tag,
+                          style: GoogleFonts.lexendDeca(
+                            fontSize: 12,
+                            color: const Color(0xFF00C853),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        title,
+                        style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w800),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        store,
+                        style: GoogleFonts.lexendDeca(fontSize: 12, color: const Color(0xFF00C853)),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        distance,
+                        style: GoogleFonts.lexendDeca(fontSize: 11, color: const Color(0xFF80848F)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            right: 8,
+            top: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: const Color(0xFF00C853), borderRadius: BorderRadius.circular(8)),
+              child: Text(
+                price,
+                style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.white),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
-

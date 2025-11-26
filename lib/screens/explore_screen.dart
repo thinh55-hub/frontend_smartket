@@ -1,125 +1,108 @@
 import 'package:flutter/material.dart';
-import '../components/app_top_bar.dart';
-import '../theme/app_theme.dart';
-import '../components/product_card.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-class ExploreScreen extends StatelessWidget {
-  const ExploreScreen({super.key});
+import '../components/product_card.dart';
+import '../components/search_pill.dart';
+import '../components/smartbag_chip_list.dart';
+import '../core/models/product.dart';
+import '../core/state/product_provider.dart';
+import '../theme/app_theme.dart';
+
+class ExploreContent extends StatelessWidget {
+  const ExploreContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final categories = [
-      'Thực phẩm & đồ ăn',
-      'Đồ uống',
-      'Bánh ngọt / Bánh mì',
-      'Trái cây – Rau củ',
-      'Thịt – Hải sản',
-      'Sữa & sản phẩm từ sữa',
-      'Đồ khô – Gia vị – Mì gói',
-      'Thực phẩm chay / hữu cơ',
-      'Snack – Bánh kẹo – Đồ ăn vặt',
-      'Đồ hộp / Thực phẩm chế biến sẵn',
-      'Gia vị – Dầu ăn – Nước mắm',
-      'Khác',
-    ];
-
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            const AppTopBar(title: 'KHÁM PHÁ'),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        _Chip('Danh sách', true),
-                        const SizedBox(width: 8),
-                        _Chip('Bản đồ', false),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: const [
-                          Icon(Icons.search, size: 20, color: AppColors.textSecondary),
-                          SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'Tìm kiếm sản phẩm hoặc cửa hàng...',
-                              style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
-                            ),
-                          ),
-                          Icon(Icons.tune_rounded, size: 18, color: AppColors.textSecondary),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: categories
-                          .map((c) => Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                decoration: BoxDecoration(
-                                  color: AppColors.surface,
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: AppShadows.light,
-                                ),
-                                child: Text(c, style: const TextStyle(fontSize: 12, color: AppColors.textPrimary)),
-                              ))
-                          .toList(),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text('Thực phẩm & đồ ăn', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                    const SizedBox(height: 8),
-                    ProductCard(
-                      title: 'Cơm Bento Trứng Cuộn',
-                      store: 'Gia Lạc Minimart',
-                      distance: '0.8 km',
-                      price: '35.000 đ',
-                      oldPrice: '50.000 đ',
-                      discount: '-30%',
-                    ),
-                  ],
-                ),
-              ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                _ExploreModeChip(label: 'Danh sách', selected: true),
+                SizedBox(width: 8),
+                _ExploreModeChip(label: 'Bản đồ', selected: false),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: 8),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SearchPill(placeholder: 'Tìm kiếm sản phẩm hoặc cửa hàng...'),
+        ),
+        const SizedBox(height: 8),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SmartbagChipList(
+                  labels: _exploreCategories,
+                  selectedIndex: 0,
+                  onSelected: (_) {},
+                ),
+                const SizedBox(height: 8),
+                Consumer<ProductProvider>(
+                  builder: (context, provider, _) {
+                    final products = provider.products.isNotEmpty ? provider.products : _fallbackProducts;
+                    if (products.isEmpty) {
+                      return const Center(child: Text('Chưa có sản phẩm'));
+                    }
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 180,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 160 / 238.281,
+                      ),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return ProductCard(product: product, onTap: () {});
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
 
-class _Chip extends StatelessWidget {
+class _ExploreModeChip extends StatelessWidget {
   final String label;
   final bool selected;
-  const _Chip(this.label, this.selected);
+
+  const _ExploreModeChip({required this.label, required this.selected});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: selected ? AppColors.primary : AppColors.surface,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(10),
         border: Border.all(color: selected ? AppColors.primary : AppColors.border),
+        boxShadow: selected ? AppShadows.light : null,
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
+        style: GoogleFonts.lexendDeca(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
           color: selected ? Colors.white : AppColors.textPrimary,
         ),
       ),
@@ -127,5 +110,53 @@ class _Chip extends StatelessWidget {
   }
 }
 
- 
+const List<String> _exploreCategories = [
+  '🍱 Thực phẩm & đồ ăn',
+  '🥤 Đồ uống',
+  '🍪 Snack – Bánh kẹo – Đồ ăn vặt',
+  '🥛 Sữa & sản phẩm từ sữa',
+  '🍜 Mì gói – đồ khô – Gia vị',
+  '🥬 Trái cây – Rau củ',
+  '🥖 Bánh mì – Bánh ngọt',
+  '🥩 Thịt – Hải sản',
+  '🍲 Đồ khô – Gia vị – Mì gói',
+  '🌱 Thực phẩm chay / hữu cơ',
+  '🥫 Đồ hộp / Thực phẩm chế biến sẵn',
+  '🧂 Gia vị – Dầu ăn – Nước mắm',
+  '📦 Khác',
+];
 
+final List<Product> _fallbackProducts = [
+  Product(
+    id: 'exp-1',
+    name: 'Cơm Bento Trứng Cuộn',
+    merchantName: 'Gia Lạc Minimart',
+    price: 35000.0,
+    oldPrice: 50000.0,
+    discount: 30,
+  ),
+  Product(
+    id: 'exp-2',
+    name: 'Combo Ngũ Quả',
+    merchantName: 'Happy Vegan',
+    price: 49000.0,
+    oldPrice: 70000.0,
+    discount: 25,
+  ),
+  Product(
+    id: 'exp-3',
+    name: 'Smoothie Mix Pack',
+    merchantName: 'Freshie Bar',
+    price: 45000.0,
+    oldPrice: 60000.0,
+    discount: 20,
+  ),
+  Product(
+    id: 'exp-4',
+    name: 'Set Ngũ Cốc Healthy',
+    merchantName: 'Nutri Corner',
+    price: 55000.0,
+    oldPrice: 80000.0,
+    discount: 30,
+  ),
+];
