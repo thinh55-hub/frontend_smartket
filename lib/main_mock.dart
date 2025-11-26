@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
+import 'screens/register_screen.dart';
 import 'core/repositories/product_repository_mock.dart';
 import 'core/state/product_provider.dart';
 import 'core/state/navigation_provider.dart';
@@ -42,7 +43,7 @@ class SmartketApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'SMARTKET (Mock)',
         theme: buildAppTheme(),
-        home: const HomeScreen(isLandscape: false),
+        home: const RegisterScreen(),
       ),
     );
   }
