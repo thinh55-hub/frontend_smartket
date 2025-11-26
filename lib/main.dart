@@ -7,7 +7,8 @@ import 'core/api/api_client.dart';
 import 'core/repositories/product_repository.dart';
 import 'core/state/product_provider.dart';
 import 'core/state/navigation_provider.dart';
- 
+import 'screens/register_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,11 +47,11 @@ class SmartketApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'SMARTKET',
-        theme: buildAppTheme(),
-        home: const HomeScreen(isLandscape: false),
+        theme: buildAppTheme(),  home: const LoginScreen(),
       ),
     );
-  }
 }
  
  
+
+  }
