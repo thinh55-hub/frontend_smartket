@@ -13,6 +13,7 @@ import '../core/models/product.dart';
 import '../data/mock_products.dart';
 import '../components/product_card.dart';
 import '../components/smartbag_chip.dart';
+import '../components/smartbag_chip_list.dart';
 import '../components/segmented_label_row.dart';
 import '../components/stat_card.dart';
 import '../components/search_pill.dart';
@@ -386,21 +387,10 @@ class _SmartbagShelfState extends State<_SmartbagShelf> {
               ],
             ),
             const SizedBox(height: 8),
-            SizedBox(
-              height: 42,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: deals.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemBuilder: (context, index) {
-                  final deal = deals[index];
-                  return SmartbagChip(
-                    label: deal.tag,
-                    selected: index == _selectedIndex,
-                    onTap: () => _onChipTap(index),
-                  );
-                },
-              ),
+            SmartbagChipList(
+              labels: deals.map((deal) => deal.tag).toList(),
+              selectedIndex: _selectedIndex,
+              onSelected: _onChipTap,
             ),
             const SizedBox(height: 20),
             ListView.separated(
