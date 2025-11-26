@@ -15,7 +15,6 @@ class SearchBarInput extends StatelessWidget {
         const Icon(Icons.search, size: 20, color: AppColors.textSecondary),
         const SizedBox(width: 8),
         Expanded(child: Text(placeholder, style: const TextStyle(fontSize: 13, color: AppColors.textSecondary))),
-        GestureDetector(onTap: onFilter, child: const Icon(Icons.tune_rounded, size: 18, color: AppColors.textSecondary)),
       ]),
     );
   }

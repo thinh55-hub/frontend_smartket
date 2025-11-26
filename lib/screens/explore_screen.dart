@@ -59,7 +59,7 @@ class ExploreScreen extends StatelessWidget {
                               style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
                             ),
                           ),
-                          Icon(Icons.tune_rounded, size: 18, color: AppColors.textSecondary),
+                          // filter icon removed per design
                         ],
                       ),
                     ),

@@ -1,12 +1,16 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../core/state/navigation_provider.dart';
 import '../widgets/bottom_nav.dart';
+import '../widgets/smartket_header_bar.dart';
 import '../theme/app_theme.dart';
 import '../core/state/product_provider.dart';
 import '../core/models/product.dart';
+import '../data/mock_products.dart';
 import 'product_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -35,11 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
         backgroundColor: AppColors.background,
         body: _buildTabContent(nav.current),
-        bottomNavigationBar: BottomNav(
-          current: nav.current,
-          onChanged: (tab) {
-            nav.current = tab;
-          },
+        bottomNavigationBar: SafeArea(
+          top: false,
+          child: BottomNav(current: nav.current, onChanged: (t) => nav.current = t),
         ),
       ),
     );
@@ -48,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildTabContent(MainTab currentTab) {
     switch (currentTab) {
       case MainTab.home:
-        return const _HomeOverview();
+        return _HomeOverview();
       case MainTab.explore:
         return const _ExploreTab();
       case MainTab.qr:
@@ -61,45 +63,95 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// This private shell is intentionally unused in some layouts; keep it for future designs.
-// ignore: unused_element
-class _HomeShell extends StatelessWidget {
-  final bool isLandscape;
-  final MainTab currentTab;
-  final ValueChanged<MainTab> onBottomChanged;
-  final Widget child;
-
-  const _HomeShell({
-    required this.isLandscape,
-    required this.currentTab,
-    required this.onBottomChanged,
-    required this.child,
-  });
+// Replace the broken _HomeShell with a clean _HomeOverview that contains
+// the previously inlined home UI (header + scrollable content).
+class _HomeOverview extends StatelessWidget {
+  const _HomeOverview();
 
   @override
   Widget build(BuildContext context) {
-    final aspect = isLandscape ? 9 / 5 : 9 / 19.5;
-
-    return AspectRatio(
-      aspectRatio: aspect,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(32),
+    return Column(
+      children: [
+        const _HomeHeader(),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 32),
+            physics: const BouncingScrollPhysics(),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _OverviewHero(),
+                SizedBox(height: 24),
+                _SmartbagShelf(),
+              ],
+            ),
+          ),
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(32),
+      ],
+    );
+  }
+}
+
+class _HomeHeader extends StatelessWidget {
+  const _HomeHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      width: double.infinity,
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: Container(
-                  color: const Color(0xFFF5F7FB),
-                  child: child,
+              const SmartketHeaderBar(),
+              const SizedBox(height: 12),
+              // Figma Node: 346-1052 — Location selector pill
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(color: const Color(0xFFECEFF3)),
+                  boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 10, offset: Offset(0, 4))],
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.location_on_outlined, size: 18, color: AppColors.primary),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text('Quận 1, TP.HCM • 5 km', style: TextStyle(fontSize: 13, color: AppColors.textPrimary)),
+                    ),
+                    Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textPrimary),
+                  ],
                 ),
               ),
-              const Divider(height: 1, thickness: 0.4),
-              BottomNav(current: currentTab, onChanged: onBottomChanged),
+              const SizedBox(height: 8),
+              // Figma Node: 558-491 — Search input
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(28),
+                  border: Border.all(color: const Color(0xFFECEFF3)),
+                  boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 10, offset: Offset(0, 4))],
+                ),
+                child: Row(
+                  children: const [
+                    Icon(Icons.search, size: 20, color: AppColors.primary),
+                    SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        'Tìm sản phẩm, cửa hàng, smartbag...',
+                        style: TextStyle(fontSize: 13, color: Color(0xFF9AA1AF)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -108,297 +160,816 @@ class _HomeShell extends StatelessWidget {
   }
 }
 
-class _HomeOverview extends StatelessWidget {
-  const _HomeOverview();
+class _OverviewHero extends StatefulWidget {
+  const _OverviewHero();
+  static const _heroBorderRadius = BorderRadius.only(bottomLeft: Radius.circular(32), bottomRight: Radius.circular(32));
 
   @override
+  State<_OverviewHero> createState() => _OverviewHeroState();
+}
+
+class _OverviewHeroState extends State<_OverviewHero> {
+  int _selectedRange = 0;
+
+  static const List<_RangeStats> _statsByRange = [
+    _RangeStats(
+      rescuedValue: '2',
+      rescuedSubtitle: 'Túi thực phẩm đã cứu hôm nay',
+      savedValue: '36.000 đ',
+      savedSubtitle: 'Số tiền đã tiết kiệm hôm nay',
+    ),
+    _RangeStats(
+      rescuedValue: '7',
+      rescuedSubtitle: 'Túi thực phẩm đã cứu tuần này',
+      savedValue: '136.000 đ',
+      savedSubtitle: 'Số tiền đã tiết kiệm tuần này',
+    ),
+    _RangeStats(
+      rescuedValue: '16',
+      rescuedSubtitle: 'Túi thực phẩm đã cứu tháng này',
+      savedValue: '236.000 đ',
+      savedSubtitle: 'Số tiền đã tiết kiệm tháng này',
+    ),
+  ];
+
+  void _onSelectRange(int index) {
+    if (_selectedRange == index) return;
+    setState(() => _selectedRange = index);
+  }
+  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Fixed header section
-        Container(
-          color: AppColors.background,
+    return ClipRRect(
+      clipBehavior: Clip.hardEdge,
+      borderRadius: _OverviewHero._heroBorderRadius,
+      child: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColors.heroGradientStart, AppColors.heroGradientMid, AppColors.heroGradientFade],
+            stops: [0.0, 0.7, 1.0],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+          borderRadius: _OverviewHero._heroBorderRadius,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 20, 0, 28),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
+              Align(
+                alignment: Alignment.center,
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: Column(
+                    children: [
+                      _SlidingSegmentControl(
+                        selectedIndex: _selectedRange,
+                        onSelected: _onSelectRange,
+                      ),
+                      const SizedBox(height: 12),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 280),
+                        child: Row(
+                          key: ValueKey(_selectedRange),
+                          children: [
+                            Expanded(
+                              child: _StatCard(
+                                title: 'Hôm nay bạn đã cứu được',
+                                value: _statsByRange[_selectedRange].rescuedValue,
+                                subtitle: _statsByRange[_selectedRange].rescuedSubtitle,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _StatCard(
+                                title: 'Tiền đã tiết kiệm',
+                                value: _statsByRange[_selectedRange].savedValue,
+                                subtitle: _statsByRange[_selectedRange].savedSubtitle,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  const SizedBox(width: 14),
+                  _PromoIcon(),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Khuyến mãi gần bạn',
+                    style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              ClipRect(
+                child: SizedBox(
+                  height: 238.281,
+                  child: Consumer<ProductProvider>(
+                    builder: (context, provider, _) {
+                      if (provider.loading) {
+                        return const Center(
+                          child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
+                        );
+                      }
+                      if (provider.error != null) {
+                        return Center(
+                          child: Text('Lỗi: ${provider.error}', style: TextStyle(color: Colors.white)),
+                        );
+                      }
+                      final data = provider.products.isNotEmpty ? provider.products : mockProducts;
+                      final promos = data.take(6).toList();
+                      if (promos.isEmpty) {
+                        return const Center(
+                          child: Text('Chưa có sản phẩm', style: TextStyle(color: Colors.white)),
+                        );
+                      }
+                      return ListView.separated(
+                        padding: const EdgeInsets.only(left: 18, right:  18),
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: promos.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        itemBuilder: (context, index) {
+                          final product = promos[index];
+                          return _ProductCard(
+                            product: product,
+                            onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => ProductDetailScreen(product: product)),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SmartbagShelf extends StatefulWidget {
+  const _SmartbagShelf();
+
+  @override
+  State<_SmartbagShelf> createState() => _SmartbagShelfState();
+}
+
+class _SmartbagShelfState extends State<_SmartbagShelf> {
+  int _selectedIndex = 0;
+  final List<GlobalKey> _cardKeys = List.generate(_smartbagDeals.length, (_) => GlobalKey());
+
+  void _onChipTap(int index) {
+    if (_selectedIndex != index) {
+      setState(() => _selectedIndex = index);
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCard(index));
+    } else {
+      _scrollToCard(index);
+    }
+  }
+
+  void _scrollToCard(int index) {
+    final context = _cardKeys[index].currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 300),
+        alignment: 0.1,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final deals = _smartbagDeals;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(0, 22, 0, 26),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF1FBF5),
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Smartbag đáng chú ý',
+                        style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Săn túi thực phẩm ngon giá tốt trong ngày',
+                        style: GoogleFonts.lexendDeca(fontSize: 13, color: AppColors.textSecondary),
+                      ),
+                    ],
+                  ),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                    foregroundColor: AppColors.primary,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+                    textStyle: GoogleFonts.lexendDeca(fontWeight: FontWeight.w600),
+                  ),
+                  onPressed: () {},
+                  child: const Text('Xem tất cả'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 42,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: deals.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemBuilder: (context, index) {
+                  final deal = deals[index];
+                  return _SmartbagChip(
+                    label: deal.tag,
+                    selected: index == _selectedIndex,
+                    onTap: () => _onChipTap(index),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: deals.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 14),
+              itemBuilder: (context, index) {
+                final deal = deals[index];
+                return KeyedSubtree(
+                  key: _cardKeys[index],
+                  child: _SmartbagHighlightCard(deal: deal, highlight: index == _selectedIndex),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SmartbagChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback? onTap;
+
+  const _SmartbagChip({required this.label, this.selected = false, this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final chip = AnimatedContainer(
+      duration: const Duration(milliseconds: 220),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+      decoration: BoxDecoration(
+        color: selected ? const Color(0xFF00C853) : Colors.white,
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: selected ? const Color(0xFF00C853) : const Color(0xFFE0E4EE)),
+        boxShadow: selected
+            ? const [BoxShadow(color: Color(0x3300C853), blurRadius: 18, offset: Offset(0, 8))]
+            : const [BoxShadow(color: Color(0x05000000), blurRadius: 8, offset: Offset(0, 4))],
+      ),
+      child: Text(
+        label,
+        style: GoogleFonts.lexendDeca(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: selected ? Colors.white : AppColors.textPrimary,
+        ),
+      ),
+    );
+
+    return GestureDetector(onTap: onTap, child: chip);
+  }
+}
+
+class _SmartbagHighlightCard extends StatelessWidget {
+  final _SmartbagDeal deal;
+  final bool highlight;
+
+  const _SmartbagHighlightCard({required this.deal, this.highlight = false});
+
+  @override
+  Widget build(BuildContext context) {
+    final Color textColor = highlight ? Colors.white : AppColors.textPrimary;
+    final Color muted = highlight ? Colors.white.withOpacity(0.78) : AppColors.textSecondary;
+    final gradient = highlight
+        ? const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF00C261), Color(0xFF00994E)],
+          )
+        : const LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.white, Color(0xFFEFF8F2)],
+          );
+
+    return Container(
+      width: 280,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        gradient: gradient,
+        border: highlight ? null : Border.all(color: const Color(0xFFD9E6DD)),
+        boxShadow: highlight
+            ? const [BoxShadow(color: Color(0x3300AF55), blurRadius: 24, offset: Offset(0, 14))]
+            : const [BoxShadow(color: Color(0x14000000), blurRadius: 12, offset: Offset(0, 8))],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              _SmartbagEmojiBadge(emoji: deal.emoji, highlight: highlight),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    _SmartbagTag(label: deal.tag, highlight: highlight),
+                    const SizedBox(height: 6),
                     Text(
-                      'SMARTKET',
-                      style: GoogleFonts.lexendDeca(fontSize: 18, fontWeight: FontWeight.w700),
+                      deal.title,
+                      style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w700, color: textColor),
                     ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.favorite_border, color: Color(0xFF00C853)),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.person_outline, color: Color(0xFF00C853)),
-                      onPressed: () {},
+                    Text(
+                      deal.store,
+                      style: GoogleFonts.lexendDeca(fontSize: 12, fontWeight: FontWeight.w500, color: muted),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: const Color(0xFFE0E4EE)),
-                  ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.location_on_outlined, size: 18, color: Color(0xFF00C853)),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Quận 1, TP.HCM • 5 km',
-                          style: TextStyle(fontSize: 13),
-                        ),
-                      ),
-                      Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF3C404B)),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.search, size: 20, color: Color(0xFF9AA1AF)),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Tìm sản phẩm, cửa hàng, smartbag...',
-                          style: GoogleFonts.lexendDeca(fontSize: 13, color: Color(0xFF9AA1AF)),
-                        ),
-                      ),
-                      const Icon(Icons.tune_rounded, size: 18, color: Color(0xFF9AA1AF)),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 12),
+              Icon(Icons.chevron_right_rounded, color: highlight ? Colors.white : AppColors.primary, size: 20),
             ],
           ),
-        ),
-        // Scrollable content
-        Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.zero,
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      _SegmentChip('Ngày', true),
-                      const SizedBox(width: 8),
-                      _SegmentChip('Tuần', false),
-                      const SizedBox(width: 8),
-                      _SegmentChip('Tháng', false),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-          SizedBox(
-          height: 90,
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            children: const [
-              _StatCard(title: 'Túi thực phẩm đã cứu', value: '3', subtitle: 'Hôm nay bạn đã cứu được'),
-              SizedBox(width: 12),
-              _StatCard(title: 'Tiền đã tiết kiệm', value: '82.000 đ', subtitle: 'Số tiền bạn tiết kiệm hôm nay'),
-            ],
-          ),
-          ),
           const SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                const Icon(Icons.local_offer_outlined, size: 16, color: Color(0xFF00C853)),
-                const SizedBox(width: 6),
-                Text('Khuyến mãi gần bạn', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
-              ],
-            ),
-            ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 170,
-            child: Consumer<ProductProvider>(
-              builder: (context, provider, _) {
-                if (provider.loading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (provider.error != null) {
-                  return Center(
-                    child: Text(
-                      'Lỗi: ${provider.error}',
-                      style: const TextStyle(color: Colors.red, fontSize: 12),
-                    ),
-                  );
-                }
-                final products = provider.products.take(10).toList();
-                if (products.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'Chưa có sản phẩm',
-                      style: TextStyle(fontSize: 12, color: Color(0xFF80848F)),
-                    ),
-                  );
-                }
-                return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: products.length,
-                  separatorBuilder: (context, index) => const SizedBox(width: 12),
-                  itemBuilder: (ctx, i) {
-                    final p = products[i];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => ProductDetailScreen(product: p),
-                          ),
-                        );
-                      },
-                      child: _ProductCard(product: p),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-          const SizedBox(height: 16),
-          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
+          Row(
             children: [
-              const Icon(Icons.shopping_bag_outlined, size: 16, color: Color(0xFF00C853)),
-              const SizedBox(width: 6),
-              Text('Smartbag gần bạn', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
+              Icon(Icons.location_on_outlined, size: 16, color: muted),
+              const SizedBox(width: 4),
+              Text(deal.distance, style: GoogleFonts.lexendDeca(fontSize: 12, color: muted)),
+              const SizedBox(width: 12),
+              Icon(Icons.access_time, size: 16, color: muted),
+              const SizedBox(width: 4),
+              Text(deal.time, style: GoogleFonts.lexendDeca(fontSize: 12, color: muted)),
             ],
-          ),
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-          height: 200,
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            children: const [
-              _SmartbagCard(
-                tag: 'Túi bữa sáng',
-                title: 'Breakfast Bag – Bakery & Coffee',
-                store: 'Gia Lạc Minimart',
-                distance: '0.8 km',
-                price: '45.000 đ',
-                oldPrice: '90.000 đ',
-                discount: '-50%',
-                time: '07:00–09:00',
-              ),
-              SizedBox(width: 12),
-              _SmartbagCard(
-                tag: 'Túi bữa tối',
-                title: 'Dinner Bag',
-                store: 'Gia Lạc Minimart',
-                distance: '0.8 km',
-                price: '50.000 đ',
-                oldPrice: '100.000 đ',
-                discount: '-50%',
-                time: '18:00–20:00',
-              ),
-            ],
-          ),
           ),
           const SizedBox(height: 16),
-          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              const Icon(Icons.favorite_border, size: 16, color: Color(0xFF00C853)),
-              const SizedBox(width: 6),
-              Text('Cửa hàng yêu thích', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
+              Text(
+                deal.price,
+                style: GoogleFonts.lexendDeca(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: highlight ? Colors.white : AppColors.primary,
+                ),
+              ),
+              if (deal.originalPrice != null) ...[
+                const SizedBox(width: 10),
+                Text(
+                  deal.originalPrice!,
+                  style: GoogleFonts.lexendDeca(
+                    fontSize: 13,
+                    color: muted,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                ),
+              ],
+              if (deal.savingText != null) ...[
+                const SizedBox(width: 10),
+                Text(
+                  deal.savingText!,
+                  style: GoogleFonts.lexendDeca(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: highlight ? Colors.white : AppColors.primary,
+                  ),
+                ),
+              ],
             ],
           ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Color(0xFFE0E4EE)),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.favorite_border, size: 32, color: Color(0xFFB3BAC8)),
-                SizedBox(height: 12),
-                Text(
-                  'Bạn chưa có cửa hàng yêu thích',
-                  style: TextStyle(fontSize: 13, color: Color(0xFF3C404B)),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  "Hãy nhấn nút '❤' tại trang cửa hàng để lưu lại.",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 11, color: Color(0xFF80848F)),
-                ),
-              ],
-            ),
-          ),
-          ),
-                const SizedBox(height: 24),
-              ],
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
-}class _SegmentChip extends StatelessWidget {
-  final String label;
-  final bool selected;
+}
 
-  const _SegmentChip(this.label, this.selected);
+class _SmartbagTag extends StatelessWidget {
+  final String label;
+  final bool highlight;
+
+  const _SmartbagTag({required this.label, required this.highlight});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: selected ? const Color(0xFF00C853) : Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        color: highlight ? Colors.white.withOpacity(0.18) : const Color(0xFFEFFCEB),
+        borderRadius: BorderRadius.circular(14),
+        border: highlight ? Border.all(color: Colors.white.withOpacity(0.3)) : null,
       ),
       child: Text(
         label,
-        style: TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w500,
-          color: selected ? Colors.white : const Color(0xFF3C404B),
+        style: GoogleFonts.lexendDeca(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: highlight ? Colors.white : const Color(0xFF00C853),
+        ),
+      ),
+    );
+  }
+}
+
+class _SmartbagEmojiBadge extends StatelessWidget {
+  final String emoji;
+  final bool highlight;
+
+  const _SmartbagEmojiBadge({required this.emoji, required this.highlight});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 56,
+      height: 56,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        color: highlight ? Colors.white.withOpacity(0.15) : Colors.white,
+        border: highlight ? Border.all(color: Colors.white24) : Border.all(color: const Color(0xFFE3EBE4)),
+        boxShadow: highlight ? null : const [BoxShadow(color: Color(0x11000000), blurRadius: 10, offset: Offset(0, 6))],
+      ),
+      child: Center(
+        child: Text(
+          emoji,
+          style: const TextStyle(fontSize: 30),
+        ),
+      ),
+    );
+  }
+}
+
+class _PromoIcon extends StatelessWidget {
+  const _PromoIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.white.withOpacity(0)),
+      ),
+      child: CustomPaint(
+        size: const Size(20, 20),
+        painter: _PromoIconPainter(),
+      ),
+    );
+  }
+}
+
+class _PromoIconPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.66603
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final clipRect = Rect.fromLTWH(0, 0, size.width, size.height);
+    canvas.save();
+    canvas.clipRect(clipRect);
+
+    final path1 = Path()
+      ..moveTo(size.width * 0.6664, size.height * 0.4165)
+      ..cubicTo(size.width * 0.6664, size.height * 0.4592, size.width * 0.6495, size.height * 0.5003,
+          size.width * 0.6190, size.height * 0.5309)
+      ..cubicTo(size.width * 0.5885, size.height * 0.5614, size.width * 0.5474, size.height * 0.5783,
+          size.width * 0.5048, size.height * 0.5783)
+      ..cubicTo(size.width * 0.4622, size.height * 0.5783, size.width * 0.4211, size.height * 0.5614,
+          size.width * 0.3906, size.height * 0.5309)
+      ..cubicTo(size.width * 0.3601, size.height * 0.5003, size.width * 0.3432, size.height * 0.4592,
+          size.width * 0.3432, size.height * 0.4165);
+    canvas.drawPath(path1, paint);
+
+    canvas.drawLine(
+      Offset(size.width * 0.1293, size.height * 0.2513),
+      Offset(size.width * 0.8707, size.height * 0.2513),
+      paint,
+    );
+
+    final path3 = Path()
+      ..moveTo(size.width * 0.1417, size.height * 0.2275)
+      ..cubicTo(size.width * 0.1291, size.height * 0.2440, size.width * 0.1225, size.height * 0.2650,
+          size.width * 0.1225, size.height * 0.2867)
+      ..lineTo(size.width * 0.1225, size.height * 0.8330)
+      ..cubicTo(size.width * 0.1225, size.height * 0.8566, size.width * 0.1318, size.height * 0.8789,
+          size.width * 0.1480, size.height * 0.8951)
+      ..cubicTo(size.width * 0.1642, size.height * 0.9113, size.width * 0.1865, size.height * 0.9206,
+          size.width * 0.2101, size.height * 0.9206)
+      ..lineTo(size.width * 0.7900, size.height * 0.9206)
+      ..cubicTo(size.width * 0.8136, size.height * 0.9206, size.width * 0.8359, size.height * 0.9113,
+          size.width * 0.8521, size.height * 0.8951)
+      ..cubicTo(size.width * 0.8683, size.height * 0.8789, size.width * 0.8775, size.height * 0.8566,
+          size.width * 0.8775, size.height * 0.8330)
+      ..lineTo(size.width * 0.8775, size.height * 0.2867)
+      ..cubicTo(size.width * 0.8775, size.height * 0.2650, size.width * 0.8709, size.height * 0.2440,
+          size.width * 0.8583, size.height * 0.2275)
+      ..lineTo(size.width * 0.7747, size.height * 0.1166)
+      ..cubicTo(size.width * 0.7671, size.height * 0.1067, size.width * 0.7578, size.height * 0.0985,
+          size.width * 0.7470, size.height * 0.0926)
+      ..cubicTo(size.width * 0.7362, size.height * 0.0868, size.width * 0.7243, size.height * 0.0834,
+          size.width * 0.7122, size.height * 0.0834)
+      ..lineTo(size.width * 0.2914, size.height * 0.0834)
+      ..cubicTo(size.width * 0.2793, size.height * 0.0834, size.width * 0.2674, size.height * 0.0868,
+          size.width * 0.2566, size.height * 0.0926)
+      ..cubicTo(size.width * 0.2458, size.height * 0.0985, size.width * 0.2365, size.height * 0.1067,
+          size.width * 0.2289, size.height * 0.1166)
+      ..lineTo(size.width * 0.1417, size.height * 0.2275);
+    canvas.drawPath(path3, paint);
+
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _SmartbagDeal {
+  final String tag;
+  final String title;
+  final String store;
+  final String distance;
+  final String price;
+  final String time;
+  final String emoji;
+  final String? originalPrice;
+  final String? savingText;
+
+  const _SmartbagDeal({
+    required this.tag,
+    required this.title,
+    required this.store,
+    required this.distance,
+    required this.price,
+    required this.time,
+    required this.emoji,
+    this.originalPrice,
+    this.savingText,
+  });
+}
+
+const List<_SmartbagDeal> _smartbagDeals = [
+  _SmartbagDeal(
+    tag: 'Túi Ăn Sáng',
+    title: 'Bakery & Coffee',
+    store: 'Gia Lạc Minimart',
+    distance: '0.8 km',
+    price: '45.000 ₫',
+    time: '07:00 - 09:00',
+    emoji: '🥐',
+    originalPrice: '90.000 ₫',
+    savingText: 'Tiết kiệm 50%',
+  ),
+  _SmartbagDeal(
+    tag: 'Túi Ăn Chiều',
+    title: 'Bakery & Coffee',
+    store: 'Gia Lạc Minimart',
+    distance: '0.8 km',
+    price: '45.000 ₫',
+    time: '15:00 - 17:00',
+    emoji: '🥐',
+    originalPrice: '90.000 ₫',
+    savingText: 'Tiết kiệm 50%',
+  ),
+  _SmartbagDeal(
+    tag: 'Túi Đồ Uống',
+    title: 'Tea & Smoothie',
+    store: 'ĐT Minimart',
+    distance: '1.2 km',
+    price: '39.000 ₫',
+    time: '13:00 - 15:00',
+    emoji: '🥤',
+    originalPrice: '70.000 ₫',
+    savingText: 'Còn 2 túi',
+  ),
+  _SmartbagDeal(
+    tag: 'Túi Healthy',
+    title: 'Eat Clean Combo',
+    store: 'GL Minimart',
+    distance: '0.5 km',
+    price: '52.000 ₫',
+    time: '10:00 - 12:00',
+    emoji: '🥗',
+    originalPrice: '98.000 ₫',
+    savingText: 'Tiết kiệm 47%',
+  ),
+];
+
+String _formatCurrency(double value) {
+  final amount = value.toInt().toString();
+  final buffer = StringBuffer();
+  for (int i = 0; i < amount.length; i++) {
+    if (i > 0 && (amount.length - i) % 3 == 0) {
+      buffer.write('.');
+    }
+    buffer.write(amount[i]);
+  }
+  return '${buffer.toString()} ₫';
+}
+
+class _SlidingSegmentControl extends StatelessWidget {
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  const _SlidingSegmentControl({required this.selectedIndex, required this.onSelected});
+
+  static const _labels = ['Ngày', 'Tuần', 'Tháng'];
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        const double padding = 4;
+        final double availableWidth = constraints.maxWidth - padding * 2;
+        final double itemWidth = availableWidth / _labels.length;
+
+        return Container(
+          height: 40,
+          padding: const EdgeInsets.all(padding),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(39),
+            boxShadow: const [BoxShadow(color: Color(0x1A000000), blurRadius: 16, offset: Offset(0, 8))],
+          ),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 280),
+                left: selectedIndex * itemWidth,
+                top: 0,
+                bottom: 0,
+                width: itemWidth,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(30),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                        gradient: LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [Color(0xFF00A63E), Color(0xFF00C950)],
+                        ),
+                        boxShadow: [
+                          BoxShadow(color: Color(0x4000C950), blurRadius: 12, offset: Offset(0, 4)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Row(
+                children: List.generate(
+                  _labels.length,
+                  (index) => Expanded(
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () => onSelected(index),
+                      child: Center(
+                        child: AnimatedDefaultTextStyle(
+                          duration: const Duration(milliseconds: 200),
+                          style: GoogleFonts.lexendDeca(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: selectedIndex == index ? Colors.white : AppColors.primary,
+                          ),
+                          child: Text(_labels[index]),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _SegmentChip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final bool inverted;
+
+  const _SegmentChip(this.label, this.selected, {this.inverted = false});
+
+  @override
+  Widget build(BuildContext context) {
+    if (inverted) {
+      final borderRadius = BorderRadius.circular(39);
+      Widget chip = AnimatedContainer(
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOut,
+        width: 320,
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 1),
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          gradient: selected
+              ? const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [Color(0xFF00A63E), Color(0xFF00C950)],
+                )
+              : null,
+          color: selected ? null : Colors.transparent,
+          boxShadow: selected
+              ? const [
+                  BoxShadow(color: Color(0x4D00C950), blurRadius: 12, offset: Offset(0, 4)),
+                ]
+              : null,
+        ),
+        child: Center(
+          child: Text(
+            label,
+            style: GoogleFonts.lexendDeca(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: selected ? Colors.white : AppColors.primary,
+            ),
+          ),
+        ),
+      );
+
+      if (selected) {
+        chip = ClipRRect(
+          borderRadius: borderRadius,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+            child: chip,
+          ),
+        );
+      }
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 1),
+        child: chip,
+      );
+    }
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 180),
+      curve: Curves.easeOut,
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+      decoration: BoxDecoration(
+        color: selected ? AppColors.primary : Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: selected ? null : Border.all(color: const Color(0xFFE8EBF2)),
+        boxShadow: selected
+            ? const [BoxShadow(color: Color(0x12000000), blurRadius: 8, offset: Offset(0, 4))]
+            : const [BoxShadow(color: Color(0x05000000), blurRadius: 4, offset: Offset(0, 2))],
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: GoogleFonts.lexendDeca(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: selected ? Colors.white : AppColors.textPrimary,
+          ),
         ),
       ),
     );
@@ -419,30 +990,44 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 170,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 24, offset: Offset(0, 12))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: const TextStyle(fontSize: 13, color: Color(0xFF3C404B))),
-          const SizedBox(height: 8),
+          Text(title, style: GoogleFonts.lexendDeca(fontSize: 9, color: AppColors.textSecondary, fontWeight: FontWeight.w700)),
+          const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            style: GoogleFonts.lexendDeca(fontSize: 22, fontWeight: FontWeight.w800, color: AppColors.primary),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             subtitle,
-            style: const TextStyle(fontSize: 11, color: Color(0xFF80848F)),
+            style: GoogleFonts.lexendDeca(fontSize: 8, color: AppColors.textSecondary),
           ),
         ],
       ),
     );
   }
+}
+
+class _RangeStats {
+  final String rescuedValue;
+  final String rescuedSubtitle;
+  final String savedValue;
+  final String savedSubtitle;
+
+  const _RangeStats({
+    required this.rescuedValue,
+    required this.rescuedSubtitle,
+    required this.savedValue,
+    required this.savedSubtitle,
+  });
 }
 
 class _DealCard extends StatelessWidget {
@@ -464,60 +1049,70 @@ class _DealCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 170,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE0E4EE)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return SizedBox(
+      width: 180,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          const SizedBox(height: 8),
-          const Icon(Icons.ramen_dining, size: 32, color: Color(0xFFEF6C00)),
-          const SizedBox(height: 8),
-          Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
-          const SizedBox(height: 4),
-          Text(
-            '$store\n$distance',
-            style: const TextStyle(fontSize: 11, color: Color(0xFF00C853)),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFE0E4EE)),
+              boxShadow: const [BoxShadow(color: Color(0x0D000000), blurRadius: 8, offset: Offset(0,4))],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 6),
+                Container(
+                  height: 72,
+                  decoration: BoxDecoration(color: const Color(0xFFF6F8FA), borderRadius: BorderRadius.circular(12)),
+                  child: const Center(child: Icon(Icons.ramen_dining, size: 36, color: Color(0xFFEF6C00))),
+                ),
+                const SizedBox(height: 8),
+                Text(title, style: GoogleFonts.lexendDeca(fontSize: 13, fontWeight: FontWeight.w700)),
+                const SizedBox(height: 4),
+                Text(
+                  '$store\n$distance',
+                  style: GoogleFonts.lexendDeca(fontSize: 11, color: const Color(0xFF00C853)),
+                ),
+                const SizedBox(height: 1),
+                Row(
+                  children: [
+                    Text(
+                      price,
+                      style: GoogleFonts.lexendDeca(fontSize: 13, fontWeight: FontWeight.w800, color: Colors.red),
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        oldPrice,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: GoogleFonts.lexendDeca(fontSize: 11, color: const Color(0xFFB3BAC8), decoration: TextDecoration.lineThrough),
+                      ),
+                    ),
+                    const Spacer(),
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              Text(
-                price,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
+          Positioned(
+            top: 0,
+            right: -50,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFE5E8),
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: const [BoxShadow(color: Color(0x16000000), blurRadius: 8, offset: Offset(0,4))],
               ),
-              const SizedBox(width: 4),
-              Flexible(
-                child: Text(
-                  oldPrice,
-                  overflow: TextOverflow.fade,
-                  softWrap: false,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFFB3BAC8),
-                    decoration: TextDecoration.lineThrough,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  discount,
-                  style: const TextStyle(fontSize: 10, color: Colors.white),
-                ),
-              ),
-            ],
+              child: Text(discount, style: GoogleFonts.lexendDeca(fontSize: 24, fontWeight: FontWeight.w400, color: const Color(0xFFB00020))),
+            ),
           ),
         ],
       ),
@@ -527,111 +1122,178 @@ class _DealCard extends StatelessWidget {
 
 class _ProductCard extends StatelessWidget {
   final Product product;
-  const _ProductCard({required this.product});
+  final VoidCallback? onTap;
+
+  const _ProductCard({required this.product, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final price = product.price != null ? _formatCurrency(product.price!) : '--';
+    final priceValue = product.price != null ? _formatCurrency(product.price!) : '-- ₫';
     final oldPrice = product.oldPrice != null ? _formatCurrency(product.oldPrice!) : null;
-    final discount = (product.price != null && product.oldPrice != null && product.oldPrice! > 0)
-        ? '-${(((product.oldPrice! - product.price!) / product.oldPrice!) * 100).round()}%'
-        : null;
+    final priceLabel = _cleanPrice(priceValue);
+    final oldPriceLabel = oldPrice != null ? _cleanPrice(oldPrice) : null;
+    final discount = _discountLabel();
 
-    return Container(
-      width: 170,
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE0E4EE)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 4),
-          SizedBox(
-            height: 48,
-            child: product.imageUrl != null
-                ? Image.asset(
-                    product.imageUrl!,
-                    fit: BoxFit.contain,
-                    errorBuilder: (ctx, error, stack) => const Icon(Icons.ramen_dining, size: 32, color: Color(0xFFEF6C00)),
-                  )
-                : const Icon(Icons.ramen_dining, size: 32, color: Color(0xFFEF6C00)),
-          ),
-          Text(
-            product.name,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            product.merchantName ?? 'SMARTKET',
-            style: const TextStyle(fontSize: 11, color: Color(0xFF00C853)),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              Text(
-                price,
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red),
+    return GestureDetector(
+      onTap: onTap,
+      child: SizedBox(
+        width: 160,
+        height: 238.281,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              clipBehavior: Clip.hardEdge,
+              child: Stack(
+                clipBehavior: Clip.hardEdge,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 18),
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.white, AppColors.promoCardBackground],
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 96,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: AppColors.promoCardBackground),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: _buildProductImage(),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          product.name,
+                          style: GoogleFonts.lexendDeca(fontSize: 15, fontWeight: FontWeight.w400, color: AppColors.textPrimary),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          product.merchantName ?? 'GL Minimart',
+                          style: GoogleFonts.lexendDeca(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.primary),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            const Icon(Icons.location_on_outlined, size: 14, color: AppColors.textSecondary),
+                            const SizedBox(width: 4),
+                            Text(
+                              '0.8 km',
+                              style: GoogleFonts.lexendDeca(fontSize: 12, color: AppColors.textSecondary),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              priceLabel,
+                              style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.salePrice),
+                            ),
+                            if (oldPriceLabel != null) ...[
+                              const SizedBox(width: 6),
+                              Text(
+                                oldPriceLabel,
+                                style: GoogleFonts.lexendDeca(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                  color: const Color(0xFFB3BAC8),
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                            ],
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (discount != null)
+                    Positioned(
+                      top: 0,
+                      right: -4,
+                      child: IgnorePointer(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: AppColors.discountPink,
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: Text(
+                            discount,
+                            style: GoogleFonts.lexendDeca(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.discountRed,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(color: const Color(0xFF00A63E), width: 1.212),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 4),
-              if (oldPrice != null)
-                Flexible(
-                  child: Text(
-                    oldPrice,
-                    overflow: TextOverflow.fade,
-                    softWrap: false,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFFB3BAC8),
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ),
-              const Spacer(),
-              if (discount != null)
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.discountPink,
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    discount,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.discountRed,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  String _formatCurrency(double v) {
-    // Format VND: no decimals, '.' as thousand separator
-    final int amount = v.toInt();
-    final str = amount.toString();
-    final buffer = StringBuffer();
-    for (int i = 0; i < str.length; i++) {
-      if (i > 0 && (str.length - i) % 3 == 0) {
-        buffer.write('.');
-      }
-      buffer.write(str[i]);
+  Widget _buildProductImage() {
+    final imageUrl = product.imageUrl;
+    const fallback = Center(child: Icon(Icons.ramen_dining, size: 40, color: Color(0xFFEF6C00)));
+    if (imageUrl == null || imageUrl.isEmpty) {
+      return fallback;
     }
-    return '${buffer.toString()} đ';
+    if (imageUrl.startsWith('http')) {
+      return Image.network(imageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => fallback);
+    }
+    return Image.asset(imageUrl, fit: BoxFit.cover, errorBuilder: (_, __, ___) => fallback);
+  }
+
+  String? _discountLabel() {
+    if (product.oldPrice != null && product.price != null && product.oldPrice! > 0) {
+      final percent = (1 - (product.price! / product.oldPrice!)) * 100;
+      final rounded = percent.round();
+      if (rounded > 0) {
+        return '-${rounded.abs()}%';
+      }
+    }
+    if (product.discount != null && product.discount! > 0) {
+      return '-${product.discount!.round()}%';
+    }
+    return null;
+  }
+
+  String _cleanPrice(String value) {
+    return value.replaceAll('₫', 'đ').replaceAll(' ', '');
   }
 }
+
 
 class _ExploreTab extends StatelessWidget {
   const _ExploreTab();
@@ -690,12 +1352,14 @@ class _ExploreTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: const Color(0xFFECEFF3)),
+              boxShadow: const [BoxShadow(color: Color(0x05000000), blurRadius: 6, offset: Offset(0, 2))],
             ),
-            child: Row(
+                child: Row(
               children: const [
                 Icon(Icons.search, size: 20, color: Color(0xFF9AA1AF)),
                 SizedBox(width: 8),
@@ -705,7 +1369,6 @@ class _ExploreTab extends StatelessWidget {
                     style: TextStyle(fontSize: 13, color: Color(0xFF9AA1AF)),
                   ),
                 ),
-                Icon(Icons.tune_rounded, size: 18, color: Color(0xFF9AA1AF)),
               ],
             ),
           ),
@@ -788,12 +1451,12 @@ class _QrTab extends StatelessWidget {
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.qr_code_2, size: 72, color: Color(0xFFB3BAC8)),
-                SizedBox(height: 16),
+              children: [
+                const Icon(Icons.qr_code_2, size: 72, color: Color(0xFFB3BAC8)),
+                const SizedBox(height: 16),
                 Text(
                   'Chưa có mã QR nào',
-                  style: TextStyle(fontSize: 14, color: Color(0xFF80848F)),
+                  style: GoogleFonts.lexendDeca(fontSize: 14, color: const Color(0xFF80848F)),
                 ),
               ],
             ),
@@ -829,9 +1492,9 @@ class _SmartbagTab extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              const Text(
+              Text(
                 'Smartbag',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                style: GoogleFonts.lexendDeca(fontSize: 18, fontWeight: FontWeight.w700),
               ),
               const Spacer(),
               IconButton(
@@ -849,11 +1512,12 @@ class _SmartbagTab extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: const Color(0xFFE0E4EE)),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: const Color(0xFFECEFF3)),
+              boxShadow: const [BoxShadow(color: Color(0x05000000), blurRadius: 6, offset: Offset(0, 2))],
             ),
             child: Row(
               children: const [
@@ -948,86 +1612,69 @@ class _SmartbagCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 190,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE0E4EE)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+    return SizedBox(
+      width: 320,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          const Icon(Icons.lunch_dining, size: 28, color: Color(0xFFFFA726)),
-          const SizedBox(height: 4),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: const Color(0xFFE5F9EC),
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFE0E4EE)),
+              boxShadow: const [BoxShadow(color: Color(0x0D000000), blurRadius: 8, offset: Offset(0,4))],
             ),
-            child: Text(
-              tag,
-              style: const TextStyle(fontSize: 10, color: Color(0xFF00C853)),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(title, 
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 2),
-          Text(
-            '$store\n$distance',
-            style: const TextStyle(fontSize: 10, color: Color(0xFF00C853)),
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Text(
-                price,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Colors.red),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                oldPrice,
-                style: const TextStyle(
-                  fontSize: 10,
-                  color: Color(0xFFB3BAC8),
-                  decoration: TextDecoration.lineThrough,
-                ),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: AppColors.discountPink,
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  discount,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.discountRed,
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    width: 80,
+                    height: 80,
+                    color: const Color(0xFFF6F8FA),
+                    child: const Icon(Icons.lunch_dining, size: 44, color: Color(0xFFFFA726)),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEFFCEB),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(tag, style: GoogleFonts.lexendDeca(fontSize: 12, color: const Color(0xFF00C853), fontWeight: FontWeight.w600)),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(title,
+                        style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w800),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 6),
+                      Text(store, style: GoogleFonts.lexendDeca(fontSize: 12, color: const Color(0xFF00C853))),
+                      const SizedBox(height: 4),
+                      Text(distance, style: GoogleFonts.lexendDeca(fontSize: 11, color: const Color(0xFF80848F))),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 12, color: Color(0xFF80848F)),
-              const SizedBox(width: 3),
-              Text(
-                time,
-                style: const TextStyle(fontSize: 10, color: Color(0xFF80848F)),
-              ),
-            ],
+          // Price pill
+          Positioned(
+            right: 8,
+            top: 8,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: const Color(0xFF00C853), borderRadius: BorderRadius.circular(8)),
+              child: Text(price, style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w800, color: Colors.white)),
+            ),
           ),
         ],
       ),
@@ -1045,9 +1692,9 @@ class _CartTab extends StatelessWidget {
         const SizedBox(height: 40),
         const Icon(Icons.shopping_bag_outlined, size: 56, color: Color(0xFFB3BAC8)),
         const SizedBox(height: 12),
-        const Text(
+        Text(
           'Giỏ hàng của bạn đang trống',
-          style: TextStyle(fontSize: 14, color: Color(0xFF80848F)),
+          style: GoogleFonts.lexendDeca(fontSize: 14, color: const Color(0xFF80848F)),
         ),
       ],
     );
