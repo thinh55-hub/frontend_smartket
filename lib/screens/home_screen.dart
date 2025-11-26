@@ -15,6 +15,7 @@ import '../components/product_card.dart';
 import '../components/smartbag_chip.dart';
 import '../components/segmented_label_row.dart';
 import '../components/stat_card.dart';
+import '../components/search_pill.dart';
 import 'product_detail_screen.dart';
 import 'explore_screen.dart';
 import 'qr_screen.dart';
@@ -60,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case MainTab.home:
         return _HomeOverview();
       case MainTab.explore:
-        return const ExploreContent();
+        return ExploreContent();
       case MainTab.qr:
         return const QrContent();
       case MainTab.smartbag:
@@ -139,27 +140,8 @@ class _HomeHeader extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               // Figma Node: 558-491 — Search input
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: const Color(0xFFECEFF3)),
-                  boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 10, offset: Offset(0, 4))],
-                ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.search, size: 20, color: AppColors.primary),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'Tìm sản phẩm, cửa hàng, smartbag...',
-                        style: TextStyle(fontSize: 13, color: Color(0xFF9AA1AF)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  // Search (reusable component)
+                  const SearchPill(),
             ],
           ),
         ),

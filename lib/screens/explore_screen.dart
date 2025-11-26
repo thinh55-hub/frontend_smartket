@@ -2,24 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../theme/app_theme.dart';
 import '../components/product_card.dart';
+import '../components/search_pill.dart';
 import '../core/models/product.dart';
 import '../core/state/product_provider.dart';
-
-class ExploreScreen extends StatelessWidget {
-  const ExploreScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: const ExploreContent(),
-      ),
-    );
-  }
-}
+import '../theme/app_theme.dart';
 
 class ExploreContent extends StatelessWidget {
   const ExploreContent({super.key});
@@ -51,10 +38,10 @@ class ExploreContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            children: const [
+            children: [
               _ExploreModeChip(label: 'Danh sách', selected: true),
               SizedBox(width: 8),
               _ExploreModeChip(label: 'Bản đồ', selected: false),
@@ -62,29 +49,9 @@ class ExploreContent extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(28),
-              border: Border.all(color: AppColors.border),
-              boxShadow: AppShadows.light,
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.search, size: 20, color: AppColors.textSecondary),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    'Tìm kiếm sản phẩm hoặc cửa hàng...',
-                    style: GoogleFonts.lexendDeca(fontSize: 13, color: AppColors.textSecondary),
-                  ),
-                ),
-              ],
-            ),
-          ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SearchPill(placeholder: 'Tìm kiếm sản phẩm hoặc cửa hàng...'),
         ),
         const SizedBox(height: 16),
         Expanded(
@@ -97,9 +64,7 @@ class ExploreContent extends StatelessWidget {
                 Wrap(
                   spacing: 10,
                   runSpacing: 10,
-                  children: _exploreCategories
-                      .map((c) => _ExploreCategoryChip(label: c))
-                      .toList(),
+                  children: _exploreCategories.map((c) => _ExploreCategoryChip(label: c)).toList(),
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -109,8 +74,8 @@ class ExploreContent extends StatelessWidget {
                 const SizedBox(height: 12),
                 Consumer<ProductProvider>(
                   builder: (context, provider, _) {
-                    final data = provider.products.isNotEmpty ? provider.products : _fallbackProducts;
-                    if (data.isEmpty) {
+                    final products = provider.products.isNotEmpty ? provider.products : _fallbackProducts;
+                    if (products.isEmpty) {
                       return const Center(child: Text('Chưa có sản phẩm'));
                     }
                     return GridView.builder(
@@ -122,9 +87,9 @@ class ExploreContent extends StatelessWidget {
                         crossAxisSpacing: 12,
                         childAspectRatio: 160 / 238.281,
                       ),
-                      itemCount: data.length,
+                      itemCount: products.length,
                       itemBuilder: (context, index) {
-                        final product = data[index];
+                        final product = products[index];
                         return ProductCard(product: product, onTap: () {});
                       },
                     );
@@ -240,5 +205,3 @@ final List<Product> _fallbackProducts = [
     discount: 30,
   ),
 ];
-
- 

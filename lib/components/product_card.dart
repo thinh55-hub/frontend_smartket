@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../core/models/product.dart';
 import '../theme/app_theme.dart';
 
-/// Common product card used across home & explore tabs.
+/// Shared product card used across home & explore tabs.
 class ProductCard extends StatelessWidget {
   final Product product;
   final VoidCallback? onTap;
@@ -82,7 +82,7 @@ class ProductCard extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        const Spacer(),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
@@ -104,7 +104,6 @@ class ProductCard extends StatelessWidget {
                             ],
                           ],
                         ),
-                        const Spacer(),
                       ],
                     ),
                   ),
