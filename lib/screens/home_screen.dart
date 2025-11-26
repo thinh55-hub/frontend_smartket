@@ -11,8 +11,12 @@ import '../theme/app_theme.dart';
 import '../core/state/product_provider.dart';
 import '../core/models/product.dart';
 import '../data/mock_products.dart';
-import '../components/home_product_card.dart';
+import '../components/product_card.dart';
+import '../components/smartbag_chip.dart';
+import '../components/smartbag_chip_list.dart';
+import '../components/segmented_label_row.dart';
 import '../components/stat_card.dart';
+import '../components/search_pill.dart';
 import 'product_detail_screen.dart';
 import 'explore_screen.dart';
 import 'qr_screen.dart';
@@ -58,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
       case MainTab.home:
         return _HomeOverview();
       case MainTab.explore:
-        return const ExploreContent();
+        return ExploreContent();
       case MainTab.qr:
         return const QrContent();
       case MainTab.smartbag:
@@ -137,27 +141,8 @@ class _HomeHeader extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               // Figma Node: 558-491 — Search input
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: const Color(0xFFECEFF3)),
-                  boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 10, offset: Offset(0, 4))],
-                ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.search, size: 20, color: AppColors.primary),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text(
-                        'Tìm sản phẩm, cửa hàng, smartbag...',
-                        style: TextStyle(fontSize: 13, color: Color(0xFF9AA1AF)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  // Search (reusable component)
+                  const SearchPill(),
             ],
           ),
         ),
@@ -304,7 +289,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                         separatorBuilder: (_, __) => const SizedBox(width: 12),
                         itemBuilder: (context, index) {
                           final product = promos[index];
-                          return HomeProductCard(
+                          return ProductCard(
                             product: product,
                             onTap: () => Navigator.of(context).push(
                               MaterialPageRoute(builder: (_) => ProductDetailScreen(product: product)),
@@ -402,21 +387,10 @@ class _SmartbagShelfState extends State<_SmartbagShelf> {
               ],
             ),
             const SizedBox(height: 8),
-            SizedBox(
-              height: 42,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: deals.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-                itemBuilder: (context, index) {
-                  final deal = deals[index];
-                  return _SmartbagChip(
-                    label: deal.tag,
-                    selected: index == _selectedIndex,
-                    onTap: () => _onChipTap(index),
-                  );
-                },
-              ),
+            SmartbagChipList(
+              labels: deals.map((deal) => deal.tag).toList(),
+              selectedIndex: _selectedIndex,
+              onSelected: _onChipTap,
             ),
             const SizedBox(height: 20),
             ListView.separated(
@@ -436,40 +410,6 @@ class _SmartbagShelfState extends State<_SmartbagShelf> {
         ),
       ),
     );
-  }
-}
-
-class _SmartbagChip extends StatelessWidget {
-  final String label;
-  final bool selected;
-  final VoidCallback? onTap;
-
-  const _SmartbagChip({required this.label, this.selected = false, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final chip = AnimatedContainer(
-      duration: const Duration(milliseconds: 220),
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-      decoration: BoxDecoration(
-        color: selected ? const Color(0xFF00C853) : Colors.white,
-        borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: selected ? const Color(0xFF00C853) : const Color(0xFFE0E4EE)),
-        boxShadow: selected
-            ? const [BoxShadow(color: Color(0x3300C853), blurRadius: 18, offset: Offset(0, 8))]
-            : const [BoxShadow(color: Color(0x05000000), blurRadius: 8, offset: Offset(0, 4))],
-      ),
-      child: Text(
-        label,
-        style: GoogleFonts.lexendDeca(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-          color: selected ? Colors.white : AppColors.textPrimary,
-        ),
-      ),
-    );
-
-    return GestureDetector(onTap: onTap, child: chip);
   }
 }
 
@@ -854,28 +794,7 @@ class _SlidingSegmentControl extends StatelessWidget {
                   ),
                 ),
               ),
-              Row(
-                children: List.generate(
-                  _labels.length,
-                  (index) => Expanded(
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () => onSelected(index),
-                      child: Center(
-                        child: AnimatedDefaultTextStyle(
-                          duration: const Duration(milliseconds: 200),
-                          style: GoogleFonts.lexendDeca(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w700,
-                            color: selectedIndex == index ? Colors.white : AppColors.primary,
-                          ),
-                          child: Text(_labels[index]),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              SegmentedLabelRow(labels: _labels, selectedIndex: selectedIndex, onSelected: onSelected),
             ],
           ),
         );
