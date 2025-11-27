@@ -27,7 +27,7 @@ class _WelcomePage1State extends State<WelcomePage1> {
   final List<Map<String, dynamic>> _onboardingData = [
     {
       "title": "Khuyến mãi gần bạn",
-      "desc": "Tìm sản phẩm sắp hết hạn với giá ưu đãi tại\ncác cửa hàng gần bạn",
+      "desc": "Tìm sản phẩm với giá ưu đãi tại\ncác cửa hàng gần bạn",
       "icon": Icons.shopping_bag_outlined,
       "bgIconColor": const Color(0xFFE8F9F0),
       "iconColor": const Color(0xFF00A651),
