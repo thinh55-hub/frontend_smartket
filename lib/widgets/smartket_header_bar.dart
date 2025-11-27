@@ -22,9 +22,15 @@ class SmartketHeaderBar extends StatelessWidget {
       children: [
         SmartketLogo(height: logoHeight, padding: const EdgeInsets.only(top: 4)),
         const Spacer(),
-        CircleIconButton(icon: Icons.favorite_border, onPressed: onFavoriteTap),
+        CircleIconButton(
+          icon: Icons.favorite_border,
+          onPressed: onFavoriteTap,
+        ),
         const SizedBox(width: 10),
-        CircleIconButton(icon: Icons.person_outline, onPressed: onProfileTap),
+        CircleIconButton(
+          icon: Icons.person_outline,
+          onPressed: onProfileTap ?? () => Navigator.of(context).pushNamed('/login'),
+        ),
       ],
     );
   }

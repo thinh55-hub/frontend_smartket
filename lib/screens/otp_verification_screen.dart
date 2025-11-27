@@ -23,7 +23,12 @@ class OtpVerificationScreen extends StatelessWidget {
                   height: 48,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   alignment: Alignment.centerLeft,
-                  child: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                  child: IconButton(
+                    onPressed: () => Navigator.of(context).maybePop(),
+                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
                 ),
                 const Divider(height: 1, thickness: 0.4),
                 Expanded(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'home_screen.dart';
+import 'login_screen.dart';
 import 'otp_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -16,6 +18,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  late TapGestureRecognizer _loginTapRecognizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginTapRecognizer = TapGestureRecognizer()..onTap = _navigateToLogin;
+  }
 
   @override
   void dispose() {
@@ -23,6 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _loginTapRecognizer.dispose();
     super.dispose();
   }
 
@@ -253,8 +263,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-                // Phần "Hoặc đăng nhập bằng"
+                // Phần "Quay lại đăng nhập"
                 const SizedBox(height: 16),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'Quay lại ',
+                        style: GoogleFonts.getFont(
+                          'Lexend Deca',
+                          color: const Color(0xFF8A8A8A),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          height: 1.31,
+                          letterSpacing: -0.50,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'đăng nhập',
+                        style: GoogleFonts.getFont(
+                          'Lexend Deca',
+                          color: const Color(0xFF00A63E),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          height: 1.31,
+                          letterSpacing: -0.50,
+                        ),
+                        recognizer: _loginTapRecognizer,
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 5),
+                // Phần "Hoặc đăng nhập bằng"
                 Text(
                   'Hoặc đăng nhập bằng',
                   textAlign: TextAlign.center,
@@ -388,6 +430,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void _navigateToHome() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => const HomeScreen(isLandscape: false)),
+    );
+  }
+
+  void _navigateToLogin() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
     );
   }
 }
