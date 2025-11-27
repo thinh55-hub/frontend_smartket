@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _navigationTimer = Timer(_splashDuration, () {
       if (!mounted) return;
-      Navigator.of(context).pushReplacementNamed('/onboarding');
+      Navigator.of(context).pushReplacementNamed('/welcome');
     });
   }
 

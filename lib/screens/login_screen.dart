@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Để dùng GoogleFonts hoặc tự add Lexend Deca
-
-// Nếu chưa có GoogleFonts, chạy: flutter pub add google_fonts
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'home_screen.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -222,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _navigateToHome,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
@@ -263,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: _navigateToRegister,
                     child: Text(
                       'Tạo tài khoản',
                       style: GoogleFonts.getFont(
@@ -309,10 +310,9 @@ class _LoginScreenState extends State<LoginScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Google (hoặc Facebook/Apple tùy bạn)
-                  _socialButton('assets/images/google.png'), // thay icon thật
+                  _socialButton('assets/images/google.png', onTap: _navigateToHome),
                   const SizedBox(width: 60),
-                  _socialButton('assets/images/facebook.png'),
+                  _socialButton('assets/images/facebook.png', onTap: _navigateToHome),
                 ],
               ),
 
@@ -324,23 +324,39 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _socialButton(String assetPath) {
-    return Container(
-      width: 59,
-      height: 59,
-      padding: const EdgeInsets.all(11),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x33000000),
-            blurRadius: 6,
-            offset: Offset(0, 1),
-          ),
-        ],
+  Widget _socialButton(String assetPath, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: 59,
+        height: 59,
+        padding: const EdgeInsets.all(11),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x33000000),
+              blurRadius: 6,
+              offset: Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Image.asset(assetPath, width: 37, height: 37),
       ),
-      child: Image.asset(assetPath, width: 37, height: 37),
+    );
+  }
+
+  void _navigateToHome() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const HomeScreen(isLandscape: false)),
+    );
+  }
+
+  void _navigateToRegister() {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const RegisterScreen()),
     );
   }
 }
