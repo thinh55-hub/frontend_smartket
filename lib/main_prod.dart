@@ -3,14 +3,15 @@ import 'package:flutter/services.dart';
 import 'package:frontend_smartket/screens/login_screen.dart';
 import 'package:provider/provider.dart';
 import 'theme/app_theme.dart';
-import 'screens/home_screen.dart';
 import 'core/api/api_client.dart';
 import 'core/repositories/product_repository.dart';
 import 'core/state/product_provider.dart';
 import 'core/config/env.dart';
 import 'core/state/navigation_provider.dart';
-import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/splash_screen.dart';
+import 'screens/welcome_screen.dart';
 
 
 void main() {
@@ -52,7 +53,13 @@ class SmartketApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'SMARTKET',
         theme: buildAppTheme(),
-        home: const RegisterScreen(),
+        initialRoute: '/splash',
+        routes: {
+          '/splash': (_) => const SplashScreen(),
+          '/welcome': (_) => const WelcomeScreen(),
+          '/login': (_) => const LoginScreen(),
+          '/register': (_) => const RegisterScreen(),
+        },
         builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
           value: const SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
