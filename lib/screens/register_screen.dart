@@ -142,9 +142,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(horizontal: 36),
                                     child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
                                       const SizedBox(height: 24),
                                       // Tiêu đề nhỏ
                                       Text(
