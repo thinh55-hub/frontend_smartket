@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
-import 'screens/register_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/splash_screen.dart';
+import 'screens/welcome_screen.dart';
 import 'core/repositories/product_repository_mock.dart';
 import 'core/repositories/cart_repository_mock.dart';
 import 'core/state/product_provider.dart';
@@ -19,7 +20,7 @@ void main() {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.light,
+      systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
   runApp(const SmartketApp());
@@ -54,7 +55,21 @@ class SmartketApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'SMARTKET (Mock)',
         theme: buildAppTheme(),
-        home: const HomeScreen(isLandscape: false),
+        initialRoute: '/splash',
+        routes: {
+          '/splash': (_) => const SplashScreen(),
+          '/welcome': (_) => const WelcomeScreen(),
+          '/login': (_) => const LoginScreen(),
+        },
+        builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+          value: const SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            systemNavigationBarColor: Colors.white,
+            systemNavigationBarIconBrightness: Brightness.dark,
+          ),
+          child: child ?? const SizedBox.shrink(),
+        ),
       ),
     );
   }

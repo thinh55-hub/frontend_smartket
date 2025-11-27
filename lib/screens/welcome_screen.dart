@@ -54,8 +54,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
+      return;
     }
-    // Trang cuối: hiện tại không làm gì cả (bạn sẽ thêm logic sau)
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 
   @override
