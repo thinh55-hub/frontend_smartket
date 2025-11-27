@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import '../core/state/navigation_provider.dart';
 import '../core/state/cart_provider.dart';
 import '../core/utils/formatting.dart';
+import 'cart_screen.dart';
 // home_screen import removed; navigation uses NavigationProvider now
 
 class ProductDetailScreen extends StatefulWidget {
@@ -420,6 +421,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: BottomNav(
                 current: context.watch<NavigationProvider>().current,
                 onChanged: (tab) {
+                  if (tab == MainTab.cart) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen()));
+                    return;
+                  }
                   context.read<NavigationProvider>().current = tab;
                   Navigator.of(context).popUntil((r) => r.isFirst);
                 },

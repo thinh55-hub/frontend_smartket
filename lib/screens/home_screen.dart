@@ -52,7 +52,16 @@ class _HomeScreenState extends State<HomeScreen> {
         body: _buildTabContent(nav.current),
         bottomNavigationBar: SafeArea(
           top: false,
-          child: BottomNav(current: nav.current, onChanged: (t) => nav.current = t),
+          child: BottomNav(
+            current: nav.current,
+            onChanged: (t) {
+              if (t == MainTab.cart) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen()));
+                return;
+              }
+              nav.current = t;
+            },
+          ),
         ),
       ),
     );
