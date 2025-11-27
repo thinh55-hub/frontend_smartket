@@ -109,234 +109,252 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                         // Card trắng chính
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 32),
-                          child: Container(
-                            width: double.infinity,
-                            constraints: const BoxConstraints(minHeight: 420),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color(0x66000000),
-                                  blurRadius: 6,
-                                  offset: Offset(0, 1),
-                                  spreadRadius: 0,
-                                ),
-                              ],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 36),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  // Tiêu đề nhỏ
-                                  Text(
-                                    'Thông tin cá nhân',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.getFont(
-                                      'Lexend Deca',
-                                      color: const Color(0xFF00A63E),
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w600,
-                                      height: 0.77,
-                                      letterSpacing: -0.50,
-                                    ),
-                                  ),
+                          padding: EdgeInsets.only(
+                            left: 16,
+                            right: 16,
+                            bottom: isKeyboardVisible ? 0 : 32,
+                          ),
+                          child: LayoutBuilder(
+                            builder: (context, cardConstraints) {
+                              final double availableHeight = cardConstraints.maxHeight;
+                              final double baseHeight = availableHeight.isFinite
+                                  ? availableHeight - 160
+                                  : MediaQuery.of(context).size.height - 260;
+                              final double targetHeight =
+                                  baseHeight.clamp(420.0, double.infinity);
 
-                                  // Họ và tên
-                                  _buildInputField(
-                                    label: 'Họ và tên',
-                                    controller: _fullNameController,
-                                    hint: 'Nhập Họ và Tên của bạn',
-                                  ),
-
-                                  // Số điện thoại
-                                  _buildInputField(
-                                    label: 'Số điện thoại',
-                                    controller: _phoneController,
-                                    hint: 'Nhập Số điện thoại của bạn',
-                                    keyboardType: TextInputType.phone,
-                                  ),
-
-                                  // Email
-                                  _buildInputField(
-                                    label: 'Email',
-                                    controller: _emailController,
-                                    hint: 'Nhập địa chỉ Email của bạn',
-                                    keyboardType: TextInputType.emailAddress,
-                                  ),
-
-                                  // Đặt mật khẩu
-                                  _buildInputField(
-                                    label: 'Đặt mật khẩu',
-                                    controller: _passwordController,
-                                    hint: 'Tạo mật khẩu cho tài khoản của bạn',
-                                    obscureText: true,
-                                  ),
-
-                                  // Nút Tiếp tục
-                                  Container(
-                                    width: 150,
-                                    height: 35,
-                                    decoration: BoxDecoration(
-                                      gradient: const LinearGradient(
-                                        begin: Alignment(1.00, 0.49),
-                                        end: Alignment(0.00, 0.49),
-                                        colors: [Color(0xFF00C950), Color(0xFF00A63E)],
+                              return ConstrainedBox(
+                                constraints: BoxConstraints(minHeight: targetHeight),
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color(0x66000000),
+                                        blurRadius: 6,
+                                        offset: Offset(0, 1),
+                                        spreadRadius: 0,
                                       ),
-                                      borderRadius: BorderRadius.circular(30),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Color(0x7F00A63E),
-                                          blurRadius: 6,
-                                          offset: Offset(0, 2),
-                                          spreadRadius: 0,
-                                        ),
-                                      ],
-                                    ),
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // TODO: Validate + gửi OTP
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) =>
-                                                const OtpVerificationScreen(),
-                                          ),
-                                        );
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.transparent,
-                                        shadowColor: Colors.transparent,
-                                        padding: EdgeInsets.zero,
-                                      ),
-                                      child: Text(
-                                        'Tiếp tục',
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 36),
+                                    child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 24),
+                                      // Tiêu đề nhỏ
+                                      Text(
+                                        'Thông tin cá nhân',
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.getFont(
                                           'Lexend Deca',
-                                          color: Colors.white,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w300,
+                                          color: const Color(0xFF00A63E),
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          height: 0.77,
+                                          letterSpacing: -0.50,
                                         ),
                                       ),
-                                    ),
-                                  ),
+                                      const SizedBox(height: 24),
 
-                                  // Điều khoản
-                                  SizedBox(
-                                    width: 272,
-                                    child: Text.rich(
-                                      TextSpan(
+                                      // Họ và tên
+                                      _buildInputField(
+                                        label: 'Họ và tên',
+                                        controller: _fullNameController,
+                                        hint: 'Nhập Họ và Tên của bạn',
+                                      ),
+                                      const SizedBox(height: 16),
+
+                                      // Số điện thoại
+                                      _buildInputField(
+                                        label: 'Số điện thoại',
+                                        controller: _phoneController,
+                                        hint: 'Nhập Số điện thoại của bạn',
+                                        keyboardType: TextInputType.phone,
+                                      ),
+                                      const SizedBox(height: 16),
+
+                                      // Email
+                                      _buildInputField(
+                                        label: 'Email',
+                                        controller: _emailController,
+                                        hint: 'Nhập địa chỉ Email của bạn',
+                                        keyboardType: TextInputType.emailAddress,
+                                      ),
+                                      const SizedBox(height: 16),
+
+                                      // Đặt mật khẩu
+                                      _buildInputField(
+                                        label: 'Đặt mật khẩu',
+                                        controller: _passwordController,
+                                        hint: 'Tạo mật khẩu cho tài khoản của bạn',
+                                        obscureText: true,
+                                      ),
+                                      const SizedBox(height: 24),
+
+                                      // Nút Tiếp tục
+                                      Container(
+                                        width: 150,
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                          gradient: const LinearGradient(
+                                            begin: Alignment(1.00, 0.49),
+                                            end: Alignment(0.00, 0.49),
+                                            colors: [Color(0xFF00C950), Color(0xFF00A63E)],
+                                          ),
+                                          borderRadius: BorderRadius.circular(30),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Color(0x7F00A63E),
+                                              blurRadius: 6,
+                                              offset: Offset(0, 2),
+                                              spreadRadius: 0,
+                                            ),
+                                          ],
+                                        ),
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) => const OtpVerificationScreen(),
+                                              ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.transparent,
+                                            shadowColor: Colors.transparent,
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                          child: Text(
+                                            'Tiếp tục',
+                                            textAlign: TextAlign.center,
+                                            style: GoogleFonts.getFont(
+                                              'Lexend Deca',
+                                              color: Colors.white,
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+
+                                      // Điều khoản
+                                      SizedBox(
+                                        width: 272,
+                                        child: Text.rich(
+                                          TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Bằng cách tiếp tục, bạn đồng ý với\n',
+                                                style: GoogleFonts.getFont(
+                                                  'Lexend Deca',
+                                                  color: const Color(0xFF6A7282),
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w300,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: 'Điều khoản dịch vụ',
+                                                style: GoogleFonts.getFont(
+                                                  'Lexend Deca',
+                                                  color: const Color(0xFF00A63E),
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: ' và ',
+                                                style: GoogleFonts.getFont(
+                                                  'Lexend Deca',
+                                                  color: const Color(0xFF6A7282),
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w300,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: 'Chính sách bảo mật',
+                                                style: GoogleFonts.getFont(
+                                                  'Lexend Deca',
+                                                  color: const Color(0xFF00A63E),
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'Quay lại ',
+                                              style: GoogleFonts.getFont(
+                                                'Lexend Deca',
+                                                color: const Color(0xFF8A8A8A),
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.31,
+                                                letterSpacing: -0.50,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: 'đăng nhập',
+                                              style: GoogleFonts.getFont(
+                                                'Lexend Deca',
+                                                color: const Color(0xFF00A63E),
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w400,
+                                                height: 1.31,
+                                                letterSpacing: -0.50,
+                                              ),
+                                              recognizer: _loginTapRecognizer,
+                                            ),
+                                          ],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        'Hoặc đăng nhập bằng',
+                                        textAlign: TextAlign.center,
+                                        style: GoogleFonts.getFont(
+                                          'Lexend Deca',
+                                          color: const Color(0xFF8A8A8A),
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w400,
+                                          height: 1.31,
+                                          letterSpacing: -0.50,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
-                                          TextSpan(
-                                            text: 'Bằng cách tiếp tục, bạn đồng ý với\n',
-                                            style: GoogleFonts.getFont(
-                                              'Lexend Deca',
-                                              color: const Color(0xFF6A7282),
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: 'Điều khoản dịch vụ',
-                                            style: GoogleFonts.getFont(
-                                              'Lexend Deca',
-                                              color: const Color(0xFF00A63E),
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: ' và ',
-                                            style: GoogleFonts.getFont(
-                                              'Lexend Deca',
-                                              color: const Color(0xFF6A7282),
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w300,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: 'Chính sách bảo mật',
-                                            style: GoogleFonts.getFont(
-                                              'Lexend Deca',
-                                              color: const Color(0xFF00A63E),
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
+                                          _buildSocialButton('assets/images/google.png',
+                                              onTap: _navigateToHome),
+                                          const SizedBox(width: 61),
+                                          _buildSocialButton('assets/images/facebook.png',
+                                              onTap: _navigateToHome),
                                         ],
                                       ),
-                                      textAlign: TextAlign.center,
-                                    ),
+                                      const SizedBox(height: 32),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        // Phần "Quay lại đăng nhập"
-                        const SizedBox(height: 16),
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'Quay lại ',
-                                style: GoogleFonts.getFont(
-                                  'Lexend Deca',
-                                  color: const Color(0xFF8A8A8A),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.31,
-                                  letterSpacing: -0.50,
                                 ),
                               ),
-                              TextSpan(
-                                text: 'đăng nhập',
-                                style: GoogleFonts.getFont(
-                                  'Lexend Deca',
-                                  color: const Color(0xFF00A63E),
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                  height: 1.31,
-                                  letterSpacing: -0.50,
-                                ),
-                                recognizer: _loginTapRecognizer,
-                              ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center,
+                            );
+                          },
                         ),
-                        const SizedBox(height: 5),
-                        // Phần "Hoặc đăng nhập bằng"
-                        Text(
-                          'Hoặc đăng nhập bằng',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.getFont(
-                            'Lexend Deca',
-                            color: const Color(0xFF8A8A8A),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                            height: 1.31,
-                            letterSpacing: -0.50,
-                          ),
-                        ),
-                        const SizedBox(height: 22),
-
-                        // Social login buttons
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _buildSocialButton('assets/images/google.png',
-                                onTap: _navigateToHome),
-                            const SizedBox(width: 61),
-                            _buildSocialButton('assets/images/facebook.png',
-                                onTap: _navigateToHome),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
+                      ),
                       ],
                     ),
                   ),
