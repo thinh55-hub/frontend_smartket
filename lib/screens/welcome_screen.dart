@@ -1,14 +1,14 @@
-// lib/screens/welcome_page1.dart (hoặc tên file bạn thích)
+// lib/screens/welcome_screen.dart
 import 'package:flutter/material.dart';
 
-class WelcomePage1 extends StatefulWidget {
-  const WelcomePage1({Key? key}) : super(key: key);
+class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<WelcomePage1> createState() => _WelcomePage1State();
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomePage1State extends State<WelcomePage1> {
+class _WelcomeScreenState extends State<WelcomeScreen> {
   late PageController _pageController;
   int _currentPage = 0;
 
@@ -24,28 +24,28 @@ class _WelcomePage1State extends State<WelcomePage1> {
     super.dispose();
   }
 
-  final List<Map<String, dynamic>> _onboardingData = [
-    {
-      "title": "Khuyến mãi gần bạn",
-      "desc": "Tìm sản phẩm với giá ưu đãi tại\ncác cửa hàng gần bạn",
-      "icon": Icons.shopping_bag_outlined,
-      "bgIconColor": const Color(0xFFE8F9F0),
-      "iconColor": const Color(0xFF00A651),
-    },
-    {
-      "title": "Túi Smartbag bất ngờ",
-      "desc": "Nhận các sản phẩm giá trị cao với chi phí rẻ.\nMỗi túi là một bất ngờ!",
-      "icon": Icons.card_giftcard,
-      "bgIconColor": const Color(0xFFF1F8E9),
-      "iconColor": const Color(0xFF00A651),
-    },
-    {
-      "title": "Giảm lãng phí thực phẩm",
-      "desc": "Cùng cửa hàng giảm lãng phí – bảo vệ môi trường\ncho thế hệ mai sau",
-      "icon": Icons.public,
-      "bgIconColor": const Color(0xFFE1F5FE),
-      "iconColor": const Color(0xFF0288D1),
-    },
+  final List<OnboardingItem> _onboardingData = const [
+    OnboardingItem(
+      title: 'Khuyến mãi gần bạn',
+      description: 'Tìm sản phẩm với giá ưu đãi tại\ncác cửa hàng gần bạn',
+      icon: Icons.shopping_bag_outlined,
+      backgroundColor: Color(0xFFE8F9F0),
+      iconColor: Color(0xFF00A651),
+    ),
+    OnboardingItem(
+      title: 'Túi Smartbag bất ngờ',
+      description: 'Nhận các sản phẩm giá trị cao với chi phí rẻ.\nMỗi túi là một bất ngờ!',
+      icon: Icons.card_giftcard,
+      backgroundColor: Color(0xFFF1F8E9),
+      iconColor: Color(0xFF00A651),
+    ),
+    OnboardingItem(
+      title: 'Giảm lãng phí thực phẩm',
+      description: 'Cùng cửa hàng giảm lãng phí – bảo vệ môi trường\ncho thế hệ mai sau',
+      icon: Icons.public,
+      backgroundColor: Color(0xFFE1F5FE),
+      iconColor: Color(0xFF0288D1),
+    ),
   ];
 
   void _onNext() {
@@ -78,7 +78,7 @@ class _WelcomePage1State extends State<WelcomePage1> {
                   });
                 },
                 itemBuilder: (context, index) => _buildPageContent(
-                  data: _onboardingData[index],
+                  item: _onboardingData[index],
                   size: size,
                 ),
               ),
@@ -144,10 +144,7 @@ class _WelcomePage1State extends State<WelcomePage1> {
     );
   }
 
-  Widget _buildPageContent({
-    required Map<String, dynamic> data,
-    required Size size,
-  }) {
+  Widget _buildPageContent({required OnboardingItem item, required Size size}) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -159,7 +156,7 @@ class _WelcomePage1State extends State<WelcomePage1> {
             width: size.width * 0.55,
             height: size.width * 0.55,
             decoration: BoxDecoration(
-              color: data['bgIconColor'],
+              color: item.backgroundColor,
               borderRadius: BorderRadius.circular(40),
               boxShadow: [
                 BoxShadow(
@@ -170,16 +167,16 @@ class _WelcomePage1State extends State<WelcomePage1> {
               ],
             ),
             child: Icon(
-              data['icon'],
+              item.icon,
               size: 80,
-              color: data['iconColor'],
+              color: item.iconColor,
             ),
           ),
 
           const SizedBox(height: 40),
 
           Text(
-            data['title'],
+            item.title,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 24,
@@ -192,7 +189,7 @@ class _WelcomePage1State extends State<WelcomePage1> {
           const SizedBox(height: 16),
 
           Text(
-            data['desc'],
+            item.description,
             textAlign: TextAlign.center,
             style: const TextStyle(
               fontSize: 15,
@@ -233,4 +230,20 @@ class _WelcomePage1State extends State<WelcomePage1> {
       ),
     );
   }
+}
+
+class OnboardingItem {
+  final String title;
+  final String description;
+  final IconData icon;
+  final Color backgroundColor;
+  final Color iconColor;
+
+  const OnboardingItem({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.backgroundColor,
+    required this.iconColor,
+  });
 }

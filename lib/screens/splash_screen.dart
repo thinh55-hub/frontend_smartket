@@ -11,8 +11,10 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
+  static const _splashDuration = Duration(seconds: 3);
   late AnimationController _controller;
   late Animation<double> _progress;
+  Timer? _navigationTimer;
 
   @override
   void initState() {
@@ -22,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen>
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
     _controller = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: _splashDuration,
       vsync: this,
     );
 
@@ -32,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    Timer(const Duration(seconds: 3), () {
+    _navigationTimer = Timer(_splashDuration, () {
       if (!mounted) return;
       Navigator.of(context).pushReplacementNamed('/onboarding');
     });
@@ -40,6 +42,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
+    _navigationTimer?.cancel();
     _controller.dispose();
     SystemChrome.setPreferredOrientations([]);
     super.dispose();
