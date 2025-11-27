@@ -10,6 +10,7 @@ class StoreCartCard extends StatelessWidget {
   final List<CompactCartItemData> items;
   final VoidCallback? onClose;
   final VoidCallback? onCheckout;
+  final EdgeInsetsGeometry? margin;
 
   const StoreCartCard({
     super.key,
@@ -17,6 +18,7 @@ class StoreCartCard extends StatelessWidget {
     required this.items,
     this.onClose,
     this.onCheckout,
+    this.margin,
   });
 
   @override
@@ -24,7 +26,7 @@ class StoreCartCard extends StatelessWidget {
     final total = items.fold<double>(0, (sum, item) => sum + item.price * item.quantity);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      margin: margin ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
@@ -90,9 +92,9 @@ class StoreCartCard extends StatelessWidget {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    Text('Tổng cửa hàng', style: GoogleFonts.lexendDeca(fontSize: 14, color: AppColors.textSecondary)),
+                    Text('Tổng cửa hàng', style: GoogleFonts.lexendDeca(fontSize: 17, color: AppColors.textSecondary)),
                     const Spacer(),
-                    Text('${total.toInt()} đ', style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w700, color: AppColors.primary)),
+                    Text('${total.toInt()} đ', style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w400, color: AppColors.primary)),
                   ],
                 ),
                 const SizedBox(height: 12),

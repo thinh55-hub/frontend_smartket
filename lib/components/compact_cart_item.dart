@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../theme/app_theme.dart';
 
@@ -58,23 +59,34 @@ class CompactCartItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(title, style: GoogleFonts.lexendDeca(fontSize: 15, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 4),
-                Text('${price.toInt()} đ', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w700, color: AppColors.primary)),
+                Text(title, style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w400)),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Text('${price.toInt()} đ', style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w400, color: AppColors.primary)),
+                    const Spacer(),
+                    _QuantityButton(icon: Icons.remove, filled: false, onTap: onDecrease),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text('$quantity', style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w400)),
+                    ),
+                    _QuantityButton(icon: Icons.add, filled: true, onTap: onIncrease),
+                    const Spacer(),
+                    IconButton(
+                      onPressed: onRemove,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                      splashRadius: 20,
+                      icon: SvgPicture.string(
+                        _trashIconSvg,
+                        width: 18,
+                        height: 20,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
-          ),
-          _QuantityButton(icon: Icons.remove, filled: false, onTap: onDecrease),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text('$quantity', style: GoogleFonts.lexendDeca(fontSize: 15, fontWeight: FontWeight.w600)),
-          ),
-          _QuantityButton(icon: Icons.add, filled: true, onTap: onIncrease),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: onRemove,
-            splashRadius: 20,
-            icon: const Icon(Icons.delete_outline, color: Color(0xFFE53935)),
           ),
         ],
       ),
@@ -82,30 +94,52 @@ class CompactCartItem extends StatelessWidget {
   }
 }
 
+const _trashIconSvg = '''
+<svg xmlns="http://www.w3.org/2000/svg" width="21" height="23" viewBox="0 0 21 23" fill="none">
+  <path d="M1.25 5.25H3.25M3.25 5.25H19.25M3.25 5.25V19.25C3.25 19.7804 3.46071 20.2891 3.83579 20.6642C4.21086 21.0393 4.71957 21.25 5.25 21.25H15.25C15.7804 21.25 16.2891 21.0393 16.6642 20.6642C17.0393 20.2891 17.25 19.7804 17.25 19.25V5.25M6.25 5.25V3.25C6.25 2.71957 6.46071 2.21086 6.83579 1.83579C7.21086 1.46071 7.71957 1.25 8.25 1.25H12.25C12.7804 1.25 13.2891 1.46071 13.6642 1.83579C14.0393 2.21086 14.25 2.71957 14.25 3.25V5.25" stroke="#E7000B" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+''';
+
 class _QuantityButton extends StatelessWidget {
   final IconData icon;
   final bool filled;
   final VoidCallback? onTap;
 
-  const _QuantityButton({required this.icon, required this.filled, this.onTap});
+  const _QuantityButton({
+    required this.icon,
+    required this.filled,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(999),
+      splashColor: AppColors.primary.withOpacity(0.1),
       child: Container(
-        width: 32,
-        height: 32,
+        width: 22,
+        height: 22,
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
           color: filled ? AppColors.primary : Colors.white,
-          border: filled ? null : Border.all(color: const Color(0xFFD8DEE6)),
-          boxShadow: filled ? const [BoxShadow(color: Color(0x3300C853), blurRadius: 8, offset: Offset(0, 4))] : null,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+            color: filled ? AppColors.primary : const Color(0xFFE0E4EE),
+          ),
+          boxShadow: filled
+              ? const [
+                  BoxShadow(
+                    color: Color(0x2200A63E),
+                    blurRadius: 6,
+                    offset: Offset(0, 2),
+                  )
+                ]
+              : null,
         ),
         child: Icon(
           icon,
-          size: 18,
-          color: filled ? Colors.white : AppColors.textPrimary,
+          size: 11,
+          color: filled ? Colors.white : AppColors.primary,
         ),
       ),
     );
