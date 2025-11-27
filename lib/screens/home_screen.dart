@@ -24,6 +24,7 @@ import 'explore_screen.dart';
 import 'qr_screen.dart';
 import 'smartbag_screen.dart';
 import 'cart_screen.dart';
+import 'favorite_stores_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isLandscape;
@@ -128,7 +129,13 @@ class _HomeHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SmartketHeaderBar(),
+              SmartketHeaderBar(
+                onFavoriteTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const FavoriteStoresScreen()),
+                  );
+                },
+              ),
               const SizedBox(height: 12),
               // Figma Node: 346-1052 — Location selector pill
               const LocationPill(),
