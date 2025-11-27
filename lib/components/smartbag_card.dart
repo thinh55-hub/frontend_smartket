@@ -1,85 +1,151 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../theme/app_theme.dart';
 
+/// Compact Smartbag card used in horizontal carousels (Figma: "Smartbag - mini").
 class SmartbagCard extends StatelessWidget {
-  final String tag;
   final String title;
-  final String store;
-  final String distance;
+  final String timeRange;
   final String price;
-  final String oldPrice;
-  final String discount;
-  final String time;
+  final String? originalPrice;
+  final String? imageUrl;
+  final double width;
+  final VoidCallback? onTap;
 
   const SmartbagCard({
     super.key,
-    required this.tag,
     required this.title,
-    required this.store,
-    required this.distance,
+    required this.timeRange,
     required this.price,
-    required this.oldPrice,
-    required this.discount,
-    required this.time,
+    this.originalPrice,
+    this.imageUrl,
+    this.width = 176,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 3 / 4,
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.border),
-          boxShadow: AppShadows.light,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Icon(Icons.lunch_dining, size: 36, color: Color(0xFFFFA726)),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(color: const Color(0xFFE5F9EC), borderRadius: BorderRadius.circular(12)),
-              child: Text(tag, style: const TextStyle(fontSize: 11, color: AppColors.primary)),
-            ),
-            const SizedBox(height: 6),
-            Text(title, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-            const SizedBox(height: 4),
-            Text('$store • $distance', style: const TextStyle(fontSize: 12, color: AppColors.primary)),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final card = Container(
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE4E7EF)),
+        boxShadow: AppShadows.elevated,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _SmartbagCardImage(imageUrl: imageUrl),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  title,
+                  style: GoogleFonts.lexendDeca(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  timeRange,
+                  style: GoogleFonts.lexendDeca(
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 10),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(price, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red)),
-                    const SizedBox(width: 6),
-                    Text(oldPrice, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, decoration: TextDecoration.lineThrough)),
+                    Text(
+                      price,
+                      style: GoogleFonts.lexendDeca(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.salePrice,
+                      ),
+                    ),
+                    if (originalPrice != null && originalPrice!.isNotEmpty) ...[
+                      const SizedBox(width: 6),
+                      Text(
+                        originalPrice!,
+                        style: GoogleFonts.lexendDeca(
+                          fontSize: 13,
+                          color: const Color(0xFFB1B8C6),
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(6)),
-                  child: Text(discount, style: const TextStyle(fontSize: 10, color: Colors.white)),
-                ),
               ],
             ),
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                const Icon(Icons.access_time, size: 14, color: AppColors.textSecondary),
-                const SizedBox(width: 4),
-                Text(time, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
-              ],
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+
+    if (onTap == null) return card;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: card,
     );
   }
 }
 
+class _SmartbagCardImage extends StatelessWidget {
+  final String? imageUrl;
+
+  const _SmartbagCardImage({this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+      child: AspectRatio(
+        aspectRatio: 4 / 3,
+        child: _buildImage(),
+      ),
+    );
+  }
+
+  Widget _buildImage() {
+    final placeholder = Container(
+      color: const Color(0xFFF4F6FA),
+      child: const Icon(
+        Icons.local_cafe,
+        size: 40,
+        color: Color(0xFFB7BDC9),
+      ),
+    );
+
+    if (imageUrl == null || imageUrl!.isEmpty) {
+      return placeholder;
+    }
+
+    if (imageUrl!.startsWith('http')) {
+      return Image.network(
+        imageUrl!,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => placeholder,
+      );
+    }
+
+    return Image.asset(
+      imageUrl!,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => placeholder,
+    );
+  }
+}
