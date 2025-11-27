@@ -43,7 +43,7 @@ class SmartketApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'SMARTKET (Mock)',
         theme: buildAppTheme(),
-        home: const RegisterScreen(),
+        home: const HomeScreen(isLandscape: false),
       ),
     );
   }

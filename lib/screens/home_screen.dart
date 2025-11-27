@@ -12,6 +12,7 @@ import '../core/state/product_provider.dart';
 import '../core/models/product.dart';
 import '../data/mock_products.dart';
 import '../components/product_card.dart';
+import '../components/location_pill.dart';
 import '../components/smartbag_chip.dart';
 import '../components/smartbag_chip_list.dart';
 import '../components/segmented_label_row.dart';
@@ -120,25 +121,7 @@ class _HomeHeader extends StatelessWidget {
               const SmartketHeaderBar(),
               const SizedBox(height: 12),
               // Figma Node: 346-1052 — Location selector pill
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: const Color(0xFFECEFF3)),
-                  boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 10, offset: Offset(0, 4))],
-                ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.location_on_outlined, size: 18, color: AppColors.primary),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text('Quận 1, TP.HCM • 5 km', style: TextStyle(fontSize: 13, color: AppColors.textPrimary)),
-                    ),
-                    Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textPrimary),
-                  ],
-                ),
-              ),
+              const LocationPill(),
               const SizedBox(height: 8),
               // Figma Node: 558-491 — Search input
                   // Search (reusable component)
