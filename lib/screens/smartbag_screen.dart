@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-
 import '../theme/app_theme.dart';
 import '../widgets/segment_chip.dart';
+import '../widgets/smartket_header_bar.dart';
 
 class SmartbagScreen extends StatelessWidget {
   const SmartbagScreen({super.key});
@@ -39,25 +38,9 @@ class SmartbagContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Text(
-                'Smartbag',
-                style: GoogleFonts.lexendDeca(fontSize: 18, fontWeight: FontWeight.w700),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.favorite_border, color: Color(0xFF00C853)),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: const Icon(Icons.person_outline, color: Color(0xFF00C853)),
-                onPressed: () {},
-              ),
-            ],
-          ),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: SmartketHeaderBar(),
         ),
         const SizedBox(height: 4),
         Padding(
