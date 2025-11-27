@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../api/api_client.dart';
 import '../models/cart.dart';
+import '../models/product.dart';
 
 class CartProvider extends ChangeNotifier {
   final dynamic _repo; // CartRepository or CartRepositoryMock
@@ -64,8 +65,67 @@ class CartProvider extends ChangeNotifier {
     }
   }
 
+  void removeStore(String storeId) {
+    final updatedStores = _stores.where((store) => store.id != storeId).toList();
+    if (updatedStores.length != _stores.length) {
+      _stores = updatedStores;
+      notifyListeners();
+    }
+  }
+
   void clear() {
     _stores = [];
+    notifyListeners();
+  }
+
+  void addProduct(Product product, {int quantity = 1}) {
+    if (quantity <= 0) return;
+    final storeName = product.merchantName ?? 'Cửa hàng';
+    String storeId = product.merchantId?.toString() ?? storeName;
+    CartStore? existingStore;
+    for (final store in _stores) {
+      if (store.id == storeId || store.name.toLowerCase() == storeName.toLowerCase()) {
+        existingStore = store;
+        storeId = store.id;
+        break;
+      }
+    }
+
+    final newItem = CartItem(
+      id: product.id,
+      title: product.name,
+      price: product.price ?? 0,
+      quantity: quantity,
+      imageAsset: product.imageUrl != null && !product.imageUrl!.startsWith('http') ? product.imageUrl : null,
+    );
+
+    if (existingStore != null) {
+      bool updatedExisting = false;
+      final updatedItems = existingStore.items.map((item) {
+        if (item.id != product.id) return item;
+        updatedExisting = true;
+        return item.copyWith(
+          quantity: item.quantity + quantity,
+          price: product.price ?? item.price,
+          title: product.name,
+          imageAsset: newItem.imageAsset ?? item.imageAsset,
+        );
+      }).toList();
+      if (!updatedExisting) {
+        updatedItems.add(newItem);
+      }
+      _stores = _stores.map((store) {
+        if (store.id != storeId) return store;
+        return store.copyWith(items: updatedItems);
+      }).toList();
+    } else {
+      final newStore = CartStore(
+        id: storeId,
+        name: storeName,
+        items: [newItem],
+      );
+      _stores = [..._stores, newStore];
+    }
     notifyListeners();
   }
 

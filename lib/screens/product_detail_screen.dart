@@ -7,6 +7,7 @@ import '../data/mock_products.dart';
 import '../widgets/bottom_nav.dart';
 import 'package:provider/provider.dart';
 import '../core/state/navigation_provider.dart';
+import '../core/state/cart_provider.dart';
 import '../core/utils/formatting.dart';
 // home_screen import removed; navigation uses NavigationProvider now
 
@@ -374,7 +375,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         child: ElevatedButton(
                           onPressed: quantity > 0
                               ? () {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Đã thêm $quantity ${widget.product.name} vào giỏ hàng'), backgroundColor: AppColors.primary, duration: const Duration(seconds: 2)));
+                                  context.read<CartProvider>().addProduct(widget.product, quantity: quantity);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Đã thêm $quantity ${widget.product.name} vào giỏ hàng'),
+                                      backgroundColor: AppColors.primary,
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                  setState(() => quantity = 0);
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(

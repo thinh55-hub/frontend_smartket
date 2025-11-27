@@ -89,6 +89,7 @@ class CartContent extends StatelessWidget {
                             ),
                           )
                           .toList(),
+                      onClose: () => cartProvider.removeStore(store.id),
                       onCheckout: () {},
                       margin: EdgeInsets.fromLTRB(16, index == 0 ? 0 : 12, 16, 12),
                     );
