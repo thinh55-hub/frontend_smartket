@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_smartket/screens/otp_verification_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'home_screen.dart';
+import 'otp_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -271,9 +273,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _buildSocialButton('assets/images/google.png'),
+                    _buildSocialButton('assets/images/google.png', onTap: _navigateToHome),
                     const SizedBox(width: 61),
-                    _buildSocialButton('assets/images/facebook.png'),
+                    _buildSocialButton('assets/images/facebook.png', onTap: _navigateToHome),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -351,31 +353,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildSocialButton(String iconPath) {
-    return Container(
-      width: 59,
-      height: 59,
-      padding: const EdgeInsets.all(11),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x33000000),
-            blurRadius: 6,
-            offset: Offset(0, 1),
-            spreadRadius: 0,
+  Widget _buildSocialButton(String iconPath, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: 59,
+        height: 59,
+        padding: const EdgeInsets.all(11),
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
           ),
-        ],
+          shadows: const [
+            BoxShadow(
+              color: Color(0x33000000),
+              blurRadius: 6,
+              offset: Offset(0, 1),
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Image.asset(
+          iconPath,
+          width: 37,
+          height: 37,
+          fit: BoxFit.cover,
+        ),
       ),
-      child: Image.asset(
-        iconPath,
-        width: 37,
-        height: 37,
-        fit: BoxFit.cover,
-      ),
+    );
+  }
+
+  void _navigateToHome() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const HomeScreen(isLandscape: false)),
     );
   }
 }
