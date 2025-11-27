@@ -45,6 +45,7 @@ class SmartketApp extends StatelessWidget {
         title: 'SMARTKET (Mock)',
         theme: buildAppTheme(),
         home: const HomeScreen(isLandscape: false),
+        // home: const LoginScreen(),
       ),
     );
   }
