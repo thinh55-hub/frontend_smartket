@@ -52,14 +52,34 @@ class SmartbagCard extends StatelessWidget {
             Text('$store • $distance', style: const TextStyle(fontSize: 12, color: AppColors.primary)),
             const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Text(price, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Colors.red)),
-                    const SizedBox(width: 6),
-                    Text(oldPrice, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary, decoration: TextDecoration.lineThrough)),
-                  ],
+                Expanded(
+                  child: Row(
+                    children: [
+                      Text(
+                        price,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.red,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          oldPrice,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -82,4 +102,3 @@ class SmartbagCard extends StatelessWidget {
     );
   }
 }
-

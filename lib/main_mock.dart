@@ -8,9 +8,11 @@ import 'screens/splash_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'core/repositories/product_repository_mock.dart';
 import 'core/repositories/cart_repository_mock.dart';
+import 'core/repositories/smartbag_repository_mock.dart';
 import 'core/state/product_provider.dart';
 import 'core/state/cart_provider.dart';
 import 'core/state/navigation_provider.dart';
+import 'core/state/smartbag_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,10 +37,20 @@ class SmartketApp extends StatelessWidget {
       providers: [
         Provider<ProductRepositoryMock>(create: (_) => ProductRepositoryMock()),
         Provider<CartRepositoryMock>(create: (_) => CartRepositoryMock()),
+        Provider<SmartbagRepositoryMock>(
+            create: (_) => SmartbagRepositoryMock()),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider<ProductProvider>(
           create: (ctx) {
             final provider = ProductProvider(ctx.read<ProductRepositoryMock>());
+            provider.fetchInitial();
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider<SmartbagProvider>(
+          create: (ctx) {
+            final provider =
+                SmartbagProvider(ctx.read<SmartbagRepositoryMock>());
             provider.fetchInitial();
             return provider;
           },

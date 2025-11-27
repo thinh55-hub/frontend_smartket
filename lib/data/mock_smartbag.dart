@@ -1,0 +1,48 @@
+import '../core/models/smartbag.dart';
+
+const List<Smartbag> mockSmartbags = [
+  Smartbag(
+    id: 'sb-1',
+    title: 'Bánh ngọt & cà phê',
+    storeName: 'GL Minimart',
+    price: 27000,
+    oldPrice: 37000,
+    pickupTime: '8:00 - 11:30 hôm nay',
+    distance: '0.6 km',
+    tag: 'Sweet Treat',
+    imageAsset: 'assets/images/smartbag_image.jpg',
+  ),
+  Smartbag(
+    id: 'sb-2',
+    title: 'Sữa tươi + bánh mì',
+    storeName: 'ĐT Minimart',
+    price: 32000,
+    oldPrice: 45000,
+    pickupTime: '9:00 - 12:00 hôm nay',
+    distance: '0.9 km',
+    tag: 'Breakfast',
+    imageAsset: 'assets/images/smartbag_image.jpg',
+  ),
+  Smartbag(
+    id: 'sb-3',
+    title: 'Combo salad & nước ép',
+    storeName: 'Freshie Bar',
+    price: 45000,
+    oldPrice: 60000,
+    pickupTime: '10:00 - 13:00 hôm nay',
+    distance: '1.1 km',
+    tag: 'Healthy',
+    imageAsset: 'assets/images/smartbag_image.jpg',
+  ),
+  Smartbag(
+    id: 'sb-4',
+    title: 'Bento trưa ngẫu nhiên',
+    storeName: 'Gia Lạc Minimart',
+    price: 38000,
+    oldPrice: 52000,
+    pickupTime: '11:00 - 14:00 hôm nay',
+    distance: '1.4 km',
+    tag: 'Lunch Deal',
+    imageAsset: 'assets/images/smartbag_image.jpg',
+  ),
+];
