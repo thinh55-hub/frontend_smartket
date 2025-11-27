@@ -45,6 +45,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: const Color(0xFFF9FAFB),
       body: LayoutBuilder(
         builder: (context, constraints) {
+          final ScrollPhysics scrollPhysics = isKeyboardVisible
+              ? const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics())
+              : const NeverScrollableScrollPhysics();
+          final double keyboardPadding = isKeyboardVisible ? 24 : 0;
+
           return Stack(
             children: [
               // Background gradient oval
@@ -68,12 +73,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Main content
               SafeArea(
                 child: SingleChildScrollView(
-                  physics: isKeyboardVisible
-                      ? const ClampingScrollPhysics()
-                      : const NeverScrollableScrollPhysics(),
-                  padding: EdgeInsets.only(bottom: isKeyboardVisible ? bottomInset : 0),
+                  physics: scrollPhysics,
+                  padding: EdgeInsets.only(bottom: keyboardPadding),
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: isKeyboardVisible ? 0 : constraints.maxHeight,
+                    ),
                     child: Column(
                       children: [
                         // Header section với title
