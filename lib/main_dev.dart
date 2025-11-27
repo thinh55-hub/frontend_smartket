@@ -5,10 +5,12 @@ import 'theme/app_theme.dart';
 import 'core/api/api_client.dart';
 import 'core/repositories/product_repository.dart';
 import 'core/repositories/cart_repository.dart';
+import 'core/repositories/smartbag_repository_mock.dart';
 import 'core/state/product_provider.dart';
 import 'core/state/cart_provider.dart';
 import 'core/config/env.dart';
 import 'core/state/navigation_provider.dart';
+import 'core/state/smartbag_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/splash_screen.dart';
@@ -43,10 +45,20 @@ class SmartketApp extends StatelessWidget {
         ProxyProvider<ApiClient, CartRepository>(
           update: (context, client, previous) => CartRepository(client),
         ),
+        Provider<SmartbagRepositoryMock>(
+            create: (_) => SmartbagRepositoryMock()),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider<ProductProvider>(
           create: (ctx) {
             final provider = ProductProvider(ctx.read<ProductRepository>());
+            provider.fetchInitial();
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider<SmartbagProvider>(
+          create: (ctx) {
+            final provider =
+                SmartbagProvider(ctx.read<SmartbagRepositoryMock>());
             provider.fetchInitial();
             return provider;
           },
