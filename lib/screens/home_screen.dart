@@ -249,7 +249,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
               const SizedBox(height: 24),
               Row(
                 children: [
-                  const SizedBox(width: 14),
+                  const SizedBox(width: 12),
                   _PromoIcon(),
                   const SizedBox(width: 8),
                   Text(
@@ -282,7 +282,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                         );
                       }
                       return ListView.separated(
-                        padding: const EdgeInsets.only(left: 18, right:  18),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
                         itemCount: promos.length,
