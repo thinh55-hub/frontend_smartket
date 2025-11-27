@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../core/models/product.dart';
+import '../core/utils/formatting.dart';
 import '../theme/app_theme.dart';
 
 /// Shared product card used across home & explore tabs.
@@ -13,8 +14,8 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final priceValue = product.price != null ? _formatCurrency(product.price!) : '-- ₫';
-    final oldPrice = product.oldPrice != null ? _formatCurrency(product.oldPrice!) : null;
+    final priceValue = product.price != null ? '${formatCurrency(product.price!)} ₫' : '-- ₫';
+    final oldPrice = product.oldPrice != null ? '${formatCurrency(product.oldPrice!)} ₫' : null;
     final priceLabel = _cleanPrice(priceValue);
     final oldPriceLabel = oldPrice != null ? _cleanPrice(oldPrice) : null;
     final discount = _discountLabel();
@@ -172,18 +173,6 @@ class ProductCard extends StatelessWidget {
       return '-${product.discount!.round()}%';
     }
     return null;
-  }
-
-  String _formatCurrency(num value) {
-    final amount = value.toInt().toString();
-    final buffer = StringBuffer();
-    for (int i = 0; i < amount.length; i++) {
-      if (i > 0 && (amount.length - i) % 3 == 0) {
-        buffer.write('.');
-      }
-      buffer.write(amount[i]);
-    }
-    return '${buffer.toString()} ₫';
   }
 
   String _cleanPrice(String value) {
