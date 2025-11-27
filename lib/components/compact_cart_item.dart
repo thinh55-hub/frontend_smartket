@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../core/utils/formatting.dart';
 import '../theme/app_theme.dart';
 
 /// Compact cart item row that matches the Figma snapshot with image,
@@ -63,7 +64,7 @@ class CompactCartItem extends StatelessWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Text('${price.toInt()} đ', style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w400, color: AppColors.primary)),
+                    Text('${formatCurrency(price)} đ', style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w400, color: AppColors.primary)),
                     const Spacer(),
                     _QuantityButton(icon: Icons.remove, filled: false, onTap: onDecrease),
                     Padding(

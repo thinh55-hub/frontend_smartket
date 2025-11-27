@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../core/utils/formatting.dart';
 import '../theme/app_theme.dart';
 import 'compact_cart_item.dart';
 
@@ -94,7 +95,7 @@ class StoreCartCard extends StatelessWidget {
                   children: [
                     Text('Tổng cửa hàng', style: GoogleFonts.lexendDeca(fontSize: 17, color: AppColors.textSecondary)),
                     const Spacer(),
-                    Text('${total.toInt()} đ', style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w400, color: AppColors.primary)),
+                    Text('${formatCurrency(total)} đ', style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w400, color: AppColors.primary)),
                   ],
                 ),
                 const SizedBox(height: 12),
