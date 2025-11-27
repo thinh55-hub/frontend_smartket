@@ -7,6 +7,9 @@ import '../data/mock_products.dart';
 import '../widgets/bottom_nav.dart';
 import 'package:provider/provider.dart';
 import '../core/state/navigation_provider.dart';
+import '../core/state/cart_provider.dart';
+import '../core/utils/formatting.dart';
+import 'cart_screen.dart';
 // home_screen import removed; navigation uses NavigationProvider now
 
 class ProductDetailScreen extends StatefulWidget {
@@ -152,13 +155,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               children: [
                                 if (oldPrice > 0) ...[
                                   Text(
-                                    _formatCurrency(oldPrice),
+                                    '${formatCurrency(oldPrice)} đ',
                                     style: const TextStyle(fontSize: 16, color: Color(0xFFBDBDBD), decoration: TextDecoration.lineThrough),
                                   ),
                                   const SizedBox(width: 8),
                                 ],
                                 Text(
-                                  _formatCurrency(price),
+                                  '${formatCurrency(price)} đ',
                                   style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.primary),
                                 ),
                                 const SizedBox(width: 12),
@@ -373,7 +376,15 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         child: ElevatedButton(
                           onPressed: quantity > 0
                               ? () {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Đã thêm $quantity ${widget.product.name} vào giỏ hàng'), backgroundColor: AppColors.primary, duration: const Duration(seconds: 2)));
+                                  context.read<CartProvider>().addProduct(widget.product, quantity: quantity);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text('Đã thêm $quantity ${widget.product.name} vào giỏ hàng'),
+                                      backgroundColor: AppColors.primary,
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                  setState(() => quantity = 0);
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(
@@ -410,6 +421,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               child: BottomNav(
                 current: context.watch<NavigationProvider>().current,
                 onChanged: (tab) {
+                  if (tab == MainTab.cart) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen()));
+                    return;
+                  }
                   context.read<NavigationProvider>().current = tab;
                   Navigator.of(context).popUntil((r) => r.isFirst);
                 },
@@ -421,19 +436,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  String _formatCurrency(double v) {
-    final int amount = v.toInt();
-    final str = amount.toString();
-    final buffer = StringBuffer();
-    for (int i = 0; i < str.length; i++) {
-      if (i > 0 && (str.length - i) % 3 == 0) buffer.write('.');
-      buffer.write(str[i]);
-    }
-    return '${buffer.toString()} đ';
-  }
 }
-
-
 
 class _InfoBlock extends StatelessWidget {
   final String title;

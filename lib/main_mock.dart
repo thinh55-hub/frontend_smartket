@@ -7,7 +7,9 @@ import 'screens/login_screen.dart';
 import 'screens/splash_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'core/repositories/product_repository_mock.dart';
+import 'core/repositories/cart_repository_mock.dart';
 import 'core/state/product_provider.dart';
+import 'core/state/cart_provider.dart';
 import 'core/state/navigation_provider.dart';
 
 void main() {
@@ -32,11 +34,19 @@ class SmartketApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<ProductRepositoryMock>(create: (_) => ProductRepositoryMock()),
+        Provider<CartRepositoryMock>(create: (_) => CartRepositoryMock()),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider<ProductProvider>(
           create: (ctx) {
             final provider = ProductProvider(ctx.read<ProductRepositoryMock>());
             provider.fetchInitial();
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider<CartProvider>(
+          create: (ctx) {
+            final provider = CartProvider(ctx.read<CartRepositoryMock>());
+            provider.fetchCart();
             return provider;
           },
         ),

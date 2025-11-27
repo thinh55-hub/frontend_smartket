@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 import 'theme/app_theme.dart';
 import 'core/api/api_client.dart';
 import 'core/repositories/product_repository.dart';
+import 'core/repositories/cart_repository.dart';
 import 'core/state/product_provider.dart';
+import 'core/state/cart_provider.dart';
 import 'core/state/navigation_provider.dart';
 import 'screens/register_screen.dart';
 import 'screens/login_screen.dart';
@@ -36,11 +38,21 @@ class SmartketApp extends StatelessWidget {
         ProxyProvider<ApiClient, ProductRepository>(
           update: (context, client, previous) => ProductRepository(client),
         ),
+        ProxyProvider<ApiClient, CartRepository>(
+          update: (context, client, previous) => CartRepository(client),
+        ),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider<ProductProvider>(
           create: (ctx) {
             final provider = ProductProvider(ctx.read<ProductRepository>());
             provider.fetchInitial();
+            return provider;
+          },
+        ),
+        ChangeNotifierProvider<CartProvider>(
+          create: (ctx) {
+            final provider = CartProvider(ctx.read<CartRepository>());
+            provider.fetchCart();
             return provider;
           },
         ),

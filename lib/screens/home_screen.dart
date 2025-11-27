@@ -12,11 +12,13 @@ import '../core/state/product_provider.dart';
 import '../core/models/product.dart';
 import '../data/mock_products.dart';
 import '../components/product_card.dart';
+import '../components/location_pill.dart';
 import '../components/smartbag_chip.dart';
 import '../components/smartbag_chip_list.dart';
 import '../components/segmented_label_row.dart';
 import '../components/stat_card.dart';
 import '../components/search_pill.dart';
+import '../core/utils/formatting.dart';
 import 'product_detail_screen.dart';
 import 'explore_screen.dart';
 import 'qr_screen.dart';
@@ -51,7 +53,16 @@ class _HomeScreenState extends State<HomeScreen> {
         body: _buildTabContent(nav.current),
         bottomNavigationBar: SafeArea(
           top: false,
-          child: BottomNav(current: nav.current, onChanged: (t) => nav.current = t),
+          child: BottomNav(
+            current: nav.current,
+            onChanged: (t) {
+              if (t == MainTab.cart) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CartScreen()));
+                return;
+              }
+              nav.current = t;
+            },
+          ),
         ),
       ),
     );
@@ -120,25 +131,7 @@ class _HomeHeader extends StatelessWidget {
               const SmartketHeaderBar(),
               const SizedBox(height: 12),
               // Figma Node: 346-1052 — Location selector pill
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(28),
-                  border: Border.all(color: const Color(0xFFECEFF3)),
-                  boxShadow: const [BoxShadow(color: Color(0x08000000), blurRadius: 10, offset: Offset(0, 4))],
-                ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.location_on_outlined, size: 18, color: AppColors.primary),
-                    SizedBox(width: 10),
-                    Expanded(
-                      child: Text('Quận 1, TP.HCM • 5 km', style: TextStyle(fontSize: 13, color: AppColors.textPrimary)),
-                    ),
-                    Icon(Icons.keyboard_arrow_down_rounded, color: AppColors.textPrimary),
-                  ],
-                ),
-              ),
+              const LocationPill(),
               const SizedBox(height: 8),
               // Figma Node: 558-491 — Search input
                   // Search (reusable component)
@@ -164,21 +157,21 @@ class _OverviewHeroState extends State<_OverviewHero> {
 
   static const List<_RangeStats> _statsByRange = [
     _RangeStats(
-      rescuedValue: '2',
+      rescuedValue: 2,
       rescuedSubtitle: 'Túi thực phẩm đã cứu hôm nay',
-      savedValue: '36.000 đ',
+      savedValue: 36000,
       savedSubtitle: 'Số tiền đã tiết kiệm hôm nay',
     ),
     _RangeStats(
-      rescuedValue: '7',
+      rescuedValue: 7,
       rescuedSubtitle: 'Túi thực phẩm đã cứu tuần này',
-      savedValue: '136.000 đ',
+      savedValue: 136000,
       savedSubtitle: 'Số tiền đã tiết kiệm tuần này',
     ),
     _RangeStats(
-      rescuedValue: '16',
+      rescuedValue: 16,
       rescuedSubtitle: 'Túi thực phẩm đã cứu tháng này',
-      savedValue: '236.000 đ',
+      savedValue: 236000,
       savedSubtitle: 'Số tiền đã tiết kiệm tháng này',
     ),
   ];
@@ -227,7 +220,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                             Expanded(
                               child: StatCard(
                                 title: 'Hôm nay bạn đã cứu được',
-                                value: _statsByRange[_selectedRange].rescuedValue,
+                                value: _statsByRange[_selectedRange].rescuedValue.toString(),
                                 subtitle: _statsByRange[_selectedRange].rescuedSubtitle,
                               ),
                             ),
@@ -235,7 +228,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                             Expanded(
                               child: StatCard(
                                 title: 'Tiền đã tiết kiệm',
-                                value: _statsByRange[_selectedRange].savedValue,
+                                value: '${formatCurrency(_statsByRange[_selectedRange].savedValue)} đ',
                                 subtitle: _statsByRange[_selectedRange].savedSubtitle,
                               ),
                             ),
@@ -249,7 +242,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
               const SizedBox(height: 24),
               Row(
                 children: [
-                  const SizedBox(width: 14),
+                  const SizedBox(width: 12),
                   _PromoIcon(),
                   const SizedBox(width: 8),
                   Text(
@@ -282,7 +275,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                         );
                       }
                       return ListView.separated(
-                        padding: const EdgeInsets.only(left: 18, right:  18),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
                         itemCount: promos.length,
@@ -804,9 +797,9 @@ class _SlidingSegmentControl extends StatelessWidget {
 }
 
 class _RangeStats {
-  final String rescuedValue;
+  final int rescuedValue;
   final String rescuedSubtitle;
-  final String savedValue;
+  final int savedValue;
   final String savedSubtitle;
 
   const _RangeStats({
