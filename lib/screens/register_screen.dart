@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 // Import giả lập các màn hình khác
+import '../core/state/navigation_provider.dart';
+import '../widgets/bottom_nav.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 import 'otp_verification_screen.dart';
@@ -292,7 +295,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _navigateToHome() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen(isLandscape: false)));
+    // Ensure Home tab is selected when entering HomeScreen
+    context.read<NavigationProvider>().current = MainTab.home;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const HomeScreen(isLandscape: false)),
+    );
   }
 
   void _navigateToLogin() {

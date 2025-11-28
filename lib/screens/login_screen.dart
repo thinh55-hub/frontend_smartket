@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 // Import các màn hình khác (giữ nguyên cấu trúc của bạn)
+import '../core/state/navigation_provider.dart';
+import '../widgets/bottom_nav.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
 
@@ -187,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           boxShadow: const [BoxShadow(color: Color(0x8400A63E), blurRadius: 6, offset: Offset(0, 3))],
                         ),
                         child: ElevatedButton(
-                          onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => const HomeScreen(isLandscape: false))),
+                          onPressed: _navigateToHome,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent, 
                             shadowColor: Colors.transparent, 
@@ -226,9 +229,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          _socialButton('assets/images/google.png'),
+                          _socialButton('assets/images/google.png', onTap: _navigateToHome),
                           const SizedBox(width: 40),
-                          _socialButton('assets/images/facebook.png'),
+                          _socialButton('assets/images/facebook.png', onTap: _navigateToHome),
                         ],
                       ),
                       
@@ -245,17 +248,31 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _socialButton(String assetPath) {
-    return Container(
-      width: 50, // Size chuẩn icon
-      height: 50,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white, 
-        borderRadius: BorderRadius.circular(10), 
-        boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 4, offset: Offset(0, 1))]
+  Widget _socialButton(String assetPath, {VoidCallback? onTap}) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: 50, // Size chuẩn icon
+        height: 50,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white, 
+          borderRadius: BorderRadius.circular(10), 
+          boxShadow: const [BoxShadow(color: Color(0x33000000), blurRadius: 4, offset: Offset(0, 1))]
+        ),
+        child: Image.asset(assetPath, width: 30, height: 30, fit: BoxFit.contain),
       ),
-      child: Image.asset(assetPath, width: 30, height: 30, fit: BoxFit.contain),
+    );
+  }
+
+  void _navigateToHome() {
+    // Ensure Home tab is selected when entering HomeScreen
+    context.read<NavigationProvider>().current = MainTab.home;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => const HomeScreen(isLandscape: false),
+      ),
     );
   }
 }
