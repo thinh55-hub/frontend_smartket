@@ -14,6 +14,7 @@ import '../core/state/product_provider.dart';
 import '../core/state/smartbag_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/smartket_header_bar.dart';
+import 'product_detail_screen.dart';
 
 enum ExploreTab { list, map }
 
@@ -153,7 +154,14 @@ class _ListExploreTab extends StatelessWidget {
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
-                  return ProductCard(product: product, onTap: () {});
+                  return ProductCard(
+                    product: product,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ProductDetailScreen(product: product),
+                      ),
+                    ),
+                  );
                 },
               );
             },
