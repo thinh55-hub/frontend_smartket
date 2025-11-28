@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'circle_icon_button.dart';
 import 'smartket_logo.dart';
+import '../screens/favorite_stores_screen.dart';
 
 /// Brand header row used on the Home and detail screens.
 class SmartketHeaderBar extends StatelessWidget {
@@ -24,7 +25,12 @@ class SmartketHeaderBar extends StatelessWidget {
         const Spacer(),
         CircleIconButton(
           icon: Icons.favorite_border,
-          onPressed: onFavoriteTap,
+          onPressed: onFavoriteTap ??
+              () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (_) => const FavoriteStoresScreen()),
+                );
+              },
         ),
         const SizedBox(width: 10),
         CircleIconButton(
