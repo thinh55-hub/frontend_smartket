@@ -6,6 +6,7 @@ import '../widgets/cards/store_cart_card.dart';
 import '../core/state/cart_provider.dart';
 import '../core/state/navigation_provider.dart';
 import '../theme/app_theme.dart';
+import '../core/localization/app_localizations.dart';
 import '../widgets/cards/empty_state.dart';
 import '../widgets/layout/bottom_nav.dart';
 import '../widgets/layout/smartket_header_bar.dart';
@@ -64,18 +65,18 @@ class CartContent extends StatelessWidget {
                 return Center(
                   child: EmptyState(
                     icon: Icons.warning_amber_outlined,
-                    title: 'Không thể tải giỏ hàng',
+                    title: AppLocalizations.of(context).cartLoadErrorTitle,
                     subtitle: cartProvider.error,
                   ),
                 );
               }
               final stores = cartProvider.stores;
               if (stores.isEmpty) {
-                return const Center(
+                return Center(
                   child: EmptyState(
                     icon: Icons.shopping_bag_outlined,
-                    title: 'Giỏ hàng đang trống',
-                    subtitle: 'Hãy thêm sản phẩm để bắt đầu mua sắm',
+                    title: AppLocalizations.of(context).cartEmptyTitle,
+                    subtitle: AppLocalizations.of(context).cartEmptySubtitle,
                   ),
                 );
               }
@@ -98,7 +99,7 @@ class CartContent extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Giỏ hàng',
+                              AppLocalizations.of(context).cartTitle,
                               style: GoogleFonts.lexendDeca(fontSize: 24, fontWeight: FontWeight.w400),
                             ),
                           ],

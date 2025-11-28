@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme/app_theme.dart';
+import '../core/localization/app_localizations.dart';
 
 class FavoriteStore {
   final String name;
@@ -59,7 +60,7 @@ class FavoritesScreen extends StatelessWidget {
             ),
             Expanded(
               child: _mockFavoriteStores.isEmpty
-                  ? Center(
+                    ? Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -69,10 +70,10 @@ class FavoritesScreen extends StatelessWidget {
                             child: const Icon(Icons.favorite_border, size: 40, color: AppColors.textSecondary),
                           ),
                           const SizedBox(height: 24),
-                          Text('No favorite stores yet', style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                          Text(AppLocalizations.of(context).favoritesEmptyTitle, style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
                           const SizedBox(height: 8),
                           Text(
-                            'Start adding stores to your favorites to see them here',
+                            AppLocalizations.of(context).favoritesEmptyMessage,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.lexendDeca(fontSize: 13, color: AppColors.textSecondary),
                           ),
@@ -88,7 +89,7 @@ class FavoritesScreen extends StatelessWidget {
                                 boxShadow: AppShadows.light,
                               ),
                               child: Center(
-                                child: Text('Browse Stores', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
+                                child: Text(AppLocalizations.of(context).favoritesBrowseAction, style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.textPrimary)),
                               ),
                             ),
                           ),
