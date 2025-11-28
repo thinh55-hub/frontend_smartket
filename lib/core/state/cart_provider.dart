@@ -21,6 +21,16 @@ class CartProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     final ApiResponse<List<CartStore>> resp = await _repo.fetchCart();
+
+    // If the cart has been modified locally while this fetch was in
+    // flight (e.g. user added an item), keep the local state and
+    // ignore the remote payload to avoid clobbering the first add.
+    if (_stores.isNotEmpty) {
+      _loading = false;
+      notifyListeners();
+      return;
+    }
+
     if (resp.ok && resp.data != null) {
       _stores = resp.data!;
     } else if (resp.unauthorized) {
