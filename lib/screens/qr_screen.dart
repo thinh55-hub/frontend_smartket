@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_theme.dart';
 import '../widgets/segment_chip.dart';
+import '../widgets/smartket_header_bar.dart';
 
 class QrScreen extends StatelessWidget {
   const QrScreen({super.key});
@@ -26,15 +27,18 @@ class QrContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'Mã QR của tôi',
-            style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600),
+        Container(
+          color: Colors.white,
+          width: double.infinity,
+          child: const SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: SmartketHeaderBar(),
+            ),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(

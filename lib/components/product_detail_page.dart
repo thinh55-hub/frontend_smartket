@@ -12,6 +12,7 @@ import '../core/state/navigation_provider.dart';
 import '../core/state/cart_provider.dart';
 import '../core/utils/formatting.dart';
 import '../screens/cart_screen.dart';
+import '../widgets/smartket_header_bar.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;
@@ -30,7 +31,7 @@ class _IncreaseItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // CSS: width/height 1.86627rem (~29.86px), border-radius 1.06667rem (~17.07px), background #00C950
-    const double size = 1.86627 * 16; // ~29.86
+    const double size = 27; // ~29.86
     const double radius = 1.06667 * 16; // ~17.07
 
     return SizedBox(
@@ -78,25 +79,40 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: Stack(
+        body: Column(
           children: [
-            SafeArea(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Image header
-                    Container(
-                      height: 340,
-                      padding: const EdgeInsets.only(top: 8),
-                      decoration: const BoxDecoration(color: Colors.white),
-                      child: Center(child: _buildHeroImage()),
-                    ),
+            Container(
+              color: Colors.white,
+              width: double.infinity,
+              child: const SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                  child: SmartketHeaderBar(logoHeight: 52),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Stack(
+                children: [
+                  SafeArea(
+                    top: false,
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Image header
+                          Container(
+                            height: 300,
+                            padding: const EdgeInsets.only(top: 8),
+                            decoration: const BoxDecoration(color: Colors.white),
+                            child: Center(child: _buildHeroImage()),
+                          ),
 
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
-                      child: Container(
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
+                            child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(14),
@@ -105,10 +121,10 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 BoxShadow(color: const Color.fromRGBO(0, 0, 0, 0.03), blurRadius: 12, offset: const Offset(0, 6)),
                           ],
                         ),
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
                             Text(
                               widget.product.name,
                               style: GoogleFonts.lexendDeca(
@@ -177,85 +193,92 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 height: 1.73333,
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            if (extended != null) ...[
-                              _InfoBlock(title: 'Xuất xứ', value: extended['origin']),
-                              _InfoBlock(title: 'Thành phần / Dinh dưỡng', value: extended['nutrition']),
-                              _InfoBlock(title: 'Bảo quản', value: extended['storage']),
-                              _InfoBlock(title: 'Hướng dẫn sử dụng', value: extended['usage']),
-                            ],
-                          ],
-                        ),
+                                  const SizedBox(height: 16),
+                                  if (extended != null) ...[
+                                    _InfoBlock(title: 'Xuất xứ', value: extended['origin']),
+                                    _InfoBlock(title: 'Thành phần / Dinh dưỡng', value: extended['nutrition']),
+                                    _InfoBlock(title: 'Bảo quản', value: extended['storage']),
+                                    _InfoBlock(title: 'Hướng dẫn sử dụng', value: extended['usage']),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Related products title
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+                            child: Text(
+                              'Thêm từ cửa hàng này',
+                              style: GoogleFonts.lexendDeca(
+                                color: const Color(0xFF292929),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w400,
+                                height: 1.5,
+                              ),
+                            ),
+                          ),
+
+                          // Green strip with related cards (gradient)
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 12),
+                            padding: const EdgeInsets.fromLTRB(12, 12, 12, 18),
+                            decoration: BoxDecoration(
+                              gradient: const LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Color.fromRGBO(0, 166, 62, 0.70),
+                                  Color.fromRGBO(0, 166, 62, 0.00),
+                                ],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: SizedBox(
+                              height: 220,
+                              child: ListView(
+                                scrollDirection: Axis.horizontal,
+                                physics: const BouncingScrollPhysics(),
+                                children: const [
+                                  _RelatedProductCard(emoji: '🍱', name: 'Cơm Bento Trứng Cuộn', price: '35.000 đ', oldPrice: '35.000 đ'),
+                                  SizedBox(width: 12),
+                                  _RelatedProductCard(emoji: '🧃', name: 'Nước cam ép tươi', price: '20.000 đ', oldPrice: '20.000 đ'),
+                                  SizedBox(width: 12),
+                                  _RelatedProductCard(emoji: '☕', name: 'Cà phê sữa đá', price: '18.000 đ'),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-
-                    // Related products title
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-                      child: Text(
-                        'Thêm từ cửa hàng này',
-                        style: GoogleFonts.lexendDeca(
-                          color: const Color(0xFF292929),
-                          fontSize: 18, // 1.2rem (1rem = 16px)
-                          fontWeight: FontWeight.w400,
-                          height: 1.5, // 1.8rem line-height -> 1.5 relative to 1.2rem (150%)
-                        ),
-                      ),
-                    ),
-
-                    // Green strip with related cards (gradient)
-                    Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 18),
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color.fromRGBO(0, 166, 62, 0.70), // rgba(0,166,62,0.70)
-                            Color.fromRGBO(0, 166, 62, 0.00), // rgba(0,166,62,0.00)
-                          ],
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: SizedBox(
-                        height: 220,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          physics: const BouncingScrollPhysics(),
-                          children: const [
-                            _RelatedProductCard(emoji: '🍱', name: 'Cơm Bento Trứng Cuộn', price: '35.000 đ', oldPrice: '35.000 đ'),
-                            SizedBox(width: 12),
-                            _RelatedProductCard(emoji: '🧃', name: 'Nước cam ép tươi', price: '20.000 đ', oldPrice: '20.000 đ'),
-                            SizedBox(width: 12),
-                            _RelatedProductCard(emoji: '☕', name: 'Cà phê sữa đá', price: '18.000 đ'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Permanent back button overlay (always visible)
-            Positioned(
-              top: MediaQuery.of(context).padding.top + 8,
-              left: 16,
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                          BoxShadow(color: const Color.fromRGBO(39, 174, 96, 0.18), blurRadius: 8, offset: const Offset(0, 4)),
-                    ],
                   ),
-                  child: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
-                ),
+
+                  // Back button overlay inside scroll area, below header
+                  Positioned(
+                    top: 16,
+                    left: 16,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromRGBO(39, 174, 96, 0.18),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -297,8 +320,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         children: [
                           // decrease
                           SizedBox(
-                            width: 1.86627 * 16,
-                            height: 1.86627 * 16,
+                            width: 27,
+                            height: 27,
                             child: Container(
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
@@ -328,9 +351,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 quantity.toString(),
                                 style: GoogleFonts.lexendDeca(
                                   color: const Color.fromRGBO(41, 41, 41, 0.90),
-                                  fontSize: 1.33333 * 16,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.w400,
-                                  height: 1.2, // 1.6rem / 1.33333rem = 1.2
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -362,13 +384,21 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                   context.read<CartProvider>().addProduct(widget.product, quantity: quantity);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Đã thêm $quantity ${widget.product.name} vào giỏ hàng'),
+                                      content: GestureDetector(
+                                        onTap: () {
+                                          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (_) => const CartScreen()),
+                                          );
+                                        },
+                                        child: Text('Đã thêm $quantity ${widget.product.name} vào giỏ hàng'),
+                                      ),
                                       backgroundColor: AppColors.primary,
                                       duration: const Duration(seconds: 2),
                                     ),
                                   );
                                   setState(() => quantity = 0);
-                                }
+                              }
                               : null,
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size.fromHeight(double.infinity),
@@ -385,10 +415,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             textAlign: TextAlign.center,
                             style: GoogleFonts.lexendDeca(
                               color: Colors.white,
-                              fontSize: 1.4 * 16,
-                              fontWeight: FontWeight.w600,
-                              height: 1.0,
-                              letterSpacing: 0,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w400,
+                              letterSpacing: -0.5,
                             ),
                           ),
                         ),

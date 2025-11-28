@@ -13,6 +13,8 @@ import '../core/models/smartbag.dart';
 import '../core/state/product_provider.dart';
 import '../core/state/smartbag_provider.dart';
 import '../theme/app_theme.dart';
+import '../widgets/smartket_header_bar.dart';
+import 'product_detail_screen.dart';
 
 enum ExploreTab { list, map }
 
@@ -31,9 +33,19 @@ class _ExploreContentState extends State<ExploreContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SafeArea(
-          bottom: false,
-          child: Padding(
+        Container(
+          color: Colors.white,
+          width: double.infinity,
+          child: const SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: SmartketHeaderBar(),
+            ),
+          ),
+        ),
+        if (_selectedTab == ExploreTab.map)
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
@@ -55,13 +67,16 @@ class _ExploreContentState extends State<ExploreContent> {
               ],
             ),
           ),
-        ),
         const SizedBox(height: 8),
         Expanded(
           child: AnimatedSwitcher(
             duration: const Duration(milliseconds: 250),
             child: _selectedTab == ExploreTab.list
-                ? const _ListExploreTab(key: ValueKey('list-tab'))
+                ? _ListExploreTab(
+                    key: const ValueKey('list-tab'),
+                    selectedTab: _selectedTab,
+                    onTabSelected: _onTabSelected,
+                  )
                 : const _MapExploreTab(key: ValueKey('map-tab')),
           ),
         ),
@@ -76,7 +91,14 @@ class _ExploreContentState extends State<ExploreContent> {
 }
 
 class _ListExploreTab extends StatelessWidget {
-  const _ListExploreTab({super.key});
+  final ExploreTab selectedTab;
+  final ValueChanged<ExploreTab> onTabSelected;
+
+  const _ListExploreTab({
+    super.key,
+    required this.selectedTab,
+    required this.onTabSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +108,26 @@ class _ListExploreTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Row(
+            children: [
+              Expanded(
+                child: _ExploreModeChip(
+                  label: 'Danh sách',
+                  selected: selectedTab == ExploreTab.list,
+                  onTap: () => onTabSelected(ExploreTab.list),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _ExploreModeChip(
+                  label: 'Bản đồ',
+                  selected: selectedTab == ExploreTab.map,
+                  onTap: () => onTabSelected(ExploreTab.map),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
           SmartbagChipList(
             labels: _exploreCategories,
             selectedIndex: 0,
@@ -112,7 +154,14 @@ class _ListExploreTab extends StatelessWidget {
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
-                  return ProductCard(product: product, onTap: () {});
+                  return ProductCard(
+                    product: product,
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => ProductDetailScreen(product: product),
+                      ),
+                    ),
+                  );
                 },
               );
             },
