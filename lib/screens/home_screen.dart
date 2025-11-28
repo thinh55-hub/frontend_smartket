@@ -229,7 +229,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                           children: [
                             Expanded(
                               child: StatCard(
-                                title: 'Hôm nay bạn đã cứu được',
+                                title: 'Bạn đã cứu được',
                                 value: _statsByRange[_selectedRange].rescuedValue.toString(),
                                 subtitle: _statsByRange[_selectedRange].rescuedSubtitle,
                               ),
@@ -237,7 +237,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                             const SizedBox(width: 12),
                             Expanded(
                               child: StatCard(
-                                title: 'Tiền đã tiết kiệm',
+                                title: 'Số tiền đã tiết kiệm',
                                 value: '${formatCurrency(_statsByRange[_selectedRange].savedValue)} đ',
                                 subtitle: _statsByRange[_selectedRange].savedSubtitle,
                               ),
