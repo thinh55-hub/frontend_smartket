@@ -4,7 +4,9 @@ import 'package:provider/provider.dart';
 
 import '../components/store_cart_card.dart';
 import '../core/state/cart_provider.dart';
+import '../core/state/navigation_provider.dart';
 import '../theme/app_theme.dart';
+import '../widgets/bottom_nav.dart';
 import '../widgets/empty_state.dart';
 
 class CartScreen extends StatelessWidget {
@@ -12,9 +14,22 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final nav = context.watch<NavigationProvider>();
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: CartContent(),
+      body: const CartContent(),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: BottomNav(
+          current: nav.current == MainTab.cart ? nav.current : MainTab.cart,
+          onChanged: (tab) {
+            if (tab == MainTab.cart) return;
+            nav.current = tab;
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        ),
+      ),
     );
   }
 }
