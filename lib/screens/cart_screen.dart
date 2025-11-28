@@ -4,17 +4,33 @@ import 'package:provider/provider.dart';
 
 import '../components/store_cart_card.dart';
 import '../core/state/cart_provider.dart';
+import '../core/state/navigation_provider.dart';
 import '../theme/app_theme.dart';
+import '../widgets/bottom_nav.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/smartket_header_bar.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final nav = context.watch<NavigationProvider>();
+
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: CartContent(),
+      body: const CartContent(),
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: BottomNav(
+          current: nav.current == MainTab.cart ? nav.current : MainTab.cart,
+          onChanged: (tab) {
+            if (tab == MainTab.cart) return;
+            nav.current = tab;
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          },
+        ),
+      ),
     );
   }
 }
@@ -27,19 +43,16 @@ class CartContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SafeArea(
-          top: true,
-          bottom: false,
-          child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: const Icon(Icons.arrow_back_ios_new, size: 18),
-                ),
-                const SizedBox(width: 8),
-                Text('Giỏ hàng', style: GoogleFonts.lexendDeca(fontSize: 24, fontWeight: FontWeight.w400)),
-              ],
+        Container(
+          color: Colors.white,
+          width: double.infinity,
+          child: const SafeArea(
+            bottom: false,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+              child: SmartketHeaderBar(),
             ),
+          ),
         ),
         Expanded(
           child: Consumer<CartProvider>(
@@ -70,10 +83,29 @@ class CartContent extends StatelessWidget {
                 context: context,
                 removeTop: true,
                 child: ListView.builder(
-                  itemCount: stores.length,
+                  padding: const EdgeInsets.only(top: 8),
+                  itemCount: stores.length + 1,
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    final store = stores[index];
+                    if (index == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: () => Navigator.of(context).pop(),
+                              icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              'Giỏ hàng',
+                              style: GoogleFonts.lexendDeca(fontSize: 24, fontWeight: FontWeight.w400),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    final store = stores[index - 1];
                     return StoreCartCard(
                       storeName: store.name,
                       items: store.items
@@ -91,7 +123,7 @@ class CartContent extends StatelessWidget {
                           .toList(),
                       onClose: () => cartProvider.removeStore(store.id),
                       onCheckout: () {},
-                      margin: EdgeInsets.fromLTRB(16, index == 0 ? 0 : 12, 16, 12),
+                      margin: EdgeInsets.fromLTRB(16, index == 1 ? 0 : 12, 16, 12),
                     );
                   },
                 ),

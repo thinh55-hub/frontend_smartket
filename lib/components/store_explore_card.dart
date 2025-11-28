@@ -4,11 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import '../core/models/product.dart';
 import '../core/models/smartbag.dart';
 import '../core/utils/formatting.dart';
+import '../screens/product_detail_screen.dart';
+import '../screens/smartbag_detail_screen.dart';
 import '../theme/app_theme.dart';
 import 'product_card_mini.dart';
 import 'smartbag_card.dart';
 import 'smartbag_card_mini.dart';
-import 'smartbag_card_mini.dart';
+import 'smartbag_item.dart';
+import '../screens/product_detail_screen.dart';
 
 class StoreExploreCard extends StatelessWidget {
   final StoreExploreData store;
@@ -149,16 +152,33 @@ class StoreExploreCard extends StatelessWidget {
                     final smartbag = store.smartbag;
                     final productCount = store.featuredProducts.length;
                     if (smartbag != null && index == productCount) {
+                      final deal = SmartbagItemData.fromSmartbag(smartbag);
                       return SmartbagCardMini(
                         title: smartbag.title,
                         time: smartbag.pickupTime,
                         price: _formatPrice(smartbag.price),
                         oldPrice: _formatPrice(smartbag.oldPrice),
                         image: smartbag.imageAsset,
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => SmartbagDetailScreen(
+                              deal: deal,
+                            ),
+                          ),
+                        ),
                       );
                     }
                     final product = store.featuredProducts[index];
-                    return ProductCardMini(product: product);
+                    return ProductCardMini(
+                      product: product,
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => ProductDetailScreen(
+                            product: product,
+                          ),
+                        ),
+                      ),
+                    );
                   },
                 ),
               ],

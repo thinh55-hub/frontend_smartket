@@ -71,7 +71,7 @@ class QrContent extends StatelessWidget {
             style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
