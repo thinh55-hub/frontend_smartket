@@ -2,81 +2,189 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../components/map_store_overlay.dart';
+import '../components/map_tab.dart';
 import '../components/product_card.dart';
 import '../components/search_pill.dart';
 import '../components/smartbag_chip_list.dart';
+import '../components/store_explore_card.dart';
 import '../core/models/product.dart';
+import '../core/models/smartbag.dart';
 import '../core/state/product_provider.dart';
+import '../core/state/smartbag_provider.dart';
 import '../theme/app_theme.dart';
 
-class ExploreContent extends StatelessWidget {
+enum ExploreTab { list, map }
+
+class ExploreContent extends StatefulWidget {
   const ExploreContent({super.key});
+
+  @override
+  State<ExploreContent> createState() => _ExploreContentState();
+}
+
+class _ExploreContentState extends State<ExploreContent> {
+  ExploreTab _selectedTab = ExploreTab.list;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SafeArea(
+        SafeArea(
           bottom: false,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                _ExploreModeChip(label: 'Danh sách', selected: true),
-                SizedBox(width: 8),
-                _ExploreModeChip(label: 'Bản đồ', selected: false),
+                Expanded(
+                  child: _ExploreModeChip(
+                    label: 'Danh sách',
+                    selected: _selectedTab == ExploreTab.list,
+                    onTap: () => _onTabSelected(ExploreTab.list),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _ExploreModeChip(
+                    label: 'Bản đồ',
+                    selected: _selectedTab == ExploreTab.map,
+                    onTap: () => _onTabSelected(ExploreTab.map),
+                  ),
+                ),
               ],
             ),
           ),
-        ),
-        const SizedBox(height: 8),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: SearchPill(placeholder: 'Tìm kiếm sản phẩm hoặc cửa hàng...'),
         ),
         const SizedBox(height: 8),
         Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SmartbagChipList(
-                  labels: _exploreCategories,
-                  selectedIndex: 0,
-                  onSelected: (_) {},
-                ),
-                const SizedBox(height: 8),
-                Consumer<ProductProvider>(
-                  builder: (context, provider, _) {
-                    final products = provider.products.isNotEmpty ? provider.products : _fallbackProducts;
-                    if (products.isEmpty) {
-                      return const Center(child: Text('Chưa có sản phẩm'));
-                    }
-                    return GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 180,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 160 / 238.281,
-                      ),
-                      itemCount: products.length,
-                      itemBuilder: (context, index) {
-                        final product = products[index];
-                        return ProductCard(product: product, onTap: () {});
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 250),
+            child: _selectedTab == ExploreTab.list
+                ? const _ListExploreTab(key: ValueKey('list-tab'))
+                : const _MapExploreTab(key: ValueKey('map-tab')),
           ),
         ),
       ],
+    );
+  }
+
+  void _onTabSelected(ExploreTab tab) {
+    if (_selectedTab == tab) return;
+    setState(() => _selectedTab = tab);
+  }
+}
+
+class _ListExploreTab extends StatelessWidget {
+  const _ListExploreTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+      physics: const BouncingScrollPhysics(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SmartbagChipList(
+            labels: _exploreCategories,
+            selectedIndex: 0,
+            onSelected: (_) {},
+          ),
+          const SizedBox(height: 8),
+          Consumer<ProductProvider>(
+            builder: (context, provider, _) {
+              final products = provider.products.isNotEmpty
+                  ? provider.products
+                  : _fallbackProducts;
+              if (products.isEmpty) {
+                return const Center(child: Text('Chưa có sản phẩm'));
+              }
+              return GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 180,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 160 / 238.281,
+                ),
+                itemCount: products.length,
+                itemBuilder: (context, index) {
+                  final product = products[index];
+                  return ProductCard(product: product, onTap: () {});
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MapExploreTab extends StatefulWidget {
+  const _MapExploreTab({super.key});
+
+  @override
+  State<_MapExploreTab> createState() => _MapExploreTabState();
+}
+
+class _MapExploreTabState extends State<_MapExploreTab> {
+  bool _overlayExpanded = false;
+
+  void _toggleOverlaySize() {
+    setState(() => _overlayExpanded = !_overlayExpanded);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer2<ProductProvider, SmartbagProvider>(
+      builder: (context, productProvider, smartbagProvider, _) {
+        final products = productProvider.products.isNotEmpty
+            ? productProvider.products
+            : _fallbackProducts;
+        final stores = _buildStoreSections(products, smartbagProvider.bags);
+        return Stack(
+          children: [
+            Positioned.fill(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
+                ),
+                child: Image.asset(
+                  'assets/images/map_image.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Positioned(
+              top: 24,
+              left: 24,
+              right: 24,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SearchPill(
+                    placeholder: 'Tìm kiếm sản phẩm, cửa hàng, smartbag...',
+                  ),
+                  const SizedBox(height: 12),
+                  MapTab(items: _mapTabFilters),
+                ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: MapStoreOverlay(
+                stores: stores,
+                expanded: _overlayExpanded,
+                onToggleSize: _toggleOverlaySize,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
@@ -84,26 +192,33 @@ class ExploreContent extends StatelessWidget {
 class _ExploreModeChip extends StatelessWidget {
   final String label;
   final bool selected;
+  final VoidCallback onTap;
 
-  const _ExploreModeChip({required this.label, required this.selected});
+  const _ExploreModeChip(
+      {required this.label, required this.selected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      decoration: BoxDecoration(
-        color: selected ? AppColors.primary : AppColors.surface,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: selected ? AppColors.primary : AppColors.border),
-        boxShadow: selected ? AppShadows.light : null,
-      ),
-      child: Text(
-        label,
-        style: GoogleFonts.lexendDeca(
-          fontSize: 16,
-          fontWeight: FontWeight.w400,
-          color: selected ? Colors.white : AppColors.textPrimary,
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.primary : AppColors.surface,
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(
+              color: selected ? AppColors.primary : AppColors.border),
+          boxShadow: selected ? AppShadows.light : null,
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: GoogleFonts.lexendDeca(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: selected ? Colors.white : AppColors.textPrimary,
+          ),
         ),
       ),
     );
@@ -124,6 +239,12 @@ const List<String> _exploreCategories = [
   '🥫 Đồ hộp / Thực phẩm chế biến sẵn',
   '🧂 Gia vị – Dầu ăn – Nước mắm',
   '📦 Khác',
+];
+
+const List<MapTabItem> _mapTabFilters = [
+  MapTabItem(label: 'Smartbag', icon: Icons.card_giftcard_outlined),
+  MapTabItem(label: 'Đang mở cửa', icon: Icons.access_time),
+  MapTabItem(label: 'Gần tôi', icon: Icons.navigation_outlined),
 ];
 
 final List<Product> _fallbackProducts = [
@@ -158,5 +279,90 @@ final List<Product> _fallbackProducts = [
     price: 55000.0,
     oldPrice: 80000.0,
     discount: 30,
+  ),
+];
+
+List<StoreExploreData> _buildStoreSections(
+  List<Product> products,
+  List<Smartbag> smartbags,
+) {
+  final grouped = <String, List<Product>>{};
+  for (final product in products) {
+    final key = (product.merchantName ?? '').isEmpty
+        ? 'Cửa hàng nổi bật'
+        : product.merchantName!;
+    grouped.putIfAbsent(key, () => <Product>[]);
+    grouped[key]!.add(product);
+  }
+
+  final entries = grouped.entries.toList()
+    ..sort((a, b) => a.key.compareTo(b.key));
+  final smartbagByStore = <String, Smartbag>{};
+  for (final bag in smartbags) {
+    smartbagByStore.putIfAbsent(bag.storeName, () => bag);
+  }
+
+  return List.generate(entries.length, (index) {
+    final data = entries[index];
+    final meta = _storeMetas[index % _storeMetas.length];
+    final featured = data.value.take(5).toList();
+    final matchedBag = smartbagByStore[data.key];
+    return StoreExploreData(
+      id: 'map-store-${index + 1}',
+      name: data.key,
+      rating: meta.rating,
+      reviewCountLabel: meta.reviewLabel,
+      etaText: meta.eta,
+      isOpen: meta.isOpen,
+      statusDetail: meta.statusDetail,
+      distanceText: meta.distance,
+      featuredProducts: featured,
+      smartbag: matchedBag,
+    );
+  });
+}
+
+class _StoreMeta {
+  final double rating;
+  final String reviewLabel;
+  final String eta;
+  final bool isOpen;
+  final String statusDetail;
+  final String? distance;
+
+  const _StoreMeta({
+    required this.rating,
+    required this.reviewLabel,
+    required this.eta,
+    required this.isOpen,
+    required this.statusDetail,
+    this.distance,
+  });
+}
+
+const List<_StoreMeta> _storeMetas = [
+  _StoreMeta(
+    rating: 4.2,
+    reviewLabel: '40+',
+    eta: '5 phút',
+    isOpen: true,
+    statusDetail: 'Đóng cửa lúc 20:00',
+    distance: '0.8 km',
+  ),
+  _StoreMeta(
+    rating: 4.5,
+    reviewLabel: '120+',
+    eta: '8 phút',
+    isOpen: true,
+    statusDetail: 'Đóng cửa lúc 21:30',
+    distance: '1.2 km',
+  ),
+  _StoreMeta(
+    rating: 4.0,
+    reviewLabel: '25+',
+    eta: '12 phút',
+    isOpen: false,
+    statusDetail: 'Mở lại lúc 7:00',
+    distance: '2.4 km',
   ),
 ];

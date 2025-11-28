@@ -17,7 +17,7 @@ class SmartketLogo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final logo = Image.asset(
-      'assets/images/3.0x/smartket_logo.png',
+      'assets/images/logo.png',
       height: height,
       fit: BoxFit.contain,
       filterQuality: FilterQuality.high,

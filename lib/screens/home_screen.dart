@@ -18,12 +18,16 @@ import '../components/smartbag_chip_list.dart';
 import '../components/segmented_label_row.dart';
 import '../components/stat_card.dart';
 import '../components/search_pill.dart';
+import '../components/smartbag_item.dart';
 import '../core/utils/formatting.dart';
+import '../data/mock_smartbag.dart';
 import 'product_detail_screen.dart';
 import 'explore_screen.dart';
 import 'qr_screen.dart';
 import 'smartbag_screen.dart';
 import 'cart_screen.dart';
+import 'smartbag_detail_screen.dart';
+import 'favorite_stores_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   final bool isLandscape;
@@ -128,7 +132,13 @@ class _HomeHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SmartketHeaderBar(),
+              SmartketHeaderBar(
+                onFavoriteTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const FavoriteStoresScreen()),
+                  );
+                },
+              ),
               const SizedBox(height: 12),
               // Figma Node: 346-1052 — Location selector pill
               const LocationPill(),
@@ -374,7 +384,10 @@ class _SmartbagShelfState extends State<_SmartbagShelf> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
                     textStyle: GoogleFonts.lexendDeca(fontWeight: FontWeight.w600),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    final nav = context.read<NavigationProvider>();
+                    nav.current = MainTab.smartbag;
+                  },
                   child: const Text('Xem tất cả'),
                 ),
               ],
@@ -395,7 +408,18 @@ class _SmartbagShelfState extends State<_SmartbagShelf> {
                 final deal = deals[index];
                 return KeyedSubtree(
                   key: _cardKeys[index],
-                  child: _SmartbagHighlightCard(deal: deal, highlight: index == _selectedIndex),
+                  child: GestureDetector(
+                    onTap: () {
+                      final bag = mockSmartbags[index];
+                      final dealData = SmartbagItemData.fromSmartbag(bag);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => SmartbagDetailScreen(deal: dealData),
+                        ),
+                      );
+                    },
+                    child: _SmartbagHighlightCard(deal: deal, highlight: index == _selectedIndex),
+                  ),
                 );
               },
             ),
@@ -664,6 +688,7 @@ class _PromoIconPainter extends CustomPainter {
 }
 
 class _SmartbagDeal {
+  final String id;
   final String tag;
   final String title;
   final String store;
@@ -673,8 +698,12 @@ class _SmartbagDeal {
   final String emoji;
   final String? originalPrice;
   final String? savingText;
+  final String imageUrl;
+  final String? description;
+  final int? stock;
 
   const _SmartbagDeal({
+    required this.id,
     required this.tag,
     required this.title,
     required this.store,
@@ -684,55 +713,46 @@ class _SmartbagDeal {
     required this.emoji,
     this.originalPrice,
     this.savingText,
+    required this.imageUrl,
+    this.description,
+    this.stock,
   });
 }
 
-const List<_SmartbagDeal> _smartbagDeals = [
-  _SmartbagDeal(
-    tag: 'Túi Ăn Sáng',
-    title: 'Bakery & Coffee',
-    store: 'Gia Lạc Minimart',
-    distance: '0.8 km',
-    price: '45.000 ₫',
-    time: '07:00 - 09:00',
-    emoji: '🥐',
-    originalPrice: '90.000 ₫',
-    savingText: 'Tiết kiệm 50%',
-  ),
-  _SmartbagDeal(
-    tag: 'Túi Ăn Chiều',
-    title: 'Bakery & Coffee',
-    store: 'Gia Lạc Minimart',
-    distance: '0.8 km',
-    price: '45.000 ₫',
-    time: '15:00 - 17:00',
-    emoji: '🥐',
-    originalPrice: '90.000 ₫',
-    savingText: 'Tiết kiệm 50%',
-  ),
-  _SmartbagDeal(
-    tag: 'Túi Đồ Uống',
-    title: 'Tea & Smoothie',
-    store: 'ĐT Minimart',
-    distance: '1.2 km',
-    price: '39.000 ₫',
-    time: '13:00 - 15:00',
-    emoji: '🥤',
-    originalPrice: '70.000 ₫',
-    savingText: 'Còn 2 túi',
-  ),
-  _SmartbagDeal(
-    tag: 'Túi Healthy',
-    title: 'Eat Clean Combo',
-    store: 'GL Minimart',
-    distance: '0.5 km',
-    price: '52.000 ₫',
-    time: '10:00 - 12:00',
-    emoji: '🥗',
-    originalPrice: '98.000 ₫',
-    savingText: 'Tiết kiệm 47%',
-  ),
-];
+List<_SmartbagDeal> _buildSmartbagDeals() {
+  const emojis = ['🥐', '🥐', '🥤', '🥗'];
+  return List<_SmartbagDeal>.generate(mockSmartbags.length, (index) {
+    final bag = mockSmartbags[index];
+    final emoji = emojis[index % emojis.length];
+    final priceLabel = '${formatCurrency(bag.price)} ₫';
+    final oldPriceLabel = '${formatCurrency(bag.oldPrice)} ₫';
+    String? savingText;
+    if (bag.oldPrice > bag.price) {
+      final percent = (1 - (bag.price / bag.oldPrice)) * 100;
+      final rounded = percent.abs().round();
+      if (rounded > 0) {
+        savingText = 'Tiết kiệm $rounded%';
+      }
+    }
+    return _SmartbagDeal(
+      id: bag.id,
+      tag: bag.tag,
+      title: bag.title,
+      store: bag.storeName,
+      distance: bag.distance,
+      price: priceLabel,
+      time: bag.pickupTime,
+      emoji: emoji,
+      originalPrice: oldPriceLabel,
+      savingText: savingText,
+      imageUrl: bag.imageAsset,
+      description: bag.description ?? bag.tag,
+      stock: bag.stock,
+    );
+  });
+}
+
+final List<_SmartbagDeal> _smartbagDeals = _buildSmartbagDeals();
 
 class _SlidingSegmentControl extends StatelessWidget {
   final int selectedIndex;
