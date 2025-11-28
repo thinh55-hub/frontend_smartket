@@ -9,6 +9,7 @@ class SmartbagCardMini extends StatelessWidget {
   final String price;
   final String? oldPrice;
   final String image;
+  final VoidCallback? onTap;
 
   const SmartbagCardMini({
     super.key,
@@ -17,11 +18,12 @@ class SmartbagCardMini extends StatelessWidget {
     required this.price,
     required this.image,
     this.oldPrice,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final card = Container(
       width: 150,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -89,6 +91,13 @@ class SmartbagCardMini extends StatelessWidget {
           ),
         ],
       ),
+    );
+
+    if (onTap == null) return card;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: card,
     );
   }
 
