@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../core/utils/formatting.dart';
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/core/utils/formatting.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 
 /// Compact cart item row that matches the Figma snapshot with image,
 /// name, price, quantity stepper, and delete icon.

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-// Import các màn hình khác (giữ nguyên cấu trúc của bạn)
+import '../core/localization/app_localizations.dart';
 import '../core/state/navigation_provider.dart';
-import '../widgets/bottom_nav.dart';
+import '../widgets/layout/bottom_nav.dart';
 import 'home_screen.dart';
 import 'register_screen.dart';
 
@@ -29,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     // Lấy kích thước màn hình
     final size = MediaQuery.sizeOf(context);
     final double screenWidth = size.width;
@@ -104,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Số điện thoại',
+                          strings.loginPhoneLabel,
                           style: GoogleFonts.lexendDeca(
                             color: const Color(0xFF00A63E),
                             fontSize: 18,
@@ -121,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.phone,
                           style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black87),
                           decoration: InputDecoration(
-                            hintText: 'Nhập số điện thoại',
+                            hintText: strings.loginPhoneHint,
                             hintStyle: GoogleFonts.lexendDeca(color: const Color(0xFF8A8A8A), fontSize: 12, fontWeight: FontWeight.w300),
                             filled: true,
                             fillColor: const Color(0xFFF7F7F7),
@@ -137,7 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Mật khẩu',
+                          strings.loginPasswordLabel,
                           style: GoogleFonts.lexendDeca(
                             color: const Color(0xFF00A63E),
                             fontSize: 18,
@@ -154,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: _obscurePassword,
                           style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w300, color: Colors.black87),
                           decoration: InputDecoration(
-                            hintText: 'Nhập mật khẩu',
+                            hintText: strings.loginPasswordHint,
                             hintStyle: GoogleFonts.lexendDeca(color: const Color(0xFF8A8A8A), fontSize: 12, fontWeight: FontWeight.w300),
                             filled: true,
                             fillColor: const Color(0xFFF7F7F7),
@@ -174,7 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: TextButton(
                           onPressed: () {},
                           style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 30), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                          child: Text('Quên mật khẩu?', style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.w300)),
+                          child: Text(strings.loginForgotPassword, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.w300)),
                         ),
                       ),
 
@@ -196,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             shadowColor: Colors.transparent, 
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))
                           ),
-                          child: Text('Đăng nhập', style: GoogleFonts.lexendDeca(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
+                          child: Text(strings.loginButton, style: GoogleFonts.lexendDeca(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600)),
                         ),
                       ),
 
@@ -206,10 +207,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Chưa có tài khoản? ', style: GoogleFonts.lexendDeca(fontSize: 13, fontWeight: FontWeight.w300)),
+                          Text(strings.loginNoAccount, style: GoogleFonts.lexendDeca(fontSize: 13, fontWeight: FontWeight.w300)),
+                          const SizedBox(width: 4),
                           GestureDetector(
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RegisterScreen())),
-                            child: Text('Tạo tài khoản', style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.w600)),
+                            child: Text(strings.loginCreateAccount, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.w600)),
                           ),
                         ],
                       ),
@@ -217,11 +219,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: isSmallDevice ? 30 : 40),
 
                       // Divider Hoặc
-                      Row(children: const [
-                        Expanded(child: Divider(color: Color(0xFFE0E0E0))), 
-                        Padding(padding: EdgeInsets.symmetric(horizontal: 16), child: Text('Hoặc đăng nhập bằng', style: TextStyle(color: Color(0xFF8A8A8A), fontSize: 13))), 
-                        Expanded(child: Divider(color: Color(0xFFE0E0E0)))
-                      ]),
+                      Row(
+                        children: [
+                          const Expanded(child: Divider(color: Color(0xFFE0E0E0))),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Text(strings.loginOrConnect, style: const TextStyle(color: Color(0xFF8A8A8A), fontSize: 13)),
+                          ),
+                          const Expanded(child: Divider(color: Color(0xFFE0E0E0))),
+                        ],
+                      ),
 
                       SizedBox(height: isSmallDevice ? 20 : 28),
 

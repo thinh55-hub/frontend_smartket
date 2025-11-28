@@ -12,19 +12,24 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # Add Flutter's built-in localization package so Material/Cupertino
+  # localizations for supported locales (vi, en) are available.
+  flutter_localizations:
+    sdk: flutter
+
   cupertino_icons: ^1.0.8
   http: ^1.2.2
   provider: ^6.1.2
   shared_preferences: ^2.3.2
   google_fonts: ^6.2.1  # Version mới nhất hiện tại
-  intl: ^0.19.0
+  intl: ^0.20.2
   flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
-  flutter_launcher_icons: ^0.13.1
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true

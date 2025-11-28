@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../core/localization/app_localizations.dart';
 import '../widgets/layout/map_store_overlay.dart';
 import '../widgets/forms/map_tab.dart';
 import '../widgets/cards/product_card.dart';
@@ -13,7 +14,7 @@ import '../core/models/smartbag.dart';
 import '../core/state/product_provider.dart';
 import '../core/state/smartbag_provider.dart';
 import '../theme/app_theme.dart';
-import '../widgets/smartket_header_bar.dart';
+import '../widgets/layout/smartket_header_bar.dart';
 import 'product_detail_screen.dart';
 
 enum ExploreTab { list, map }
@@ -30,19 +31,20 @@ class _ExploreContentState extends State<ExploreContent> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           color: Colors.white,
           width: double.infinity,
-          child: const SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
-              child: SmartketHeaderBar(),
-            ),
+        child: SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: SmartketHeaderBar(),
           ),
+        ),
         ),
         if (_selectedTab == ExploreTab.map)
           Padding(
@@ -51,7 +53,7 @@ class _ExploreContentState extends State<ExploreContent> {
               children: [
                 Expanded(
                   child: _ExploreModeChip(
-                    label: 'Danh sách',
+                    label: strings.exploreListLabel,
                     selected: _selectedTab == ExploreTab.list,
                     onTap: () => _onTabSelected(ExploreTab.list),
                   ),
@@ -59,7 +61,7 @@ class _ExploreContentState extends State<ExploreContent> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: _ExploreModeChip(
-                    label: 'Bản đồ',
+                    label: strings.exploreMapLabel,
                     selected: _selectedTab == ExploreTab.map,
                     onTap: () => _onTabSelected(ExploreTab.map),
                   ),
@@ -102,6 +104,7 @@ class _ListExploreTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       physics: const BouncingScrollPhysics(),
@@ -112,7 +115,7 @@ class _ListExploreTab extends StatelessWidget {
             children: [
               Expanded(
                 child: _ExploreModeChip(
-                  label: 'Danh sách',
+                  label: strings.exploreListLabel,
                   selected: selectedTab == ExploreTab.list,
                   onTap: () => onTabSelected(ExploreTab.list),
                 ),
@@ -120,7 +123,7 @@ class _ListExploreTab extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: _ExploreModeChip(
-                  label: 'Bản đồ',
+                  label: strings.exploreMapLabel,
                   selected: selectedTab == ExploreTab.map,
                   onTap: () => onTabSelected(ExploreTab.map),
                 ),
@@ -140,7 +143,7 @@ class _ListExploreTab extends StatelessWidget {
                   ? provider.products
                   : _fallbackProducts;
               if (products.isEmpty) {
-                return const Center(child: Text('Chưa có sản phẩm'));
+                return Center(child: Text(strings.exploreNoProducts));
               }
               return GridView.builder(
                 shrinkWrap: true,
@@ -190,6 +193,7 @@ class _MapExploreTabState extends State<_MapExploreTab> {
   Widget build(BuildContext context) {
     return Consumer2<ProductProvider, SmartbagProvider>(
       builder: (context, productProvider, smartbagProvider, _) {
+        final strings = AppLocalizations.of(context);
         final products = productProvider.products.isNotEmpty
             ? productProvider.products
             : _fallbackProducts;
@@ -212,11 +216,11 @@ class _MapExploreTabState extends State<_MapExploreTab> {
               top: 24,
               left: 24,
               right: 24,
-              child: Column(
+            child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const SearchPill(
-                    placeholder: 'Tìm kiếm sản phẩm, cửa hàng, smartbag...',
+                  SearchPill(
+                    placeholder: strings.searchPlaceholder,
                   ),
                   const SizedBox(height: 12),
                   MapTab(items: _mapTabFilters),

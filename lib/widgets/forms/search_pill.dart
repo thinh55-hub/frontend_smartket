@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/core/localization/app_localizations.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 
 /// A reusable rounded search pill used across screens.
 ///
@@ -10,7 +11,7 @@ class SearchPill extends StatelessWidget {
   final String placeholder;
   final VoidCallback? onTap;
 
-  const SearchPill({Key? key, this.placeholder = 'Tìm sản phẩm, cửa hàng, smartbag...', this.onTap}) : super(key: key);
+  const SearchPill({Key? key, this.placeholder = '', this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class SearchPill extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              placeholder,
+              placeholder.isNotEmpty ? placeholder : AppLocalizations.of(context).searchPlaceholder,
               style: const TextStyle(fontSize: 13, color: Color(0xFF9AA1AF)),
             ),
           ),

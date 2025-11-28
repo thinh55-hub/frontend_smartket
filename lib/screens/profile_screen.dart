@@ -5,9 +5,11 @@ import 'package:provider/provider.dart';
 import '../widgets/forms/info_section.dart';
 import '../widgets/layout/logout_dialog.dart';
 import '../widgets/forms/primary_button.dart';
+import '../widgets/layout/bottom_nav.dart';
 import '../core/state/navigation_provider.dart';
+import '../core/state/locale_provider.dart';
+import '../core/localization/app_localizations.dart';
 import '../theme/app_theme.dart';
-import '../widgets/bottom_nav.dart';
 import 'cart_screen.dart';
 import 'payment_sheet.dart';
 class ProfileScreen extends StatelessWidget {
@@ -16,6 +18,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nav = context.watch<NavigationProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
+    final strings = AppLocalizations.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -33,7 +37,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    'Hồ sơ cá nhân',
+                    strings.profileTitle,
                     style: GoogleFonts.lexendDeca(
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
@@ -43,55 +47,56 @@ class ProfileScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 24),
-              const InfoSection(
-                heading: 'Tài khoản',
+              InfoSection(
+                heading: strings.accountSection,
                 items: [
                   InfoSectionItem(
                     icon: Icons.person_outline,
-                    title: 'Account Info',
-                    subtitle: 'Nguyễn Văn A • nguyenvana@email.com',
+                    title: strings.accountInfoTitle,
+                    subtitle: strings.accountInfoSubtitle,
                   ),
                   InfoSectionItem(
                     icon: Icons.qr_code_2_outlined,
-                    title: 'Lịch sử đơn hàng',
+                    title: strings.orderHistoryTitle,
                   ),
                 ],
               ),
               const SizedBox(height: 24),
               InfoSection(
-                heading: 'Thanh toán',
+                heading: strings.paymentSection,
                 items: [
                   InfoSectionItem(
                     icon: Icons.credit_card_outlined,
-                    title: 'Payment Methods',
-                    subtitle: 'Manage MoMo / Bank / Apple Pay',
+                    title: strings.paymentMethodsTitle,
+                    subtitle: strings.paymentMethodsSubtitle,
                     onTap: () => PaymentSheet.show(context),
                   ),
                 ],
               ),
               const SizedBox(height: 24),
-              const InfoSection(
-                heading: 'Cài đặt',
+              InfoSection(
+                heading: strings.settingsSection,
                 items: [
                   InfoSectionItem(
                     icon: Icons.notifications_none,
-                    title: 'Notifications',
+                    title: strings.notificationsTitle,
                   ),
                   InfoSectionItem(
                     icon: Icons.language_outlined,
-                    title: 'Language',
-                    subtitle: 'English',
+                    title: strings.languageTitle,
+                    subtitle: strings.languageSubtitle,
+                    onTap: () => localeProvider.toggleLocale(),
                   ),
                 ],
               ),
               const SizedBox(height: 24),
-              const InfoSection(
-                heading: 'Hỗ trợ',
+              InfoSection(
+                heading: strings.supportSection,
                 items: [
                   InfoSectionItem(
                     icon: Icons.help_outline,
-                    title: 'Help & Support',
-                    subtitle: 'FAQ / Contact',
+                    title: strings.helpTitle,
+                    subtitle: strings.helpSubtitle,
                   ),
                 ],
               ),
@@ -103,10 +108,16 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               PrimaryButton(
-                label: 'Đăng xuất',
+                label: strings.logoutLabel,
                 filled: false,
-                onPressed: () {
-                  LogoutDialog.show(context);
+                onPressed: () async {
+                  final result = await LogoutDialog.show(context);
+                  if (result == true) {
+                    Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil(
+                      '/login',
+                      (route) => false,
+                    );
+                  }
                 },
               ),
             ],

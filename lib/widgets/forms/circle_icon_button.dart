@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 
 /// Circular icon button with light border/shadow used in multiple screens.
 class CircleIconButton extends StatelessWidget {

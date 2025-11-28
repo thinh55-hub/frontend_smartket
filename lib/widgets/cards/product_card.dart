@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../core/models/product.dart';
-import '../core/utils/formatting.dart';
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/core/models/product.dart';
+import 'package:frontend_smartket/core/utils/formatting.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 
 /// Shared product card used across home & explore tabs.
 class ProductCard extends StatelessWidget {

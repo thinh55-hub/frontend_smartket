@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../core/localization/app_localizations.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
@@ -97,8 +99,8 @@ class _SplashScreenState extends State<SplashScreen>
               const SizedBox(height: 32),
 
               // Text không gạch chân
-              const Text(
-                "Save food. Save money. Save Earth.",
+              Text(
+                AppLocalizations.of(context).splashTagline,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 17,

@@ -84,7 +84,6 @@ class FavoritesScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(22),
-                                border: BorderRadius.circular(22),
                                 border: Border.all(color: AppColors.border),
                                 boxShadow: AppShadows.light,
                               ),

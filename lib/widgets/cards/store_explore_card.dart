@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../core/models/product.dart';
-import '../core/models/smartbag.dart';
-import '../core/utils/formatting.dart';
-import '../screens/product_detail_screen.dart';
-import '../screens/smartbag_detail_screen.dart';
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/core/models/product.dart';
+import 'package:frontend_smartket/core/models/smartbag.dart';
+import 'package:frontend_smartket/core/utils/formatting.dart';
+import 'package:frontend_smartket/screens/product_detail_screen.dart';
+import 'package:frontend_smartket/screens/smartbag_detail_screen.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 import 'product_card_mini.dart';
-import 'smartbag_card.dart';
 import 'smartbag_card_mini.dart';
 import 'smartbag_item.dart';
-import '../screens/product_detail_screen.dart';
 
 class StoreExploreCard extends StatelessWidget {
   final StoreExploreData store;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../core/models/smartbag.dart';
-import '../screens/smartbag_detail_screen.dart';
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/core/models/smartbag.dart';
+import 'package:frontend_smartket/screens/smartbag_detail_screen.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 import 'smartbag_item.dart';
 
 /// Compact Smartbag card used in horizontal carousels (Figma: "Smartbag - mini").

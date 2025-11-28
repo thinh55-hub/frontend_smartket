@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 
 class SearchBarInput extends StatelessWidget {
   final String placeholder;

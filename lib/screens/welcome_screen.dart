@@ -1,6 +1,8 @@
 // lib/screens/welcome_screen.dart
 import 'package:flutter/material.dart';
 
+import '../core/localization/app_localizations.dart';
+
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
 
@@ -11,6 +13,24 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   late PageController _pageController;
   int _currentPage = 0;
+
+  static const List<_OnboardingVisual> _visualData = [
+    _OnboardingVisual(
+      icon: Icons.shopping_bag_outlined,
+      backgroundColor: Color(0xFFE8F9F0),
+      iconColor: Color(0xFF00A651),
+    ),
+    _OnboardingVisual(
+      icon: Icons.card_giftcard,
+      backgroundColor: Color(0xFFF1F8E9),
+      iconColor: Color(0xFF00A651),
+    ),
+    _OnboardingVisual(
+      icon: Icons.public,
+      backgroundColor: Color(0xFFE1F5FE),
+      iconColor: Color(0xFF0288D1),
+    ),
+  ];
 
   @override
   void initState() {
@@ -24,32 +44,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     super.dispose();
   }
 
-  final List<OnboardingItem> _onboardingData = const [
-    OnboardingItem(
-      title: 'Khuyến mãi gần bạn',
-      description: 'Tìm sản phẩm với giá ưu đãi tại\ncác cửa hàng gần bạn',
-      icon: Icons.shopping_bag_outlined,
-      backgroundColor: Color(0xFFE8F9F0),
-      iconColor: Color(0xFF00A651),
-    ),
-    OnboardingItem(
-      title: 'Túi Smartbag bất ngờ',
-      description: 'Nhận các sản phẩm giá trị cao với chi phí rẻ.\nMỗi túi là một bất ngờ!',
-      icon: Icons.card_giftcard,
-      backgroundColor: Color(0xFFF1F8E9),
-      iconColor: Color(0xFF00A651),
-    ),
-    OnboardingItem(
-      title: 'Giảm lãng phí thực phẩm',
-      description: 'Cùng cửa hàng giảm lãng phí – bảo vệ môi trường\ncho thế hệ mai sau',
-      icon: Icons.public,
-      backgroundColor: Color(0xFFE1F5FE),
-      iconColor: Color(0xFF0288D1),
-    ),
-  ];
-
   void _onNext() {
-    if (_currentPage < _onboardingData.length - 1) {
+    final maxIndex = _visualData.length - 1;
+    if (_currentPage < maxIndex) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
@@ -61,6 +58,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+    final onboardingItems = _buildOnboardingData(strings);
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -72,14 +71,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             Expanded(
               child: PageView.builder(
                 controller: _pageController,
-                itemCount: _onboardingData.length,
+                itemCount: onboardingItems.length,
                 onPageChanged: (index) {
                   setState(() {
                     _currentPage = index;
                   });
                 },
                 itemBuilder: (context, index) => _buildPageContent(
-                  item: _onboardingData[index],
+                  item: onboardingItems[index],
                   size: size,
                 ),
               ),
@@ -91,7 +90,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                  _onboardingData.length,
+                  onboardingItems.length,
                   (index) => _buildDot(index: index),
                 ),
               ),
@@ -125,9 +124,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     borderRadius: BorderRadius.circular(30),
                     child: Center(
                       child: Text(
-                        _currentPage == _onboardingData.length - 1
-                            ? 'Bắt đầu ngay'
-                            : 'Tiếp theo',
+                        _currentPage == onboardingItems.length - 1
+                            ? strings.welcomeStartButton
+                            : strings.welcomeNextButton,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -205,6 +204,22 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
+  List<OnboardingItem> _buildOnboardingData(AppLocalizations strings) {
+    final slides = strings.onboardingSlides;
+    final count = slides.length < _visualData.length ? slides.length : _visualData.length;
+    return List.generate(count, (index) {
+      final visual = _visualData[index];
+      final slide = slides[index];
+      return OnboardingItem(
+        title: slide['title'] ?? '',
+        description: slide['description'] ?? '',
+        icon: visual.icon,
+        backgroundColor: visual.backgroundColor,
+        iconColor: visual.iconColor,
+      );
+    });
+  }
+
   Widget _buildDot({required int index}) {
     return GestureDetector(
       onTap: () {
@@ -243,6 +258,18 @@ class OnboardingItem {
   const OnboardingItem({
     required this.title,
     required this.description,
+    required this.icon,
+    required this.backgroundColor,
+    required this.iconColor,
+  });
+}
+
+class _OnboardingVisual {
+  final IconData icon;
+  final Color backgroundColor;
+  final Color iconColor;
+
+  const _OnboardingVisual({
     required this.icon,
     required this.backgroundColor,
     required this.iconColor,

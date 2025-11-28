@@ -3,16 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../theme/app_theme.dart';
-import '../core/models/product.dart';
-import '../data/mock_products.dart';
-import '../widgets/bottom_nav.dart';
+import '../../theme/app_theme.dart';
+import '../../core/models/product.dart';
+import '../../data/mock_products.dart';
+import 'bottom_nav.dart';
 import 'package:provider/provider.dart';
-import '../core/state/navigation_provider.dart';
-import '../core/state/cart_provider.dart';
-import '../core/utils/formatting.dart';
-import '../screens/cart_screen.dart';
-import '../widgets/smartket_header_bar.dart';
+import '../../core/state/navigation_provider.dart';
+import '../../core/state/cart_provider.dart';
+import '../../core/utils/formatting.dart';
+import '../../screens/cart_screen.dart';
+import 'smartket_header_bar.dart';
 
 class ProductDetailPage extends StatefulWidget {
   final Product product;

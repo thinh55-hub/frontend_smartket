@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 
 /// Pill-style toggle chip used across Home tabs (e.g., QR and Smartbag sections).
 class SegmentChip extends StatelessWidget {

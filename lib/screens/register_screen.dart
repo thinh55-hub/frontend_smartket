@@ -3,9 +3,9 @@ import 'package:flutter/gestures.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-// Import giả lập các màn hình khác
+import '../core/localization/app_localizations.dart';
 import '../core/state/navigation_provider.dart';
-import '../widgets/bottom_nav.dart';
+import '../widgets/layout/bottom_nav.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 import 'otp_verification_screen.dart';
@@ -42,6 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final size = MediaQuery.sizeOf(context);
     final double screenHeight = size.height;
     final double paddingBottom = MediaQuery.of(context).viewInsets.bottom;
@@ -98,7 +99,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           // Header Title
                           SizedBox(height: isSmallDevice ? 40 : 60), // Khoảng cách linh hoạt
                           Text(
-                            'Đăng ký tài khoản',
+                            strings.registerTitle,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.lexendDeca(
                               color: Colors.white,
@@ -134,7 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               mainAxisSize: MainAxisSize.min, // Ôm sát nội dung
                               children: [
                                 Text(
-                                  'Thông tin cá nhân',
+                                  strings.registerPersonalInfo,
                                   style: GoogleFonts.lexendDeca(
                                     color: const Color(0xFF00A63E),
                                     fontSize: 22,
@@ -144,13 +145,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 const SizedBox(height: 24),
 
                                 // Các trường nhập liệu
-                                _buildInputField(label: 'Họ và tên', controller: _fullNameController, hint: 'Nhập Họ và Tên của bạn'),
+                                _buildInputField(
+                                  label: strings.registerFullNameLabel,
+                                  controller: _fullNameController,
+                                  hint: strings.registerFullNameHint,
+                                ),
                                 const SizedBox(height: 16),
-                                _buildInputField(label: 'Số điện thoại', controller: _phoneController, hint: 'Nhập Số điện thoại', keyboardType: TextInputType.phone),
+                                _buildInputField(
+                                  label: strings.registerPhoneLabel,
+                                  controller: _phoneController,
+                                  hint: strings.registerPhoneHint,
+                                  keyboardType: TextInputType.phone,
+                                ),
                                 const SizedBox(height: 16),
-                                _buildInputField(label: 'Email', controller: _emailController, hint: 'Nhập địa chỉ Email', keyboardType: TextInputType.emailAddress),
+                                _buildInputField(
+                                  label: strings.registerEmailLabel,
+                                  controller: _emailController,
+                                  hint: strings.registerEmailHint,
+                                  keyboardType: TextInputType.emailAddress,
+                                ),
                                 const SizedBox(height: 16),
-                                _buildInputField(label: 'Đặt mật khẩu', controller: _passwordController, hint: 'Tạo mật khẩu', obscureText: true),
+                                _buildInputField(
+                                  label: strings.registerPasswordLabel,
+                                  controller: _passwordController,
+                                  hint: strings.registerPasswordHint,
+                                  obscureText: true,
+                                ),
                                 const SizedBox(height: 24),
 
                                 // Button Tiếp tục
@@ -170,16 +190,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         shadowColor: Colors.transparent,
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                                       ),
-                                      child: Text('Tiếp tục', style: GoogleFonts.lexendDeca(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300)),
+                                      child: Text(strings.registerContinueButton, style: GoogleFonts.lexendDeca(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w300)),
                                     ),
                                   ),
                                 ),
 
                                 const SizedBox(height: 20),
-                                _buildTermsAndLogin(),
+                                _buildTermsAndLogin(strings),
                                 const SizedBox(height: 20),
 
-                                Text('Hoặc đăng nhập bằng', style: GoogleFonts.lexendDeca(color: const Color(0xFF8A8A8A), fontSize: 13)),
+                                Text(strings.loginOrConnect, style: GoogleFonts.lexendDeca(color: const Color(0xFF8A8A8A), fontSize: 13)),
                                 const SizedBox(height: 16),
 
                                 Row(
@@ -245,7 +265,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildTermsAndLogin() {
+  Widget _buildTermsAndLogin(AppLocalizations strings) {
     return Column(
       children: [
         SizedBox(
@@ -253,10 +273,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: 'Bằng cách tiếp tục, bạn đồng ý với\n', style: GoogleFonts.lexendDeca(color: const Color(0xFF6A7282), fontSize: 11, fontWeight: FontWeight.w300)),
-                TextSpan(text: 'Điều khoản dịch vụ', style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 11, fontWeight: FontWeight.w700)),
-                TextSpan(text: ' và ', style: GoogleFonts.lexendDeca(color: const Color(0xFF6A7282), fontSize: 11, fontWeight: FontWeight.w300)),
-                TextSpan(text: 'Chính sách bảo mật', style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 11, fontWeight: FontWeight.w700)),
+                TextSpan(text: strings.registerTermsPrefix, style: GoogleFonts.lexendDeca(color: const Color(0xFF6A7282), fontSize: 11, fontWeight: FontWeight.w300)),
+                TextSpan(text: strings.registerTermsService, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 11, fontWeight: FontWeight.w700)),
+                TextSpan(text: strings.registerTermsAnd, style: GoogleFonts.lexendDeca(color: const Color(0xFF6A7282), fontSize: 11, fontWeight: FontWeight.w300)),
+                TextSpan(text: strings.registerTermsPrivacy, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 11, fontWeight: FontWeight.w700)),
               ],
             ),
             textAlign: TextAlign.center,
@@ -266,8 +286,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Text.rich(
           TextSpan(
             children: [
-              TextSpan(text: 'Quay lại ', style: GoogleFonts.lexendDeca(color: const Color(0xFF8A8A8A), fontSize: 13)),
-              TextSpan(text: 'đăng nhập', style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.bold), recognizer: _loginTapRecognizer),
+              TextSpan(text: strings.registerBackToLoginPrefix, style: GoogleFonts.lexendDeca(color: const Color(0xFF8A8A8A), fontSize: 13)),
+              TextSpan(text: strings.registerBackToLoginAction, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.bold), recognizer: _loginTapRecognizer),
             ],
           ),
           textAlign: TextAlign.center,

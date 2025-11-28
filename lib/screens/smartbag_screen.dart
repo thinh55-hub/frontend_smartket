@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widgets/forms/smartbag_category.dart';
 import '../widgets/cards/smartbag_item.dart';
-import '../widgets/forms/map_tab.dart';
 import 'smartbag_detail_screen.dart';
 import '../theme/app_theme.dart';
-import '../widgets/smartket_header_bar.dart';
+import '../widgets/layout/smartket_header_bar.dart';
 import '../widgets/forms/location_pill.dart';
 import '../widgets/forms/smartbag_chip_list.dart';
 import '../data/mock_smartbag.dart';
@@ -131,10 +130,10 @@ class _SmartbagHeader extends StatelessWidget {
     return Container(
       color: Colors.white,
       width: double.infinity,
-      child: const SafeArea(
+      child: SafeArea(
         bottom: false,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
           child: SmartketHeaderBar(logoHeight: 52),
         ),
       ),
@@ -165,9 +164,3 @@ List<SmartbagItemData> _buildSmartbagItemData() {
 final List<SmartbagItemData> _smartbagMiniDeals = _buildSmartbagItemData();
 final List<SmartbagItemData> _smartbagItemDeals = _buildSmartbagItemData();
 final List<SmartbagItemData> _smartbagNewestDeals = _buildSmartbagItemData();
-
-const List<MapTabItem> _mapTabItems = [
-  MapTabItem(label: 'Smartbag', icon: Icons.card_giftcard_outlined),
-  MapTabItem(label: 'Đang mở cửa', icon: Icons.access_time_outlined),
-  MapTabItem(label: 'Gần tôi', icon: Icons.near_me_outlined),
-];

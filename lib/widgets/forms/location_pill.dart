@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 
 class LocationPill extends StatelessWidget {
   final String label;

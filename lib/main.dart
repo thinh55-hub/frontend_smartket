@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'theme/app_theme.dart';
 import 'core/api/api_client.dart';
@@ -10,6 +11,7 @@ import 'core/state/product_provider.dart';
 import 'core/state/cart_provider.dart';
 import 'core/state/navigation_provider.dart';
 import 'core/state/smartbag_provider.dart';
+import 'core/state/locale_provider.dart';
 import 'screens/register_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/splash_screen.dart';
@@ -45,6 +47,9 @@ class SmartketApp extends StatelessWidget {
         ),
         Provider<SmartbagRepositoryMock>(
             create: (_) => SmartbagRepositoryMock()),
+        ChangeNotifierProvider<LocaleProvider>(
+          create: (_) => LocaleProvider(),
+        ),
         ChangeNotifierProvider(create: (_) => NavigationProvider()),
         ChangeNotifierProvider<ProductProvider>(
           create: (ctx) {
@@ -69,26 +74,41 @@ class SmartketApp extends StatelessWidget {
           },
         ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'SMARTKET',
-        theme: buildAppTheme(),
-        initialRoute: '/splash',
-        routes: {
-          '/splash': (_) => const SplashScreen(),
-          '/welcome': (_) => const WelcomeScreen(),
-          '/login': (_) => const LoginScreen(),
-          '/register': (_) => const RegisterScreen(),
+      child: Builder(
+        builder: (context) {
+          final locale = context.watch<LocaleProvider>().locale;
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'SMARTKET',
+            theme: buildAppTheme(),
+            locale: locale,
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('vi'),
+              Locale('en'),
+            ],
+            initialRoute: '/splash',
+            routes: {
+              '/splash': (_) => const SplashScreen(),
+              '/welcome': (_) => const WelcomeScreen(),
+              '/login': (_) => const LoginScreen(),
+              '/register': (_) => const RegisterScreen(),
+            },
+            builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
+              value: const SystemUiOverlayStyle(
+                statusBarColor: Colors.transparent,
+                statusBarIconBrightness: Brightness.dark,
+                systemNavigationBarColor: Colors.white,
+                systemNavigationBarIconBrightness: Brightness.dark,
+              ),
+              child: child ?? const SizedBox.shrink(),
+            ),
+          );
         },
-        builder: (context, child) => AnnotatedRegion<SystemUiOverlayStyle>(
-          value: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.dark,
-            systemNavigationBarColor: Colors.white,
-            systemNavigationBarIconBrightness: Brightness.dark,
-          ),
-          child: child ?? const SizedBox.shrink(),
-        ),
       ),
     );
   }

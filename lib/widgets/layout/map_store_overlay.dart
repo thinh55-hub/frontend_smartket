@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_theme.dart';
-import 'store_explore_card.dart';
+import '../cards/store_explore_card.dart';
 
 class MapStoreOverlay extends StatelessWidget {
   final List<StoreExploreData> stores;

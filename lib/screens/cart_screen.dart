@@ -6,9 +6,9 @@ import '../widgets/cards/store_cart_card.dart';
 import '../core/state/cart_provider.dart';
 import '../core/state/navigation_provider.dart';
 import '../theme/app_theme.dart';
-import '../widgets/bottom_nav.dart';
-import '../widgets/empty_state.dart';
-import '../widgets/smartket_header_bar.dart';
+import '../widgets/cards/empty_state.dart';
+import '../widgets/layout/bottom_nav.dart';
+import '../widgets/layout/smartket_header_bar.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -46,13 +46,13 @@ class CartContent extends StatelessWidget {
         Container(
           color: Colors.white,
           width: double.infinity,
-          child: const SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
-              child: SmartketHeaderBar(),
-            ),
+        child: SafeArea(
+          bottom: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+            child: SmartketHeaderBar(),
           ),
+        ),
         ),
         Expanded(
           child: Consumer<CartProvider>(

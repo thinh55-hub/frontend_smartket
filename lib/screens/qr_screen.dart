@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../theme/app_theme.dart';
-import '../widgets/segment_chip.dart';
-import '../widgets/smartket_header_bar.dart';
+import '../widgets/forms/segment_chip.dart';
+import '../widgets/layout/smartket_header_bar.dart';
 
 class _MockQrOrder {
   final String storeName;
@@ -34,9 +34,9 @@ class QrScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: AppColors.background,
-      body: QrContent(),
+      body: const QrContent(),
     );
   }
 }
@@ -51,10 +51,10 @@ class QrContent extends StatelessWidget {
         Container(
           color: Colors.white,
           width: double.infinity,
-          child: const SafeArea(
+          child: SafeArea(
             bottom: false,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(16, 12, 16, 16),
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
               child: SmartketHeaderBar(),
             ),
           ),

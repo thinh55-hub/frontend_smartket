@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../widgets/bottom_nav.dart';
+import 'package:frontend_smartket/widgets/layout/bottom_nav.dart';
 
 class NavigationProvider extends ChangeNotifier {
   MainTab _current = MainTab.home;

@@ -4,16 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../core/localization/app_localizations.dart';
 import '../core/state/navigation_provider.dart';
-import '../widgets/bottom_nav.dart';
-import '../widgets/smartket_header_bar.dart';
+import '../widgets/layout/bottom_nav.dart';
+import '../widgets/layout/smartket_header_bar.dart';
 import '../theme/app_theme.dart';
 import '../core/state/product_provider.dart';
-import '../core/models/product.dart';
 import '../data/mock_products.dart';
 import '../widgets/cards/product_card.dart';
 import '../widgets/forms/location_pill.dart';
-import '../widgets/forms/smartbag_chip.dart';
 import '../widgets/forms/smartbag_chip_list.dart';
 import '../widgets/forms/segmented_label_row.dart';
 import '../widgets/cards/stat_card.dart';
@@ -102,7 +101,7 @@ class _HomeOverview extends StatelessWidget {
           child: SingleChildScrollView(
             padding: const EdgeInsets.only(bottom: 32),
             physics: const BouncingScrollPhysics(),
-            child: const Column(
+        child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _OverviewHero(),
@@ -143,9 +142,9 @@ class _HomeHeader extends StatelessWidget {
               // Figma Node: 346-1052 — Location selector pill
               const LocationPill(),
               const SizedBox(height: 8),
-              // Figma Node: 558-491 — Search input
+                  // Figma Node: 558-491 — Search input
                   // Search (reusable component)
-                  const SearchPill(),
+                  SearchPill(),
             ],
           ),
         ),
@@ -166,24 +165,9 @@ class _OverviewHeroState extends State<_OverviewHero> {
   int _selectedRange = 0;
 
   static const List<_RangeStats> _statsByRange = [
-    _RangeStats(
-      rescuedValue: 2,
-      rescuedSubtitle: 'Túi thực phẩm đã cứu hôm nay',
-      savedValue: 36000,
-      savedSubtitle: 'Số tiền đã tiết kiệm hôm nay',
-    ),
-    _RangeStats(
-      rescuedValue: 7,
-      rescuedSubtitle: 'Túi thực phẩm đã cứu tuần này',
-      savedValue: 136000,
-      savedSubtitle: 'Số tiền đã tiết kiệm tuần này',
-    ),
-    _RangeStats(
-      rescuedValue: 16,
-      rescuedSubtitle: 'Túi thực phẩm đã cứu tháng này',
-      savedValue: 236000,
-      savedSubtitle: 'Số tiền đã tiết kiệm tháng này',
-    ),
+    _RangeStats(range: HeroRangeKey.today, rescuedValue: 2, savedValue: 36000),
+    _RangeStats(range: HeroRangeKey.week, rescuedValue: 7, savedValue: 136000),
+    _RangeStats(range: HeroRangeKey.month, rescuedValue: 16, savedValue: 236000),
   ];
 
   void _onSelectRange(int index) {
@@ -192,6 +176,8 @@ class _OverviewHeroState extends State<_OverviewHero> {
   }
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
+
     return ClipRRect(
       clipBehavior: Clip.hardEdge,
       borderRadius: _OverviewHero._heroBorderRadius,
@@ -228,19 +214,19 @@ class _OverviewHeroState extends State<_OverviewHero> {
                           key: ValueKey(_selectedRange),
                           children: [
                             Expanded(
-                              child: StatCard(
-                                title: 'Bạn đã cứu được',
-                                value: _statsByRange[_selectedRange].rescuedValue.toString(),
-                                subtitle: _statsByRange[_selectedRange].rescuedSubtitle,
-                              ),
+                            child: StatCard(
+                              title: strings.heroRescuedTitle,
+                              value: _statsByRange[_selectedRange].rescuedValue.toString(),
+                              subtitle: strings.heroRescuedSubtitle(_statsByRange[_selectedRange].range),
+                            ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: StatCard(
-                                title: 'Số tiền đã tiết kiệm',
-                                value: '${formatCurrency(_statsByRange[_selectedRange].savedValue)} đ',
-                                subtitle: _statsByRange[_selectedRange].savedSubtitle,
-                              ),
+                            child: StatCard(
+                              title: strings.heroSavedTitle,
+                              value: '${formatCurrency(_statsByRange[_selectedRange].savedValue)} đ',
+                              subtitle: strings.heroSavedSubtitle(_statsByRange[_selectedRange].range),
+                            ),
                             ),
                           ],
                         ),
@@ -256,7 +242,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
                   _PromoIcon(),
                   const SizedBox(width: 8),
                   Text(
-                    'Khuyến mãi gần bạn',
+                    strings.heroPromoHeading,
                     style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
                   ),
                 ],
@@ -274,14 +260,14 @@ class _OverviewHeroState extends State<_OverviewHero> {
                       }
                       if (provider.error != null) {
                         return Center(
-                          child: Text('Lỗi: ${provider.error}', style: TextStyle(color: Colors.white)),
+                          child: Text('${strings.heroErrorPrefix} ${provider.error}', style: const TextStyle(color: Colors.white)),
                         );
                       }
                       final data = provider.products.isNotEmpty ? provider.products : mockProducts;
                       final promos = data.take(6).toList();
                       if (promos.isEmpty) {
-                        return const Center(
-                          child: Text('Chưa có sản phẩm', style: TextStyle(color: Colors.white)),
+                        return Center(
+                          child: Text(strings.heroNoProducts, style: const TextStyle(color: Colors.white)),
                         );
                       }
                       return ListView.separated(
@@ -345,6 +331,7 @@ class _SmartbagShelfState extends State<_SmartbagShelf> {
 
   @override
   Widget build(BuildContext context) {
+    final strings = AppLocalizations.of(context);
     final deals = _smartbagDeals;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -365,12 +352,12 @@ class _SmartbagShelfState extends State<_SmartbagShelf> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Smartbag đáng chú ý',
+                        strings.smartbagSpotlightTitle,
                         style: GoogleFonts.lexendDeca(fontSize: 17, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Săn túi thực phẩm ngon giá tốt trong ngày',
+                        strings.smartbagSpotlightSubtitle,
                         style: GoogleFonts.lexendDeca(fontSize: 13, color: AppColors.textSecondary),
                       ),
                     ],
@@ -388,7 +375,7 @@ class _SmartbagShelfState extends State<_SmartbagShelf> {
                     final nav = context.read<NavigationProvider>();
                     nav.current = MainTab.smartbag;
                   },
-                  child: const Text('Xem tất cả'),
+                  child: Text(strings.smartbagViewAll),
                 ),
               ],
             ),
@@ -817,16 +804,14 @@ class _SlidingSegmentControl extends StatelessWidget {
 }
 
 class _RangeStats {
+  final HeroRangeKey range;
   final int rescuedValue;
-  final String rescuedSubtitle;
   final int savedValue;
-  final String savedSubtitle;
 
   const _RangeStats({
+    required this.range,
     required this.rescuedValue,
-    required this.rescuedSubtitle,
     required this.savedValue,
-    required this.savedSubtitle,
   });
 }
 

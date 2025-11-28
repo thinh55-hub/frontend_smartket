@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../theme/app_theme.dart';
-import 'smartbag_item.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
+import '../cards/smartbag_item.dart';
 
 /// Displays a titled horizontal carousel of Smartbag items.
 class SmartbagCategory extends StatelessWidget {

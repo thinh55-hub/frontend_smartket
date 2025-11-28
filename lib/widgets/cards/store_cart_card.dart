@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../core/utils/formatting.dart';
-import '../theme/app_theme.dart';
+import 'package:frontend_smartket/core/utils/formatting.dart';
+import 'package:frontend_smartket/theme/app_theme.dart';
 import 'compact_cart_item.dart';
 
 class StoreCartCard extends StatelessWidget {
