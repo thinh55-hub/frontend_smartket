@@ -8,6 +8,8 @@ class Smartbag {
   final String distance;
   final String tag;
   final String imageAsset;
+  final int? stock;
+  final String? description;
 
   const Smartbag({
     required this.id,
@@ -19,5 +21,7 @@ class Smartbag {
     required this.distance,
     required this.tag,
     required this.imageAsset,
+    this.stock,
+    this.description,
   });
 }
