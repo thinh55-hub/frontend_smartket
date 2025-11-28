@@ -42,6 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final size = MediaQuery.sizeOf(context);
     final double screenHeight = size.height;
     final double paddingBottom = MediaQuery.of(context).viewInsets.bottom;
+    final bool keyboardVisible = paddingBottom > 0;
     
     // Xác định thiết bị nhỏ để điều chỉnh UI
     final bool isSmallDevice = screenHeight < 700; 
@@ -80,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   return SingleChildScrollView(
                     // Đẩy nội dung lên khi bàn phím hiện (thủ công)
                     padding: EdgeInsets.only(bottom: paddingBottom + 20),
-                    physics: const ClampingScrollPhysics(),
+                    physics: keyboardVisible ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
                     child: ConstrainedBox(
                       // Đảm bảo container ít nhất cao bằng màn hình để căn giữa
                       constraints: BoxConstraints(

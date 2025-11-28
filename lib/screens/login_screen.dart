@@ -33,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     
     // Lấy chiều cao bàn phím để xử lý padding
     final double viewInsetsBottom = MediaQuery.of(context).viewInsets.bottom;
+    final bool keyboardVisible = viewInsetsBottom > 0;
 
     // Logic xác định màn hình nhỏ (iPhone SE, Android cũ)
     final bool isSmallDevice = screenHeight < 700;
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
             return SingleChildScrollView(
               // Đẩy nội dung lên khi có bàn phím
               padding: EdgeInsets.only(bottom: viewInsetsBottom + 20),
-              physics: const ClampingScrollPhysics(),
+              physics: keyboardVisible ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
               child: ConstrainedBox(
                 // Đảm bảo chiều cao tối thiểu bằng màn hình để căn giữa đẹp
                 constraints: BoxConstraints(
