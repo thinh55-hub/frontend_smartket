@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../components/product_detail_page.dart';
-import '../components/smartbag_item.dart';
+import '../widgets/layout/product_detail_page.dart';
+import '../widgets/cards/smartbag_item.dart';
 import '../core/models/product.dart';
 
 class SmartbagDetailScreen extends StatelessWidget {

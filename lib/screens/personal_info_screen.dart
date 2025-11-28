@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../components/app_top_bar.dart';
+import '../widgets/layout/app_top_bar.dart';
 import '../theme/app_theme.dart';
 
 class PersonalInfoScreen extends StatelessWidget {

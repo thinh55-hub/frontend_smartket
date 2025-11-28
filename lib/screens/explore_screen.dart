@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../components/map_store_overlay.dart';
-import '../components/map_tab.dart';
-import '../components/product_card.dart';
-import '../components/search_pill.dart';
-import '../components/smartbag_chip_list.dart';
-import '../components/store_explore_card.dart';
+import '../widgets/layout/map_store_overlay.dart';
+import '../widgets/forms/map_tab.dart';
+import '../widgets/cards/product_card.dart';
+import '../widgets/forms/search_pill.dart';
+import '../widgets/forms/smartbag_chip_list.dart';
+import '../widgets/cards/store_explore_card.dart';
 import '../core/models/product.dart';
 import '../core/models/smartbag.dart';
 import '../core/state/product_provider.dart';

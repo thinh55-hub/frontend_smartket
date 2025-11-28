@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../components/info_section.dart';
-import '../components/logout_dialog.dart';
-import '../components/primary_button.dart';
+import '../widgets/forms/info_section.dart';
+import '../widgets/layout/logout_dialog.dart';
+import '../widgets/forms/primary_button.dart';
 import '../core/state/navigation_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/bottom_nav.dart';

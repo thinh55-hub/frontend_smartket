@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../components/store_cart_card.dart';
+import '../widgets/cards/store_cart_card.dart';
 import '../core/state/cart_provider.dart';
 import '../core/state/navigation_provider.dart';
 import '../theme/app_theme.dart';

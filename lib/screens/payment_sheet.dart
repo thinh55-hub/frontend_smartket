@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_theme.dart';
-import '../components/primary_button.dart';
+import '../widgets/forms/primary_button.dart';
 
 class PaymentSheet {
   static Future<void> show(BuildContext context) async {

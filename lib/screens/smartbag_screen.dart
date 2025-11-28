@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import '../components/smartbag_category.dart';
-import '../components/smartbag_item.dart';
-import '../components/map_tab.dart';
+import '../widgets/forms/smartbag_category.dart';
+import '../widgets/cards/smartbag_item.dart';
+import '../widgets/forms/map_tab.dart';
 import 'smartbag_detail_screen.dart';
-import '../components/location_pill.dart';
 import '../theme/app_theme.dart';
 import '../widgets/smartket_header_bar.dart';
-import '../components/smartbag_chip_list.dart';
+import '../widgets/forms/location_pill.dart';
+import '../widgets/forms/smartbag_chip_list.dart';
 import '../data/mock_smartbag.dart';
 import '../core/utils/formatting.dart';
 
