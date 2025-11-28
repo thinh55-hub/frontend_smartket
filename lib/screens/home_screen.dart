@@ -200,7 +200,7 @@ class _OverviewHeroState extends State<_OverviewHero> {
               Align(
                 alignment: Alignment.center,
                 child: FractionallySizedBox(
-                  widthFactor: 0.8,
+                  widthFactor: 0.7,
                   child: Column(
                     children: [
                       _SlidingSegmentControl(

@@ -38,7 +38,7 @@ class _IncreaseItem extends StatelessWidget {
       width: size,
       height: size,
       child: Material(
-        color: const Color(0xFF00C950),
+        color: AppColors.primaryAlt,
         borderRadius: BorderRadius.circular(radius),
         child: InkWell(
           onTap: onPressed,
@@ -224,16 +224,16 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             margin: const EdgeInsets.only(bottom: 12),
                             padding: const EdgeInsets.fromLTRB(12, 12, 12, 18),
                             decoration: BoxDecoration(
-                              gradient: const LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Color.fromRGBO(0, 166, 62, 0.70),
-                                  Color.fromRGBO(0, 166, 62, 0.00),
-                                ],
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    AppColors.primary.withOpacity(0.70),
+                                    AppColors.primary.withOpacity(0.00),
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
                               ),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
                             child: SizedBox(
                               height: 220,
                               child: ListView(
@@ -268,7 +268,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: const Color.fromRGBO(39, 174, 96, 0.18),
+                              color: AppColors.primary.withOpacity(0.18),
                               blurRadius: 8,
                               offset: const Offset(0, 4),
                             ),
@@ -369,15 +369,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       width: 13.75 * 16, // fixed wider pill (~13.75rem) to avoid wrapping and keep proportions
                       child: Container(
                         height: 2.8 * 16,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(999),
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF00C950), Color(0xFF27AE60)],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(999),
+                            gradient: AppColors.primaryGradientLinear,
+                            boxShadow: [BoxShadow(color: const Color.fromRGBO(0, 0, 0, 0.18), blurRadius: 24, offset: const Offset(0, 6))],
                           ),
-                          boxShadow: [BoxShadow(color: const Color.fromRGBO(0, 0, 0, 0.18), blurRadius: 24, offset: const Offset(0, 6))],
-                        ),
                         child: ElevatedButton(
                           onPressed: quantity > 0
                               ? () {

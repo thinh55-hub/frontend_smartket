@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'colors.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF27AE60);
+  // Using the new teal primary color as requested.
+  static const Color primary = kPrimaryTeal;
+  static const Color primaryAlt = kPrimaryGreenAlt;
   static const Color background = Color(0xFFF5F7FB);
   static const Color surface = Colors.white;
   static const Color border = Color(0xFFE0E4EE);
+  static const List<Color> primaryGradient = kPrimaryGradient;
+  static const LinearGradient primaryGradientLinear = LinearGradient(
+    colors: kPrimaryGradient,
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
   static const Color textPrimary = Color(0xFF3C404B);
   static const Color textSecondary = Color(0xFF80848F);
   static const Color disabled = Color(0xFFE8E8E8);

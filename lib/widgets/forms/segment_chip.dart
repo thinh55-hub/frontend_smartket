@@ -24,16 +24,10 @@ class SegmentChip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 1),
         decoration: BoxDecoration(
           borderRadius: borderRadius,
-          gradient: selected
-              ? const LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [Color(0xFF00A63E), Color(0xFF00C950)],
-                )
-              : null,
+          gradient: selected ? AppColors.primaryGradientLinear : null,
           color: selected ? null : Colors.transparent,
           boxShadow: selected
-              ? const [BoxShadow(color: Color(0x4D00C950), blurRadius: 12, offset: Offset(0, 4))]
+              ? [BoxShadow(color: AppColors.primaryAlt.withOpacity(0.30), blurRadius: 12, offset: const Offset(0, 4))]
               : null,
         ),
         child: Center(

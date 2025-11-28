@@ -28,8 +28,8 @@ class SegmentedLabelRow extends StatelessWidget {
               child: AnimatedDefaultTextStyle(
                 duration: const Duration(milliseconds: 200),
                 style: GoogleFonts.lexendDeca(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                   color: selectedIndex == index ? Colors.white : AppColors.primary,
                 ),
                 child: Text(labels[index]),

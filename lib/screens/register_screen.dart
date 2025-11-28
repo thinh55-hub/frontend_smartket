@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../core/localization/app_localizations.dart';
+import '../theme/app_theme.dart';
 import '../core/state/navigation_provider.dart';
 import '../widgets/layout/bottom_nav.dart';
 import 'home_screen.dart';
@@ -137,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Text(
                                   strings.registerPersonalInfo,
                                   style: GoogleFonts.lexendDeca(
-                                    color: const Color(0xFF00A63E),
+                                    color: AppColors.primary,
                                     fontSize: 22,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -179,9 +180,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   height: 40,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      gradient: const LinearGradient(colors: [Color(0xFF00C950), Color(0xFF00A63E)]),
+                                      gradient: AppColors.primaryGradientLinear,
                                       borderRadius: BorderRadius.circular(30),
-                                      boxShadow: const [BoxShadow(color: Color(0x7F00A63E), blurRadius: 6, offset: Offset(0, 2))],
+                                      boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.50), blurRadius: 6, offset: const Offset(0, 2))],
                                     ),
                                     child: ElevatedButton(
                                       onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const OtpVerificationScreen())),
@@ -239,7 +240,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 16, fontWeight: FontWeight.w400)), // Giảm font size header chút cho gọn
+        Text(label, style: GoogleFonts.lexendDeca(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w400)), // Giảm font size header chút cho gọn
         const SizedBox(height: 8),
         Container(
           height: 40, // Tăng nhẹ height để dễ bấm hơn
@@ -274,9 +275,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             TextSpan(
               children: [
                 TextSpan(text: strings.registerTermsPrefix, style: GoogleFonts.lexendDeca(color: const Color(0xFF6A7282), fontSize: 11, fontWeight: FontWeight.w300)),
-                TextSpan(text: strings.registerTermsService, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 11, fontWeight: FontWeight.w700)),
+                TextSpan(text: strings.registerTermsService, style: GoogleFonts.lexendDeca(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w700)),
                 TextSpan(text: strings.registerTermsAnd, style: GoogleFonts.lexendDeca(color: const Color(0xFF6A7282), fontSize: 11, fontWeight: FontWeight.w300)),
-                TextSpan(text: strings.registerTermsPrivacy, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 11, fontWeight: FontWeight.w700)),
+                TextSpan(text: strings.registerTermsPrivacy, style: GoogleFonts.lexendDeca(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.w700)),
               ],
             ),
             textAlign: TextAlign.center,
@@ -287,7 +288,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           TextSpan(
             children: [
               TextSpan(text: strings.registerBackToLoginPrefix, style: GoogleFonts.lexendDeca(color: const Color(0xFF8A8A8A), fontSize: 13)),
-              TextSpan(text: strings.registerBackToLoginAction, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.bold), recognizer: _loginTapRecognizer),
+              TextSpan(text: strings.registerBackToLoginAction, style: GoogleFonts.lexendDeca(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold), recognizer: _loginTapRecognizer),
             ],
           ),
           textAlign: TextAlign.center,

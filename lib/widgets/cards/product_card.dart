@@ -131,11 +131,11 @@ class ProductCard extends StatelessWidget {
                       ),
                     ),
                   Positioned.fill(
-                    child: IgnorePointer(
+                        child: IgnorePointer(
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: const Color(0xFF00A63E), width: 1.212),
+                          border: Border.all(color: AppColors.primary, width: 1.212),
                         ),
                       ),
                     ),

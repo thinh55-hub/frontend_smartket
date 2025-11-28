@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import '../core/localization/app_localizations.dart';
+import '../theme/app_theme.dart';
 import '../core/state/navigation_provider.dart';
 import '../widgets/layout/bottom_nav.dart';
 import 'home_screen.dart';
@@ -107,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           strings.loginPhoneLabel,
                           style: GoogleFonts.lexendDeca(
-                            color: const Color(0xFF00A63E),
+                            color: AppColors.primary,
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.5,
@@ -140,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text(
                           strings.loginPasswordLabel,
                           style: GoogleFonts.lexendDeca(
-                            color: const Color(0xFF00A63E),
+                            color: AppColors.primary,
                             fontSize: 18,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.5,
@@ -175,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: TextButton(
                           onPressed: () {},
                           style: TextButton.styleFrom(padding: EdgeInsets.zero, minimumSize: const Size(0, 30), tapTargetSize: MaterialTapTargetSize.shrinkWrap),
-                          child: Text(strings.loginForgotPassword, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.w300)),
+                          child: Text(strings.loginForgotPassword, style: GoogleFonts.lexendDeca(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w300)),
                         ),
                       ),
 
@@ -186,9 +187,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         width: double.infinity,
                         height: 48, // Chuẩn height nút bấm mobile
                         decoration: BoxDecoration(
-                          gradient: const LinearGradient(colors: [Color(0xFF00A63E), Color(0xFF00C950)]),
+                          gradient: AppColors.primaryGradientLinear,
                           borderRadius: BorderRadius.circular(30),
-                          boxShadow: const [BoxShadow(color: Color(0x8400A63E), blurRadius: 6, offset: Offset(0, 3))],
+                          boxShadow: [BoxShadow(color: AppColors.primary.withOpacity(0.52), blurRadius: 6, offset: const Offset(0, 3))],
                         ),
                         child: ElevatedButton(
                           onPressed: _navigateToHome,
@@ -211,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(width: 4),
                           GestureDetector(
                             onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const RegisterScreen())),
-                            child: Text(strings.loginCreateAccount, style: GoogleFonts.lexendDeca(color: const Color(0xFF00A63E), fontSize: 13, fontWeight: FontWeight.w600)),
+                            child: Text(strings.loginCreateAccount, style: GoogleFonts.lexendDeca(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.w600)),
                           ),
                         ],
                       ),
