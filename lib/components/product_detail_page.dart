@@ -196,7 +196,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         'Thêm từ cửa hàng này',
                         style: GoogleFonts.lexendDeca(
                           color: const Color(0xFF292929),
-                          fontSize: 2, // 1.2rem (1rem = 16px)
+                          fontSize: 18, // 1.2rem (1rem = 16px)
                           fontWeight: FontWeight.w400,
                           height: 1.5, // 1.8rem line-height -> 1.5 relative to 1.2rem (150%)
                         ),

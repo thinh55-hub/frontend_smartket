@@ -19,6 +19,7 @@ class SmartbagDetailScreen extends StatelessWidget {
       oldPrice: deal.originalPrice != null ? _parsePrice(deal.originalPrice!) : null,
       merchantName: deal.merchant,
       category: 'Smartbag',
+      stock: deal.stock,
       imageUrl: deal.imageUrl,
     );
 

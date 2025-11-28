@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../core/models/smartbag.dart';
+import '../core/utils/formatting.dart';
 import '../theme/app_theme.dart';
 
 /// Smartbag list item card with hero image + metadata (Figma: "Smartbag item").
@@ -204,6 +206,7 @@ class SmartbagItemData {
   final String imageUrl;
   final bool isFavorite;
   final String? description;
+  final int? stock;
 
   const SmartbagItemData({
     required this.id,
@@ -216,7 +219,24 @@ class SmartbagItemData {
     required this.imageUrl,
     this.isFavorite = false,
     this.description,
+    this.stock,
   });
+
+  factory SmartbagItemData.fromSmartbag(Smartbag bag) {
+    return SmartbagItemData(
+      id: bag.id,
+      title: bag.title,
+      merchant: bag.storeName,
+      distance: '• ${bag.distance}',
+      pickupWindow: 'Lấy vào ${bag.pickupTime}',
+      price: '${formatCurrency(bag.price)} đ',
+      originalPrice: '${formatCurrency(bag.oldPrice)} đ',
+      imageUrl: bag.imageAsset,
+      isFavorite: false,
+      description: bag.description ?? bag.tag,
+      stock: bag.stock,
+    );
+  }
 }
 
 class _AddButton extends StatelessWidget {

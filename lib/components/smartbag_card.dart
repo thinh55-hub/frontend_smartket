@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../core/models/smartbag.dart';
+import '../screens/smartbag_detail_screen.dart';
 import '../theme/app_theme.dart';
+import 'smartbag_item.dart';
 
 /// Compact Smartbag card used in horizontal carousels (Figma: "Smartbag - mini").
 class SmartbagCard extends StatelessWidget {
@@ -11,6 +14,7 @@ class SmartbagCard extends StatelessWidget {
   final String? originalPrice;
   final String? imageUrl;
   final double width;
+  final Smartbag? smartbag;
   final VoidCallback? onTap;
 
   const SmartbagCard({
@@ -21,6 +25,7 @@ class SmartbagCard extends StatelessWidget {
     this.originalPrice,
     this.imageUrl,
     this.width = 176,
+    this.smartbag,
     this.onTap,
   });
 
@@ -95,10 +100,25 @@ class SmartbagCard extends StatelessWidget {
       ),
     );
 
-    if (onTap == null) return card;
+    VoidCallback? effectiveOnTap = onTap;
+
+    // If no custom onTap is provided but we have a Smartbag,
+    // navigate to the SmartbagDetailScreen with mapped data.
+    if (effectiveOnTap == null && smartbag != null) {
+      final deal = SmartbagItemData.fromSmartbag(smartbag!);
+      effectiveOnTap = () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => SmartbagDetailScreen(deal: deal),
+          ),
+        );
+      };
+    }
+
+    if (effectiveOnTap == null) return card;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: effectiveOnTap,
       child: card,
     );
   }
