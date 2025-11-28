@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/layout/app_top_bar.dart';
+import '../core/localization/app_localizations.dart';
 import '../theme/app_theme.dart';
 
 class PersonalInfoScreen extends StatelessWidget {
@@ -13,7 +14,7 @@ class PersonalInfoScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const AppTopBar(title: 'Thông tin cá nhân'),
+            AppTopBar(title: AppLocalizations.of(context).personalInfoTitle),
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
@@ -21,36 +22,36 @@ class PersonalInfoScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Hoàn tất thông tin để bắt đầu sử dụng SMARTKET',
+                      AppLocalizations.of(context).personalInfoSubtitle,
                       style: GoogleFonts.lexendDeca(fontSize: 13, color: AppColors.textSecondary),
                     ),
                     const SizedBox(height: 24),
-                    const _Label('Họ và tên'),
+                    _Label(AppLocalizations.of(context).personalInfoFullNameLabel),
                     const SizedBox(height: 8),
-                    const _InputField(
+                    _InputField(
                       icon: Icons.person_outline,
-                      hint: 'Nguyễn Đức Thịnh',
+                      hint: AppLocalizations.of(context).personalInfoFullNameHint,
                     ),
                     const SizedBox(height: 16),
-                    const _Label('Ngày sinh'),
+                    _Label(AppLocalizations.of(context).personalInfoDOBLabel),
                     const SizedBox(height: 8),
-                    const _InputField(
+                    _InputField(
                       icon: Icons.calendar_today_outlined,
-                      hint: 'mm/dd/yyyy',
+                      hint: AppLocalizations.of(context).personalInfoDOBHint,
                     ),
                     const SizedBox(height: 16),
-                    const _Label('Email'),
+                    _Label(AppLocalizations.of(context).personalInfoEmailLabel),
                     const SizedBox(height: 8),
-                    const _InputField(
+                    _InputField(
                       icon: Icons.email_outlined,
-                      hint: 'email@example.com',
+                      hint: AppLocalizations.of(context).personalInfoEmailHint,
                     ),
                     const SizedBox(height: 16),
-                    const _Label('Địa chỉ'),
+                    _Label(AppLocalizations.of(context).personalInfoAddressLabel),
                     const SizedBox(height: 8),
-                    const _InputField(
+                    _InputField(
                       icon: Icons.location_on_outlined,
-                      hint: '123 Đường ABC, Quận 1, TP.HCM',
+                      hint: AppLocalizations.of(context).personalInfoAddressHint,
                       maxLines: 2,
                     ),
                     const SizedBox(height: 32),
@@ -64,7 +65,7 @@ class PersonalInfoScreen extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            'Hoàn tất',
+                            AppLocalizations.of(context).personalInfoCompleteButton,
                             style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.textSecondary),
                           ),
                         ),

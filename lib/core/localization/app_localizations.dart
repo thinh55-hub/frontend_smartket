@@ -74,6 +74,43 @@ class AppLocalizations {
 
   String get logoutCancelLabel => isVietnamese ? 'Hủy' : 'Cancel';
 
+  // Personal info
+  String get personalInfoTitle => isVietnamese ? 'Thông tin cá nhân' : 'Personal information';
+
+  String get personalInfoSubtitle => isVietnamese
+      ? 'Hoàn tất thông tin để bắt đầu sử dụng SMARTKET'
+      : 'Complete your information to start using SMARTKET';
+
+  String get personalInfoFullNameLabel => isVietnamese ? 'Họ và tên' : 'Full name';
+  String get personalInfoFullNameHint => isVietnamese ? 'Nguyễn Văn A' : 'John Doe';
+  String get personalInfoDOBLabel => isVietnamese ? 'Ngày sinh' : 'Date of birth';
+  String get personalInfoDOBHint => isVietnamese ? 'mm/dd/yyyy' : 'mm/dd/yyyy';
+  String get personalInfoEmailLabel => isVietnamese ? 'Email' : 'Email';
+  String get personalInfoEmailHint => isVietnamese ? 'email@example.com' : 'email@example.com';
+  String get personalInfoAddressLabel => isVietnamese ? 'Địa chỉ' : 'Address';
+  String get personalInfoAddressHint => isVietnamese ? '123 Đường ABC, Quận 1, TP.HCM' : '123 Main St, District 1, HCM';
+  String get personalInfoCompleteButton => isVietnamese ? 'Hoàn tất' : 'Complete';
+
+  // Favorites
+  String get favoritesTitle => isVietnamese ? 'Yêu thích' : 'Favorites';
+  String get favoritesEmptyTitle => isVietnamese ? 'Chưa có cửa hàng yêu thích' : 'No favorite stores yet';
+  String get favoritesEmptyMessage => isVietnamese
+      ? 'Thêm cửa hàng vào danh sách yêu thích để xem ở đây'
+      : 'Start adding stores to your favorites to see them here';
+  String get favoritesBrowseAction => isVietnamese ? 'Duyệt cửa hàng' : 'Browse Stores';
+
+  // Payment sheet actions
+  String get paymentCancelLabel => isVietnamese ? 'Hủy' : 'Cancel';
+  String get paymentDoneLabel => isVietnamese ? 'Xong' : 'Done';
+
+    String get paymentAddCardLabel => isVietnamese ? 'Thêm thẻ mới' : 'Add new card';
+
+  // Cart
+  String get cartEmptySubtitle => isVietnamese ? 'Hãy thêm sản phẩm để bắt đầu mua sắm' : 'Add products to start shopping';
+    String get cartTitle => isVietnamese ? 'Giỏ hàng' : 'Cart';
+    String get cartEmptyTitle => isVietnamese ? 'Giỏ hàng đang trống' : 'Your cart is empty';
+    String get cartLoadErrorTitle => isVietnamese ? 'Không thể tải giỏ hàng' : 'Could not load cart';
+
   // Login strings
   String get loginPhoneLabel => isVietnamese ? 'Số điện thoại' : 'Phone number';
 

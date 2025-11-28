@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../core/localization/app_localizations.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -30,7 +31,7 @@ class AccountScreen extends StatelessWidget {
                           const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
                           const SizedBox(width: 12),
                           Text(
-                            'Hồ sơ của tôi',
+                            AppLocalizations.of(context).profileTitle,
                             style: GoogleFonts.lexendDeca(fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ],
@@ -45,33 +46,33 @@ class AccountScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 8),
-                            Text('Tài khoản', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
+                            Text(AppLocalizations.of(context).accountSection, style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 8),
                             _AccountItem(
                               icon: Icons.person_outline,
-                              title: 'Thông tin tài khoản',
-                              subtitle: 'tungf',
+                              title: AppLocalizations.of(context).accountInfoTitle,
+                              subtitle: AppLocalizations.of(context).accountInfoSubtitle,
                             ),
                             const SizedBox(height: 10),
                             _AccountItem(
                               icon: Icons.receipt_long_outlined,
-                              title: 'Lịch sử đơn hàng',
+                              title: AppLocalizations.of(context).orderHistoryTitle,
                             ),
                             const SizedBox(height: 16),
-                            Text('Thanh toán', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
+                            Text(AppLocalizations.of(context).paymentSection, style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 8),
                             _AccountItem(
                               icon: Icons.credit_card_outlined,
-                              title: 'Phương thức thanh toán',
-                              subtitle: 'Quản lý MoMo / Ngân hàng / Apple Pay',
+                              title: AppLocalizations.of(context).paymentMethodsTitle,
+                              subtitle: AppLocalizations.of(context).paymentMethodsSubtitle,
                               onTap: () => _showPaymentSheet(context),
                             ),
                             const SizedBox(height: 16),
-                            Text('Cài đặt', style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
+                            Text(AppLocalizations.of(context).settingsSection, style: GoogleFonts.lexendDeca(fontSize: 14, fontWeight: FontWeight.w600)),
                             const SizedBox(height: 8),
                             _AccountItem(
                               icon: Icons.notifications_none,
-                              title: 'Thông báo',
+                              title: AppLocalizations.of(context).notificationsTitle,
                             ),
                           ],
                         ),
