@@ -51,13 +51,20 @@ class MapStoreOverlay extends StatelessWidget {
         child: Column(
           children: [
             GestureDetector(
+              behavior: HitTestBehavior.opaque,
               onTap: onToggleSize,
+              onVerticalDragEnd: (_) => onToggleSize(),
               child: Container(
                 width: 52,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE1E6F0),
-                  borderRadius: BorderRadius.circular(999),
+                height: 16,
+                alignment: Alignment.center,
+                child: Container(
+                  width: 52,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE1E6F0),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
                 ),
               ),
             ),
